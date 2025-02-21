@@ -1,0 +1,36 @@
+{
+    "nombreFantasia": "",
+    "logo": "",
+    "envios": [
+        {
+            "localidad": "",
+            "fecha_inicio": "",
+            "ml_venta_id": "",
+            "ml_shipment_id": "",
+            "destination_receiver_name": "",
+            "destination_receiver_phone": "",
+            "address_line": "",
+            "cp": "",
+            "obs": "",
+            "monto_total_a_cobrar": "",
+            "peso": "",
+            "remitente": "SUPONGO QUE ES EL NOMBRE DEL CLIENTE",
+            "qr": "",
+            "bultos": "",
+            "camposEspeciales": [
+                {
+                    "nombre": "",
+                    "valor": ""
+                }
+            ],
+            "fullfillment": [
+                {
+                    "sku": "",
+                    "ean": "",
+                    "descripcion": "",
+                    "cantidad": ""
+                }
+            ]
+        }
+    ]
+}

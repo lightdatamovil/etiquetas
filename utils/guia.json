@@ -1,0 +1,387 @@
+{
+    "nombreFantasia": "Procourrier",
+    "logo": "https://procourier.com.ar/wp-content/uploads/2023/12/cropped-LOGO_PROCOURRIER_color-hueco-1.png",
+
+    "envios": [
+        {
+            "qr": "{'id':'44331452376','sender_id':73223464,'hash_code':'tpllNHWHhi4iV9QLiStEF99dV6sgZkeTeuzfZllKWik=','security_digit':'1'}",
+            "numeroRem": "4596-00/1",
+            "fecha": "18/09/2024",
+            "facturaTipo": "R",
+            "codigo": "91",
+
+            "desde": {
+                "donde": "deposito",
+                "localidad": "Villa martelli (BUENOS AIRES)",
+                "direccion": "Francisco N Laprida 3455"
+            },
+
+            "hacia": {
+                "donde": "deposito",
+                "localidad": "San juan (SAN JUAN)",
+                "direccion": "Pueyrredon sur 276"
+            },
+
+            "remitente": {
+                "nombre": "REY MAXIMILIANO",
+                "direccion": "AVDA. San Martin 700",
+                "localidad": "Villa Martelli BS.AS",
+                "telefono": "123456789",
+                "iva": "CF (consumidor final)",
+                "cuit": "2035695851"
+            },
+
+            "destinatario": {
+                "nombre": "REY MAXIMILIANO",
+                "direccion": "AVDA. San Martin 700",
+                "localidad": "Villa Martelli BS.AS",
+                "telefono": "123456789",
+                "iva": "CF (consumidor final)",
+                "cuit": "2035695851"
+            },
+
+            "condicionVenta": "Pago en destino",
+            "operador": "Villa Martelli (BS.AS) - 2070",
+            "bultos": 1,
+            "descripcion": "REMITENTE RESPONSABLE DEL CONTENIDO",
+            "peso": "5",
+            "codPrecio": "545528",
+            "valor": "2000",
+            "obsevacion": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis voluptate quia velit, quae quas dolor molestiae et praesentium rem? Porro voluptas eveniet iste ipsa eaque inventore vitae nesciunt non veniam.",
+            "ultimosDatos": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis voluptate quia velit, quae quas dolor molestiae et praesentium rem? Porro voluptas eveniet iste ipsa eaque inventore vitae nesciunt non veniam.Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+
+            "listado": [
+                {
+                    "concepto": "Flete",
+                    "importe": "8030.00"
+                },
+                {
+                    "concepto": "Traslado",
+                    "importe": "96.80"
+                },
+                {
+                    "concepto": "Marbetes",
+                    "importe": "12.10"
+                },
+                {
+                    "concepto": "Otros",
+                    "importe": "96.00"
+                },
+                {
+                    "concepto": "Ajuste redondeo",
+                    "importe": "8.30"
+                },
+                {
+                    "concepto": "Seguro",
+                    "importe": "1932.00"
+                }
+            ],
+
+            "total": "10180.00"
+        },
+        {
+            "qr": "{'id':'44331452376','sender_id':73223464,'hash_code':'tpllNHWHhi4iV9QLiStEF99dV6sgZkeTeuzfZllKWik=','security_digit':'1'}",
+            "numeroRem": "4596-00/2",
+            "fecha": "18/09/2024",
+            "facturaTipo": "R",
+            "codigo": "91",
+
+            "desde": {
+                "donde": "deposito",
+                "localidad": "Villa martelli (BUENOS AIRES)",
+                "direccion": "Francisco N Laprida 3455"
+            },
+
+            "hacia": {
+                "donde": "deposito",
+                "localidad": "San juan (SAN JUAN)",
+                "direccion": "Pueyrredon sur 276"
+            },
+
+            "remitente": {
+                "nombre": "REY MAXIMILIANO",
+                "direccion": "AVDA. San Martin 700",
+                "localidad": "Villa Martelli BS.AS",
+                "telefono": "123456789",
+                "iva": "CF (consumidor final)",
+                "cuit": "2035695851"
+            },
+
+            "destinatario": {
+                "nombre": "REY MAXIMILIANO",
+                "direccion": "AVDA. San Martin 700",
+                "localidad": "Villa Martelli BS.AS",
+                "telefono": "123456789",
+                "iva": "CF (consumidor final)",
+                "cuit": "2035695851"
+            },
+
+            "condicionVenta": "Pago en destino",
+            "operador": "Villa Martelli (BS.AS) - 2070",
+            "bultos": 1,
+            "descripcion": "REMITENTE RESPONSABLE DEL CONTENIDO",
+            "peso": "5",
+            "codPrecio": "545528",
+            "valor": "2000",
+            "obsevacion": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis voluptate quia velit, quae quas dolor molestiae et praesentium rem? Porro voluptas eveniet iste ipsa eaque inventore vitae nesciunt non veniam.",
+            "ultimosDatos": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis voluptate quia velit, quae quas dolor molestiae et praesentium rem? Porro voluptas eveniet iste ipsa eaque inventore vitae nesciunt non veniam.Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+
+            "listado": [
+                {
+                    "concepto": "Flete",
+                    "importe": "8030.00"
+                },
+                {
+                    "concepto": "Traslado",
+                    "importe": "96.80"
+                },
+                {
+                    "concepto": "Marbetes",
+                    "importe": "12.10"
+                },
+                {
+                    "concepto": "Otros",
+                    "importe": "96.00"
+                },
+                {
+                    "concepto": "Ajuste redondeo",
+                    "importe": "8.30"
+                },
+                {
+                    "concepto": "Seguro",
+                    "importe": "1932.00"
+                }
+            ],
+
+            "total": "10180.00"
+        },
+        {
+            "qr": "{'id':'44331452376','sender_id':73223464,'hash_code':'tpllNHWHhi4iV9QLiStEF99dV6sgZkeTeuzfZllKWik=','security_digit':'1'}",
+            "numeroRem": "4596-00/3",
+            "fecha": "18/09/2024",
+            "facturaTipo": "R",
+            "codigo": "91",
+
+            "desde": {
+                "donde": "deposito",
+                "localidad": "Villa martelli (BUENOS AIRES)",
+                "direccion": "Francisco N Laprida 3455"
+            },
+
+            "hacia": {
+                "donde": "deposito",
+                "localidad": "San juan (SAN JUAN)",
+                "direccion": "Pueyrredon sur 276"
+            },
+
+            "remitente": {
+                "nombre": "REY MAXIMILIANO",
+                "direccion": "AVDA. San Martin 700",
+                "localidad": "Villa Martelli BS.AS",
+                "telefono": "123456789",
+                "iva": "CF (consumidor final)",
+                "cuit": "2035695851"
+            },
+
+            "destinatario": {
+                "nombre": "REY MAXIMILIANO",
+                "direccion": "AVDA. San Martin 700",
+                "localidad": "Villa Martelli BS.AS",
+                "telefono": "123456789",
+                "iva": "CF (consumidor final)",
+                "cuit": "2035695851"
+            },
+
+            "condicionVenta": "Pago en destino",
+            "operador": "Villa Martelli (BS.AS) - 2070",
+            "bultos": 1,
+            "descripcion": "REMITENTE RESPONSABLE DEL CONTENIDO",
+            "peso": "5",
+            "codPrecio": "545528",
+            "valor": "2000",
+            "obsevacion": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis voluptate quia velit, quae quas dolor molestiae et praesentium rem? Porro voluptas eveniet iste ipsa eaque inventore vitae nesciunt non veniam.",
+            "ultimosDatos": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis voluptate quia velit, quae quas dolor molestiae et praesentium rem? Porro voluptas eveniet iste ipsa eaque inventore vitae nesciunt non veniam.Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+
+            "listado": [
+                {
+                    "concepto": "Flete",
+                    "importe": "8030.00"
+                },
+                {
+                    "concepto": "Traslado",
+                    "importe": "96.80"
+                },
+                {
+                    "concepto": "Marbetes",
+                    "importe": "12.10"
+                },
+                {
+                    "concepto": "Otros",
+                    "importe": "96.00"
+                },
+                {
+                    "concepto": "Ajuste redondeo",
+                    "importe": "8.30"
+                },
+                {
+                    "concepto": "Seguro",
+                    "importe": "1932.00"
+                }
+            ],
+
+            "total": "10180.00"
+        },
+        {
+            "qr": "{'id':'44331452376','sender_id':73223464,'hash_code':'tpllNHWHhi4iV9QLiStEF99dV6sgZkeTeuzfZllKWik=','security_digit':'1'}",
+            "numeroRem": "4596-00/4",
+            "fecha": "18/09/2024",
+            "facturaTipo": "R",
+            "codigo": "91",
+
+            "desde": {
+                "donde": "deposito",
+                "localidad": "Villa martelli (BUENOS AIRES)",
+                "direccion": "Francisco N Laprida 3455"
+            },
+
+            "hacia": {
+                "donde": "deposito",
+                "localidad": "San juan (SAN JUAN)",
+                "direccion": "Pueyrredon sur 276"
+            },
+
+            "remitente": {
+                "nombre": "REY MAXIMILIANO",
+                "direccion": "AVDA. San Martin 700",
+                "localidad": "Villa Martelli BS.AS",
+                "telefono": "123456789",
+                "iva": "CF (consumidor final)",
+                "cuit": "2035695851"
+            },
+
+            "destinatario": {
+                "nombre": "REY MAXIMILIANO",
+                "direccion": "AVDA. San Martin 700",
+                "localidad": "Villa Martelli BS.AS",
+                "telefono": "123456789",
+                "iva": "CF (consumidor final)",
+                "cuit": "2035695851"
+            },
+
+            "condicionVenta": "Pago en destino",
+            "operador": "Villa Martelli (BS.AS) - 2070",
+            "bultos": 1,
+            "descripcion": "REMITENTE RESPONSABLE DEL CONTENIDO",
+            "peso": "5",
+            "codPrecio": "545528",
+            "valor": "2000",
+            "obsevacion": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis voluptate quia velit, quae quas dolor molestiae et praesentium rem? Porro voluptas eveniet iste ipsa eaque inventore vitae nesciunt non veniam.",
+            "ultimosDatos": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis voluptate quia velit, quae quas dolor molestiae et praesentium rem? Porro voluptas eveniet iste ipsa eaque inventore vitae nesciunt non veniam.Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+
+            "listado": [
+                {
+                    "concepto": "Flete",
+                    "importe": "8030.00"
+                },
+                {
+                    "concepto": "Traslado",
+                    "importe": "96.80"
+                },
+                {
+                    "concepto": "Marbetes",
+                    "importe": "12.10"
+                },
+                {
+                    "concepto": "Otros",
+                    "importe": "96.00"
+                },
+                {
+                    "concepto": "Ajuste redondeo",
+                    "importe": "8.30"
+                },
+                {
+                    "concepto": "Seguro",
+                    "importe": "1932.00"
+                }
+            ],
+
+            "total": "10180.00"
+        },
+        {
+            "qr": "{'id':'44331452376','sender_id':73223464,'hash_code':'tpllNHWHhi4iV9QLiStEF99dV6sgZkeTeuzfZllKWik=','security_digit':'1'}",
+            "numeroRem": "4596-00/5",
+            "fecha": "18/09/2024",
+            "facturaTipo": "R",
+            "codigo": "91",
+
+            "desde": {
+                "donde": "deposito",
+                "localidad": "Villa martelli (BUENOS AIRES)",
+                "direccion": "Francisco N Laprida 3455"
+            },
+
+            "hacia": {
+                "donde": "deposito",
+                "localidad": "San juan (SAN JUAN)",
+                "direccion": "Pueyrredon sur 276"
+            },
+
+            "remitente": {
+                "nombre": "REY MAXIMILIANO",
+                "direccion": "AVDA. San Martin 700",
+                "localidad": "Villa Martelli BS.AS",
+                "telefono": "123456789",
+                "iva": "CF (consumidor final)",
+                "cuit": "2035695851"
+            },
+
+            "destinatario": {
+                "nombre": "REY MAXIMILIANO",
+                "direccion": "AVDA. San Martin 700",
+                "localidad": "Villa Martelli BS.AS",
+                "telefono": "123456789",
+                "iva": "CF (consumidor final)",
+                "cuit": "2035695851"
+            },
+
+            "condicionVenta": "Pago en destino",
+            "operador": "Villa Martelli (BS.AS) - 2070",
+            "bultos": 1,
+            "descripcion": "REMITENTE RESPONSABLE DEL CONTENIDO",
+            "peso": "5",
+            "codPrecio": "545528",
+            "valor": "2000",
+            "obsevacion": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis voluptate quia velit, quae quas dolor molestiae et praesentium rem? Porro voluptas eveniet iste ipsa eaque inventore vitae nesciunt non veniam.",
+            "ultimosDatos": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis voluptate quia velit, quae quas dolor molestiae et praesentium rem? Porro voluptas eveniet iste ipsa eaque inventore vitae nesciunt non veniam.Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+
+            "listado": [
+                {
+                    "concepto": "Flete",
+                    "importe": "8030.00"
+                },
+                {
+                    "concepto": "Traslado",
+                    "importe": "96.80"
+                },
+                {
+                    "concepto": "Marbetes",
+                    "importe": "12.10"
+                },
+                {
+                    "concepto": "Otros",
+                    "importe": "96.00"
+                },
+                {
+                    "concepto": "Ajuste redondeo",
+                    "importe": "8.30"
+                },
+                {
+                    "concepto": "Seguro",
+                    "importe": "1932.00"
+                }
+            ],
+
+            "total": "10180.00"
+        }
+    ]
+}
