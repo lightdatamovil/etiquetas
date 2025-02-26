@@ -70,6 +70,7 @@ async function getFromRedis(key) {
     }
 }
 
+//FUNCION PARA OBTEBNER LOS DATOS DE LAS ETIQUETAS
 const obtenerDatosEnvios = async (idempresa, dids) => {
     try {
         let cacheLogos = {}
@@ -186,4 +187,31 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
     }
 }
 
-module.exports = { getConnection, getFromRedis, redisClient, obtenerDatosEnvios }
+//FUNCION PARA INSERTAR LOS ENVIOS YA IMPRESOS EN LA TABLA REIMPRESION HISTORIAL
+const registrarReimpresion = async (idempresa, dids, modulo, quien) => {
+    let { connection } = await getConnection(idempresa)
+
+    if (!Array.isArray(dids) || dids.length === 0) {
+        throw new Error("El parámetro dids debe ser un array con al menos un elemento.")
+    }
+
+    try {
+        let values = dids.map(() => "(?, ?, ?)").join(", ")
+        let query = `INSERT INTO reimpresion_historial (didEnvio, modulo, quien) VALUES ${values}`
+        let params = dids.flatMap((did) => [did, modulo, quien])
+
+        let result = await new Promise((resolve, reject) => {
+            connection.query(query, params, (error, results) => {
+                if (error) return reject(error)
+                resolve(results)
+            })
+        })
+
+        return result
+    } catch (error) {
+        console.error("Error al insertar en reimpresion_historial:", error.message)
+        throw error
+    }
+}
+
+module.exports = { getConnection, getFromRedis, redisClient, obtenerDatosEnvios, registrarReimpresion }
