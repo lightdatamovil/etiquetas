@@ -124,6 +124,7 @@ Y debes pasarle por body un JSON con los siguientes datos:
 | `didEnvios`    | `array`  | Dids de los envios que deseas generar su etiqueta, es un array con los numeros. <br> **Ejemplo: [1, 2, 3]** |
 | `tipoEtiqueta` | `number` | Es un numero para elegir el tamaño de la etiqueta: <br/> **0 = 10x10 <br/> 1 = 10x15 <br/> 2 = A4**         |
 | `calidad`      | `number` | Es un numero para elegir si la etiqueta es premium o no: <br/> **0 = Simple <br/> 1 = Premium**             |
+| `quien`        | `number` | Did del usuario que generara las etiquetas                                                                  |
 
 ---
 
@@ -138,6 +139,7 @@ Ejemplo del JSON que recibe por body:
 	"didEnvios": [1,2,3],
 	"tipoEtiqueta": 3,
 	"calidad": 0,
+	"quien": 1
 }
 ```
 
@@ -160,9 +162,10 @@ Y debes pasarle por body un JSON con los siguientes datos:
 
 | Key          | Value    | Descripción                                                                                                 |
 | :----------- | :------- | :---------------------------------------------------------------------------------------------------------- |
-| `didEmpresa` | `number` | Did de la empresa que generara la etiqueta                                                                  |
+| `didEmpresa` | `number` | Did de la empresa que generara la guia                                                                      |
 | `didEnvios`  | `array`  | Dids de los envios que deseas generar su etiqueta, es un array con los numeros. <br> **Ejemplo: [1, 2, 3]** |
 | `calidad`    | `number` | Es un numero para elegir si la etiqueta es premium o no: <br/> **0 = Simple <br/> 1 = Premium**             |
+| `quien`      | `number` | Did del usuario que generara las guias                                                                      |
 
 ---
 
@@ -176,6 +179,7 @@ Ejemplo del JSON que recibe por body:
 	"didEmpresa" : 4,
 	"didEnvios": [1,2,3],
 	"calidad": 0,
+	"quien": 1
 }
 ```
 
