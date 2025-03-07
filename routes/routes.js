@@ -4,7 +4,7 @@ const postGuia = require("../handlers/guiaHandler")
 
 const router = Router()
 
-router.post("/etiqueta", postEtiqueta)
-router.post("/guia", postGuia)
+router.post("/print/etiqueta", postEtiqueta)
+router.post("/print/guia", postGuia)
 
 module.exports = router

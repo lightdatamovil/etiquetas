@@ -1,3 +1,4 @@
+const e = require("express")
 const mysql = require("mysql")
 const redis = require("redis")
 
@@ -80,6 +81,7 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
         let { connection, empresasData } = await getConnection(idempresa)
 
         const nombreFantasia = empresasData[String(idempresa)]?.empresa || null
+        const tieneFullfillment = empresasData[String(idempresa)]?.fullfilment || null
 
         // Verificar si el logo ya está en la caché
         if (cacheLogos[nombreFantasia]) {
@@ -109,21 +111,24 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
             })
         })
 
-        // Query para fullfillment
-        let queryOrdenes = `
-                        SELECT o.did AS didOrden, oi.seller_sku, oi.cantidad, fp.sku, fp.ean, fp.descripcion
-                        FROM ordenes o
-                        LEFT JOIN ordenes_items oi ON o.did = oi.didOrden AND oi.superado = 0 AND oi.elim = 0
-                        LEFT JOIN fulfillment_productos fp ON oi.seller_sku = fp.sku AND fp.superado = 0 AND fp.elim = 0
-                        WHERE o.didEnvio IN (?) AND o.superado = 0 AND o.elim = 0
-                    `
+        let ordenes = []
+        if (tieneFullfillment != "0") {
+            // Query para fullfillment
+            let queryOrdenes = `
+                            SELECT o.did AS didOrden, oi.seller_sku, oi.cantidad, fp.sku, fp.ean, fp.descripcion
+                            FROM ordenes o
+                            LEFT JOIN ordenes_items oi ON o.did = oi.didOrden AND oi.superado = 0 AND oi.elim = 0
+                            LEFT JOIN fulfillment_productos fp ON oi.seller_sku = fp.sku AND fp.superado = 0 AND fp.elim = 0
+                            WHERE o.didEnvio IN (?) AND o.superado = 0 AND o.elim = 0
+                        `
 
-        let ordenes = await new Promise((resolve, reject) => {
-            connection.query(queryOrdenes, [dids], (error, results) => {
-                if (error) return reject(error)
-                resolve(results)
+            ordenes = await new Promise((resolve, reject) => {
+                connection.query(queryOrdenes, [dids], (error, results) => {
+                    if (error) return reject(error)
+                    resolve(results)
+                })
             })
-        })
+        }
 
         // Mapeamos los resultados
         let enviosMap = {}
@@ -159,18 +164,21 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
         })
 
         // Agregamos los datos de fulfillment
-        ordenes.forEach((orden) => {
-            if (enviosMap[orden.didEnvio]) {
-                enviosMap[orden.didEnvio].fullfillment.push({
-                    sku: orden.sku || null,
-                    ean: orden.ean || null,
-                    descripcion: orden.descripcion || null,
-                    cantidad: orden.cantidad || 1,
-                })
-            }
-        })
+        if (ordenes.length > 0) {
+            ordenes.forEach((orden) => {
+                if (enviosMap[orden.didEnvio]) {
+                    enviosMap[orden.didEnvio].fullfillment.push({
+                        sku: orden.sku || null,
+                        ean: orden.ean || null,
+                        descripcion: orden.descripcion || null,
+                        cantidad: orden.cantidad || 1,
+                    })
+                }
+            })
 
-        // Convertimos el objeto a array
+            // Convertimos el objeto a array
+        }
+
         arrEnvios = Object.values(enviosMap)
 
         connection.end()
