@@ -2,18 +2,21 @@ const QRCode = require("qrcode")
 const SVGtoPDF = require("svg-to-pdfkit")
 
 const { iconCalendarChico, iconNombre, iconTelefono, iconUbicacion } = require("../../utils/icons.js")
-const { esDatoValido, cortarTexto } = require("../../utils/funciones.js")
+const { esDatoValido, cortarTexto, tamañoSegunLargo } = require("../../utils/funciones.js")
 const { colorGrisClaro, colorGrisOscuro } = require("../../utils/colores.js")
 
 //ETIQUETA 10x10 CON FULLFILLMENT PREMIUM
 
 const e10x10FF = async (doc, objData) => {
-    let { nombreFantasia, logo, camposEspeciales, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fullfillment } = objData
+    let { nombreFantasia, logo, camposEspeciales, ciudad, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fullfillment } = objData
+
+    localidad = esDatoValido(ciudad) ? ciudad : localidad
+    direccion = esDatoValido(ciudad) && esDatoValido(localidad) ? `${direccion}, ${localidad}` : direccion
 
     for (let i = 0; i < bultos; i++) {
         distanciaAncho1 = 80
         anchoContainer1 = 110
-        anchoCaracteres1 = 18
+        anchoCaracteres1 = 20
         anchoCaracteres2 = 15
 
         if (esDatoValido(qr)) {
@@ -63,27 +66,35 @@ const e10x10FF = async (doc, objData) => {
         doc.roundedRect(distanciaAncho1, containerSiguiente1(3), anchoContainer1, altoContainer1, borderRadius1).fillAndStroke(colorGrisClaro, colorGrisClaro)
 
         doc.fillAndStroke("white", "white")
-        doc.fontSize(tamañoFuente1)
+        doc.fontSize(tamañoSegunLargo(localidad, tamañoFuente1, anchoCaracteres1))
             .font("Helvetica-Bold")
-            .text(esDatoValido(localidad) ? cortarTexto(localidad.toUpperCase(), anchoCaracteres1) : "Sin información", distanciaAncho1, posicionAltoTexto1(0), { baseline: "middle", lineBreak: false, width: anchoContainer1, align: "center" })
+            .text(esDatoValido(localidad) ? cortarTexto(localidad.toUpperCase(), anchoCaracteres1 + 5) : "Sin información", distanciaAncho1, posicionAltoTexto1(0), { baseline: "middle", lineBreak: false, width: anchoContainer1, align: "center" })
 
         doc.fillAndStroke("black", "black")
 
         SVGtoPDF(doc, iconCalendarChico, posicionAnchoTexto1, posicionAltoTexto1(0) + 13)
 
-        doc.fontSize(tamañoFuente1)
+        doc.fontSize(tamañoSegunLargo(fecha, tamañoFuente1, 15))
             .font("Helvetica-Bold")
             .text(esDatoValido(fecha) ? cortarTexto(fecha, anchoCaracteres2) : "Sin información", posicionAnchoTexto1 + 20, posicionAltoTexto1(1), { baseline: "middle", lineBreak: false })
 
-        doc.fontSize(tamañoFuente1).font("Helvetica").text("Venta:", posicionAnchoTexto1, posicionAltoTexto1(2), { baseline: "middle", lineBreak: false })
-        doc.fontSize(tamañoFuente1)
-            .font("Helvetica-Bold")
-            .text(esDatoValido(nroVenta) ? cortarTexto(nroVenta, anchoCaracteres2) : "Sin información", posicionAnchoTexto1 + 25, posicionAltoTexto1(2), { baseline: "middle", lineBreak: false })
+        let tamañoVenta = tamañoSegunLargo("Venta: " + nroVenta, tamañoFuente1, 22)
+        doc.fontSize(tamañoVenta)
+        let anchoTextoVenta = doc.widthOfString("Venta:", { font: "Helvetica", size: tamañoVenta })
 
-        doc.fontSize(tamañoFuente1).font("Helvetica").text("Envio:", posicionAnchoTexto1, posicionAltoTexto1(3), { baseline: "middle", lineBreak: false })
-        doc.fontSize(tamañoFuente1)
+        doc.fontSize(tamañoVenta).font("Helvetica").text("Venta:", posicionAnchoTexto1, posicionAltoTexto1(2), { baseline: "middle", lineBreak: false })
+        doc.fontSize(tamañoVenta)
             .font("Helvetica-Bold")
-            .text(esDatoValido(nroEnvio) ? cortarTexto(nroEnvio, anchoCaracteres2) : "Sin información", posicionAnchoTexto1 + 25, posicionAltoTexto1(3), { baseline: "middle", lineBreak: false })
+            .text(esDatoValido(nroVenta) ? cortarTexto(nroVenta, 23) : "Sin información", posicionAnchoTexto1 + anchoTextoVenta, posicionAltoTexto1(2), { baseline: "middle", lineBreak: false })
+
+        let tamañoEnvio = tamañoSegunLargo("Envio: " + nroEnvio, tamañoFuente1, 22)
+        doc.fontSize(tamañoEnvio)
+        let anchoTextoEnvio = doc.widthOfString("Envio:", { font: "Helvetica", size: tamañoEnvio })
+
+        doc.fontSize(tamañoEnvio).font("Helvetica").text("Envio:", posicionAnchoTexto1, posicionAltoTexto1(3), { baseline: "middle", lineBreak: false })
+        doc.fontSize(tamañoEnvio)
+            .font("Helvetica-Bold")
+            .text(esDatoValido(nroEnvio) ? cortarTexto(nroEnvio, 23) : "Sin información", posicionAnchoTexto1 + anchoTextoEnvio, posicionAltoTexto1(3), { baseline: "middle", lineBreak: false })
 
         doc.fontSize(tamañoFuente1)
             .font("Helvetica-Bold")
@@ -127,21 +138,24 @@ const e10x10FF = async (doc, objData) => {
 
         SVGtoPDF(doc, iconNombre, posicionAnchoTexto2, posicionAltoTexto2(0) - 5)
 
-        doc.fontSize(tamañoFuente2)
+        let tamañoNombre = tamañoSegunLargo(nombre, tamañoFuente2, 24)
+        doc.fontSize(tamañoNombre)
             .font("Helvetica-Bold")
-            .text(esDatoValido(nombre) ? cortarTexto(nombre, 19) : "Sin información", posicionAnchoTexto2 + 12, posicionAltoTexto2(0), { baseline: "middle", lineBreak: false })
+            .text(esDatoValido(nombre) ? cortarTexto(nombre, 33) : "Sin información", posicionAnchoTexto2 + 12, posicionAltoTexto2(0), { baseline: "middle", lineBreak: false })
 
         SVGtoPDF(doc, iconTelefono, 145 + padding2, posicionAltoTexto2(0) - 5)
 
-        doc.fontSize(tamañoFuente2)
+        let tamañoNumero = tamañoSegunLargo(nroTelefono, tamañoFuente2, 24)
+        doc.fontSize(tamañoNumero)
             .font("Helvetica-Bold")
-            .text(esDatoValido(nroTelefono) ? cortarTexto(nroTelefono, 19) : "Sin información", 155 + padding2, posicionAltoTexto2(0), { baseline: "middle", lineBreak: false })
+            .text(esDatoValido(nroTelefono) ? cortarTexto(nroTelefono, 33) : "Sin información", 155 + padding2, posicionAltoTexto2(0), { baseline: "middle", lineBreak: false })
 
         SVGtoPDF(doc, iconUbicacion, posicionAnchoTexto2, posicionAltoTexto2(1) - 5)
 
-        doc.fontSize(tamañoFuente2)
+        let tamañoDireccion = tamañoSegunLargo(direccion, tamañoFuente2, 50)
+        doc.fontSize(tamañoDireccion)
             .font("Helvetica-Bold")
-            .text(`${esDatoValido(direccion) ? cortarTexto(direccion, 35) : "Sin información"} ${esDatoValido(cp) ? "CP: " + cortarTexto(cp, 5) : ""}`, posicionAnchoTexto2 + 12, posicionAltoTexto2(1), { baseline: "middle", lineBreak: false })
+            .text(`${esDatoValido(direccion) ? cortarTexto(direccion, 70) : "Sin información"} ${esDatoValido(cp) ? "CP: " + cp : ""}`, posicionAnchoTexto2 + 12, posicionAltoTexto2(1), { baseline: "middle", lineBreak: false })
 
         doc.fontSize(tamañoFuente2 - 2)
             .font("Helvetica-Bold")
@@ -236,7 +250,7 @@ const e10x10FF = async (doc, objData) => {
                     .text(esDatoValido(elemento["ean"]) ? cortarTexto(elemento["ean"], 11) : "Sin información", distanciaAncho4 + 52 + margin4 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
                 doc.fontSize(tamañoFuente4)
                     .font("Helvetica")
-                    .text(esDatoValido(elemento["descripcion"]) ? cortarTexto(elemento["descripcion"], 24) : "Sin información", distanciaAncho4 + 104 + margin4 * 2 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
+                    .text(esDatoValido(elemento["descripcion"]) ? cortarTexto(elemento["descripcion"].toLowerCase(), 35) : "Sin información", distanciaAncho4 + 104 + margin4 * 2 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
                 doc.fontSize(tamañoFuente4)
                     .font("Helvetica")
                     .text(esDatoValido(elemento["cantidad"]) ? cortarTexto(elemento["cantidad"], 11) : "Sin información", distanciaAncho4 + 211 + margin4 * 3 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })

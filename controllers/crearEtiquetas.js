@@ -31,6 +31,7 @@ const crearEtiquetas = async (tipoEtiqueta, calidad, logistica, envios, res) => 
                     nombre: paquete.destination_receiver_name,
                     nroTelefono: paquete.destination_receiver_phone,
                     direccion: paquete.address_line,
+                    ciudad: paquete.ciudad,
                     cp: paquete.cp,
                     observacion: paquete.obs,
                     total: paquete.monto_total_a_cobrar,

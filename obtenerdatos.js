@@ -94,7 +94,7 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
 
         // Query para los envios
         let query = `
-                    SELECT e.*, edd.localidad, edd.address_line, edd.cp, eo.observacion, c.nombre_fantasia, ec.valor AS campo_valor, sdp.nombre AS campo_nombre
+                    SELECT e.*, edd.localidad, edd.ciudad, edd.address_line, edd.cp, eo.observacion, c.nombre_fantasia, ec.valor AS campo_valor, sdp.nombre AS campo_nombre
                     FROM envios e
                     LEFT JOIN envios_direcciones_destino edd ON e.did = edd.didEnvio AND edd.superado = 0 AND edd.elim = 0
                     LEFT JOIN envios_observaciones eo ON e.did = eo.didEnvio AND eo.superado = 0 AND eo.elim = 0
@@ -135,49 +135,83 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
         envios.forEach((envio) => {
             if (!enviosMap[envio.did]) {
                 enviosMap[envio.did] = {
-                    localidad: envio.localidad || null,
-                    fecha_inicio: envio.fecha_inicio || null,
-                    ml_venta_id: envio.ml_venta_id || null,
-                    ml_shipment_id: envio.ml_shipment_id || null,
-                    destination_receiver_name: envio.destination_receiver_name || null,
-                    destination_receiver_phone: envio.destination_receiver_phone || null,
-                    address_line: envio.address_line || null,
-                    cp: envio.cp || null,
-                    obs: envio.observacion || null,
-                    monto_total_a_cobrar: envio.monto_total_a_cobrar || null,
-                    peso: envio.peso || null,
-                    remitente: envio.nombre_fantasia || null,
+                    // localidad: envio.localidad || null,
+                    // fecha_inicio: envio.fecha_inicio || null,
+                    // ml_venta_id: envio.ml_venta_id || null,
+                    // ml_shipment_id: envio.ml_shipment_id || null,
+                    // destination_receiver_name: envio.destination_receiver_name || null,
+                    // destination_receiver_phone: envio.destination_receiver_phone || null,
+                    // ciudad: envio.ciudad || null,
+                    // address_line: envio.address_line || null,
+                    // cp: envio.cp || null,
+                    // obs: envio.observacion || null,
+                    // monto_total_a_cobrar: envio.monto_total_a_cobrar || null,
+                    // peso: envio.peso || null,
+                    // remitente: envio.nombre_fantasia || null,
+                    // qr: envio.ml_qr_seguridad || null,
+                    // bultos: envio.bultos || null,
+                    // camposEspeciales: [],
+                    // fullfillment: [],
+                    localidad: "Buenoas airdas",
+                    fecha_inicio: "27/09/1998",
+                    ml_venta_id: "464569123456789",
+                    ml_shipment_id: "4165654689987978746521321321321",
+                    destination_receiver_name: "Agustin mariano 1234asdasdasdsadsdasdfasd 1234asdasdasdsadsdasdfasd",
+                    destination_receiver_phone: "12345678901234576890123456789012345678901",
+                    ciudad: "hfajdshfjkasd asdfasdfasd",
+                    address_line: "asdfj asdasdas asdas asdfasdfasdf zxc<zxcz<c<zxcd",
+                    cp: "12345",
+                    obs: "dfsdfkjabsdfjla jnsdfjknasf jnsdfjknasf knsdfjlkasdf lkasdnflknasd lkafnlkasjñdfkad lkanjdflknasdlkfnlkasdnflknasdf",
+                    monto_total_a_cobrar: "123456",
+                    peso: "12345678901234576890123456789012345678901",
+                    remitente: "fhajlksdfhjkasdf aslkdjfasjlñdf alñjsdflñasdf ojasdflñsd",
                     qr: envio.ml_qr_seguridad || null,
                     bultos: envio.bultos || null,
-                    camposEspeciales: [],
-                    fullfillment: [],
+                    camposEspeciales: [
+                        { nombre: "lasdflkasdflasdjfhsdlk jhsdflkjh asdf hlksha lkasd asdfasdfasdff", valor: "hladfsjklfhjkasdfkalshdfa hsdflkh adfjlk asdfasdfasdaadghdflkash" },
+                        { nombre: "lasdflkasdflasdjfh", valor: "hladfsjklfhja hsdflkh adfjlk xczxxc fsdfsf dfd" },
+                    ],
+                    fullfillment: [
+                        // {
+                        //     sku: "1231321654654798979879653214654",
+                        //     ean: "656546546984646546513213216546984",
+                        //     descripcion: "SDFASDFASfbhasjdlkhflaks asdhflkjasdf jhldjkahf jhldjkahfjhldjkahf  jkbalkjnasdf oikdsjhflkasjdflasdjf",
+                        //     cantidad: "1234567890",
+                        // },
+                        // {
+                        //     sku: "1231321654654798979879653214654",
+                        //     ean: "656546546984646546513213216546984",
+                        //     descripcion: "fbhasjdlkhflaks asdhflkjasdf jhldjkahf jhldjkahfjhldjkahf  jkbalkjnasdf oikdsjhflkasjdflasdjf",
+                        //     cantidad: "1234567890",
+                        // },
+                    ],
                 }
             }
 
             // Agregamos los campos especiales si los hay
-            if (envio.campo_nombre) {
-                enviosMap[envio.did].camposEspeciales.push({
-                    nombre: envio.campo_nombre,
-                    valor: envio.campo_valor,
-                })
-            }
+            // if (envio.campo_nombre) {
+            //     enviosMap[envio.did].camposEspeciales.push({
+            //         nombre: envio.campo_nombre,
+            //         valor: envio.campo_valor,
+            //     })
+            // }
         })
 
         // Agregamos los datos de fulfillment
-        if (ordenes.length > 0) {
-            ordenes.forEach((orden) => {
-                if (enviosMap[orden.didEnvio]) {
-                    enviosMap[orden.didEnvio].fullfillment.push({
-                        sku: orden.sku || null,
-                        ean: orden.ean || null,
-                        descripcion: orden.descripcion || null,
-                        cantidad: orden.cantidad || 1,
-                    })
-                }
-            })
+        // if (ordenes.length > 0) {
+        //     ordenes.forEach((orden) => {
+        //         if (enviosMap[orden.didEnvio]) {
+        //             enviosMap[orden.didEnvio].fullfillment.push({
+        //                 sku: orden.sku || null,
+        //                 ean: orden.ean || null,
+        //                 descripcion: orden.descripcion || null,
+        //                 cantidad: orden.cantidad || 1,
+        //             })
+        //         }
+        //     })
 
-            // Convertimos el objeto a array
-        }
+        // Convertimos el objeto a array
+        // }
 
         arrEnvios = Object.values(enviosMap)
 

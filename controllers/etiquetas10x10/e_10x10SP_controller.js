@@ -2,18 +2,21 @@ const QRCode = require("qrcode")
 const SVGtoPDF = require("svg-to-pdfkit")
 
 const { iconCalendarChico, iconNombreGrande, iconTelefonoGrande, iconUbicacionGrande } = require("../../utils/icons.js")
-const { esDatoValido, cortarTexto } = require("../../utils/funciones.js")
+const { esDatoValido, cortarTexto, tamañoSegunLargo } = require("../../utils/funciones.js")
 const { colorGrisClaro, colorGrisOscuro } = require("../../utils/colores.js")
 
 //ETIQUETA 10x10 CON SOLO PREMIUM
 
 const e10x10SP = async (doc, objData) => {
-    let { nombreFantasia, logo, camposEspeciales, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fullfillment } = objData
+    let { nombreFantasia, logo, camposEspeciales, ciudad, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fullfillment } = objData
+
+    localidad = esDatoValido(ciudad) ? ciudad : localidad
+    direccion = esDatoValido(ciudad) && esDatoValido(localidad) ? `${direccion}, ${localidad}` : direccion
 
     for (let i = 0; i < bultos; i++) {
         distanciaAncho1 = 80
         anchoContainer1 = 110
-        anchoCaracteres1 = 18
+        anchoCaracteres1 = 20
         anchoCaracteres2 = 15
 
         if (esDatoValido(qr)) {
@@ -63,26 +66,34 @@ const e10x10SP = async (doc, objData) => {
         doc.roundedRect(distanciaAncho1, containerSiguiente1(3), anchoContainer1, altoContainer1, borderRadius1).fillAndStroke(colorGrisClaro, colorGrisClaro)
 
         doc.fillAndStroke("white", "white")
-        doc.fontSize(tamañoFuente1)
+        doc.fontSize(tamañoSegunLargo(localidad, tamañoFuente1, anchoCaracteres1))
             .font("Helvetica-Bold")
-            .text(esDatoValido(localidad) ? cortarTexto(localidad.toUpperCase(), anchoCaracteres1) : "Sin información", distanciaAncho1, posicionAltoTexto1(0), { baseline: "middle", lineBreak: false, width: anchoContainer1, align: "center" })
+            .text(esDatoValido(localidad) ? cortarTexto(localidad.toUpperCase(), anchoCaracteres1 + 5) : "Sin información", distanciaAncho1, posicionAltoTexto1(0), { baseline: "middle", lineBreak: false, width: anchoContainer1, align: "center" })
 
         SVGtoPDF(doc, iconCalendarChico, posicionAnchoTexto1, posicionAltoTexto1(0) + 13)
 
         doc.fillAndStroke("black", "black")
-        doc.fontSize(tamañoFuente1)
+        doc.fontSize(tamañoSegunLargo(fecha, tamañoFuente1, 15))
             .font("Helvetica-Bold")
             .text(esDatoValido(fecha) ? cortarTexto(fecha, anchoCaracteres2) : "Sin información", posicionAnchoTexto1 + 20, posicionAltoTexto1(1), { baseline: "middle", lineBreak: false })
 
-        doc.fontSize(tamañoFuente1).font("Helvetica").text("Venta:", posicionAnchoTexto1, posicionAltoTexto1(2), { baseline: "middle", lineBreak: false })
-        doc.fontSize(tamañoFuente1)
-            .font("Helvetica-Bold")
-            .text(esDatoValido(nroVenta) ? cortarTexto(nroVenta, anchoCaracteres2) : "Sin información", posicionAnchoTexto1 + 25, posicionAltoTexto1(2), { baseline: "middle", lineBreak: false })
+        let tamañoVenta = tamañoSegunLargo("Venta: " + nroVenta, tamañoFuente1, 22)
+        doc.fontSize(tamañoVenta)
+        let anchoTextoVenta = doc.widthOfString("Venta:", { font: "Helvetica", size: tamañoVenta })
 
-        doc.fontSize(tamañoFuente1).font("Helvetica").text("Envio:", posicionAnchoTexto1, posicionAltoTexto1(3), { baseline: "middle", lineBreak: false })
-        doc.fontSize(tamañoFuente1)
+        doc.fontSize(tamañoVenta).font("Helvetica").text("Venta:", posicionAnchoTexto1, posicionAltoTexto1(2), { baseline: "middle", lineBreak: false })
+        doc.fontSize(tamañoVenta)
             .font("Helvetica-Bold")
-            .text(esDatoValido(nroEnvio) ? cortarTexto(nroEnvio, anchoCaracteres2) : "Sin información", posicionAnchoTexto1 + 25, posicionAltoTexto1(3), { baseline: "middle", lineBreak: false })
+            .text(esDatoValido(nroVenta) ? cortarTexto(nroVenta, 23) : "Sin información", posicionAnchoTexto1 + anchoTextoVenta, posicionAltoTexto1(2), { baseline: "middle", lineBreak: false })
+
+        let tamañoEnvio = tamañoSegunLargo("Envio: " + nroEnvio, tamañoFuente1, 22)
+        doc.fontSize(tamañoEnvio)
+        let anchoTextoEnvio = doc.widthOfString("Envio:", { font: "Helvetica", size: tamañoEnvio })
+
+        doc.fontSize(tamañoEnvio).font("Helvetica").text("Envio:", posicionAnchoTexto1, posicionAltoTexto1(3), { baseline: "middle", lineBreak: false })
+        doc.fontSize(tamañoEnvio)
+            .font("Helvetica-Bold")
+            .text(esDatoValido(nroEnvio) ? cortarTexto(nroEnvio, 23) : "Sin información", posicionAnchoTexto1 + anchoTextoEnvio, posicionAltoTexto1(3), { baseline: "middle", lineBreak: false })
 
         doc.fontSize(tamañoFuente1)
             .font("Helvetica-Bold")

@@ -1,7 +1,7 @@
 const QRCode = require("qrcode")
 const SVGtoPDF = require("svg-to-pdfkit")
 
-const { esDatoValido, cortarTexto } = require("../../utils/funciones.js")
+const { esDatoValido, cortarTexto, tamañoSegunLargo } = require("../../utils/funciones.js")
 const { colorGrisClaro, colorGrisOscuro } = require("../../utils/colores.js")
 const { flechaGuia } = require("../../utils/icons.js")
 

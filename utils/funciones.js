@@ -11,4 +11,12 @@ function cortarTexto(texto, caracteres) {
     return texto.length > caracteres ? texto.slice(0, caracteres) + "..." : texto
 }
 
-module.exports = { esDatoValido, convertirFecha, cortarTexto }
+function tamañoSegunLargo(texto, tamaño, maximo) {
+    if (esDatoValido(texto) && texto.length > maximo) {
+        tamaño -= 2
+    }
+
+    return tamaño
+}
+
+module.exports = { esDatoValido, convertirFecha, cortarTexto, tamañoSegunLargo }

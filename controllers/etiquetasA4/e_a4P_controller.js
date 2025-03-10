@@ -2,13 +2,16 @@ const QRCode = require("qrcode")
 const SVGtoPDF = require("svg-to-pdfkit")
 
 const { iconCalendarChico, iconNombre, iconTelefono, iconUbicacion, iconNoQr } = require("../../utils/icons.js")
-const { esDatoValido, cortarTexto } = require("../../utils/funciones.js")
+const { esDatoValido, cortarTexto, tamañoSegunLargo } = require("../../utils/funciones.js")
 const { colorGrisClaro, colorGrisOscuro } = require("../../utils/colores.js")
 
 // ! ETIQUETA a4 CON AMBOS PREMIUM
 
 const ea4P = async (doc, objData, index, distanciaAlto1, cantFullfilmentPag, altoContenedor, mayorPorPag) => {
-    let { nombreFantasia, logo, camposEspeciales, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fullfillment } = objData
+    let { nombreFantasia, logo, camposEspeciales, ciudad, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fullfillment } = objData
+
+    direccion = esDatoValido(ciudad) && esDatoValido(localidad) ? `${direccion}, ${localidad}` : direccion
+    localidad = esDatoValido(ciudad) ? ciudad : localidad
 
     for (let i = 0; i < bultos; i++) {
         cantFullfilmentPag += camposEspeciales.length > 5 ? fullfillment.length + 3 : fullfillment.length + Math.ceil(camposEspeciales.length / 2)
@@ -76,32 +79,44 @@ const ea4P = async (doc, objData, index, distanciaAlto1, cantFullfilmentPag, alt
         doc.roundedRect(distanciaAncho1, containerSiguiente1(3), anchoContainer1, altoContainer1, borderRadius1).fillAndStroke(colorGrisClaro, colorGrisClaro)
 
         doc.fillAndStroke("white", "white")
-        doc.fontSize(tamañoFuente1)
+        doc.fontSize(tamañoSegunLargo(localidad, tamañoFuente1, 13))
             .font("Helvetica-Bold")
-            .text(esDatoValido(localidad) ? cortarTexto(localidad.toUpperCase(), 13) : "Sin información", distanciaAncho, posicionAltoTexto1(0), { baseline: "middle", lineBreak: false, width: 80, align: "center" })
+            .text(esDatoValido(localidad) ? cortarTexto(localidad.toUpperCase(), 18) : "Sin información", distanciaAncho, posicionAltoTexto1(0), { baseline: "middle", lineBreak: false, width: 80, align: "center" })
 
         doc.fillAndStroke("black", "black")
 
         SVGtoPDF(doc, iconCalendarChico, posicionAnchoTexto1, posicionAltoTexto1(0) - 5)
 
-        doc.fontSize(tamañoFuente1)
+        doc.fontSize(tamañoSegunLargo(fecha, tamañoFuente1, 15))
             .font("Helvetica-Bold")
-            .text(esDatoValido(fecha) ? cortarTexto(fecha, 15) : "Sin información", posicionAnchoTexto1 + 15, posicionAltoTexto1(0), { baseline: "middle", lineBreak: false })
+            .text(esDatoValido(fecha) ? fecha : "Sin información", posicionAnchoTexto1 + 15, posicionAltoTexto1(0), { baseline: "middle", lineBreak: false })
 
-        doc.fontSize(tamañoFuente1).font("Helvetica").text("Remitente:", posicionAnchoTexto1, posicionAltoTexto1(1), { baseline: "middle", lineBreak: false })
-        doc.fontSize(tamañoFuente1)
-            .font("Helvetica-Bold")
-            .text(esDatoValido(remitente) ? cortarTexto(remitente, 10) : "Sin información", posicionAnchoTexto1 + 40, posicionAltoTexto1(1), { baseline: "middle", lineBreak: false })
+        let tamañoRem = tamañoSegunLargo("Remitente: " + remitente, tamañoFuente1, 21)
+        doc.fontSize(tamañoRem)
+        let anchoTextoRem = doc.widthOfString("Remitente:", { font: "Helvetica", size: tamañoRem })
 
-        doc.fontSize(tamañoFuente1).font("Helvetica").text("Venta:", posicionAnchoTexto1, posicionAltoTexto1(2), { baseline: "middle", lineBreak: false })
-        doc.fontSize(tamañoFuente1)
+        doc.fontSize(tamañoRem).font("Helvetica").text("Remitente:", posicionAnchoTexto1, posicionAltoTexto1(1), { baseline: "middle", lineBreak: false })
+        doc.fontSize(tamañoRem)
             .font("Helvetica-Bold")
-            .text(esDatoValido(nroVenta) ? cortarTexto(nroVenta, 13) : "Sin información", posicionAnchoTexto1 + 25, posicionAltoTexto1(2), { baseline: "middle", lineBreak: false })
+            .text(esDatoValido(remitente) ? cortarTexto(remitente, 22) : "Sin información", posicionAnchoTexto1 + anchoTextoRem, posicionAltoTexto1(1), { baseline: "middle", lineBreak: false })
 
-        doc.fontSize(tamañoFuente1).font("Helvetica").text("Envio:", posicionAnchoTexto1, posicionAltoTexto1(3), { baseline: "middle", lineBreak: false })
-        doc.fontSize(tamañoFuente1)
+        let tamañoVenta = tamañoSegunLargo("Venta: " + nroVenta, tamañoFuente1, 20)
+        doc.fontSize(tamañoVenta)
+        let anchoTextoVenta = doc.widthOfString("Venta:", { font: "Helvetica", size: tamañoVenta })
+
+        doc.fontSize(tamañoVenta).font("Helvetica").text("Venta:", posicionAnchoTexto1, posicionAltoTexto1(2), { baseline: "middle", lineBreak: false })
+        doc.fontSize(tamañoVenta)
             .font("Helvetica-Bold")
-            .text(esDatoValido(nroEnvio) ? cortarTexto(nroEnvio, 13) : "Sin información", posicionAnchoTexto1 + 25, posicionAltoTexto1(3), { baseline: "middle", lineBreak: false })
+            .text(esDatoValido(nroVenta) ? cortarTexto(nroVenta, 23) : "Sin información", posicionAnchoTexto1 + anchoTextoVenta, posicionAltoTexto1(2), { baseline: "middle", lineBreak: false })
+
+        let tamañoEnvio = tamañoSegunLargo("Envio: " + nroEnvio, tamañoFuente1, 20)
+        doc.fontSize(tamañoEnvio)
+        let anchoTextoEnvio = doc.widthOfString("Envio:", { font: "Helvetica", size: tamañoEnvio })
+
+        doc.fontSize(tamañoEnvio).font("Helvetica").text("Envio:", posicionAnchoTexto1, posicionAltoTexto1(3), { baseline: "middle", lineBreak: false })
+        doc.fontSize(tamañoEnvio)
+            .font("Helvetica-Bold")
+            .text(esDatoValido(nroEnvio) ? cortarTexto(nroEnvio, 23) : "Sin información", posicionAnchoTexto1 + anchoTextoEnvio, posicionAltoTexto1(3), { baseline: "middle", lineBreak: false })
 
         doc.fontSize(tamañoFuente1 + 2)
             .font("Helvetica-Bold")
@@ -138,26 +153,33 @@ const ea4P = async (doc, objData, index, distanciaAlto1, cantFullfilmentPag, alt
 
         SVGtoPDF(doc, iconNombre, posicionAnchoTexto2, posicionAltoTexto2(0) - 5)
 
-        doc.fontSize(tamañoFuente2)
+        let tamañoNombre = tamañoSegunLargo(nombre, tamañoFuente1, 40)
+        doc.fontSize(tamañoNombre)
             .font("Helvetica-Bold")
-            .text(esDatoValido(nombre) ? cortarTexto(nombre, 30) : "Sin información", posicionAnchoTexto2 + 12, posicionAltoTexto2(0), { baseline: "middle", lineBreak: false })
+            .text(esDatoValido(nombre) ? cortarTexto(nombre, 60) : "Sin información", posicionAnchoTexto2 + 12, posicionAltoTexto2(0), { baseline: "middle", lineBreak: false })
 
         SVGtoPDF(doc, iconTelefono, posicionAnchoTexto2, posicionAltoTexto2(1) - 5)
 
-        doc.fontSize(tamañoFuente2)
+        let tamañoTelefono = tamañoSegunLargo(nroTelefono, tamañoFuente1, 40)
+        doc.fontSize(tamañoTelefono)
             .font("Helvetica-Bold")
-            .text(esDatoValido(nroTelefono) ? cortarTexto(nroTelefono, 30) : "Sin información", posicionAnchoTexto2 + 12, posicionAltoTexto2(1), { baseline: "middle", lineBreak: false })
+            .text(esDatoValido(nroTelefono) ? cortarTexto(nroTelefono, 60) : "Sin información", posicionAnchoTexto2 + 12, posicionAltoTexto2(1), { baseline: "middle", lineBreak: false })
 
         SVGtoPDF(doc, iconUbicacion, posicionAnchoTexto2, posicionAltoTexto2(2) - 5)
 
-        doc.fontSize(tamañoFuente2)
+        let tamañoDireccion = tamañoSegunLargo(direccion, tamañoFuente1, 40)
+        doc.fontSize(tamañoDireccion)
             .font("Helvetica-Bold")
-            .text(`${esDatoValido(direccion) ? cortarTexto(direccion, 23) : "Sin información"} ${esDatoValido(cp) ? "CP: " + cortarTexto(cp, 5) : ""}`, posicionAnchoTexto2 + 12, posicionAltoTexto2(2), { baseline: "middle", lineBreak: false })
+            .text(`${esDatoValido(direccion) ? cortarTexto(direccion, 50) : "Sin información"} ${esDatoValido(cp) ? "CP: " + cortarTexto(cp, 5) : ""}`, posicionAnchoTexto2 + 12, posicionAltoTexto2(2), { baseline: "middle", lineBreak: false })
 
-        doc.fontSize(tamañoFuente2).font("Helvetica-Bold").text("Peso declarado:", posicionAnchoTexto2, posicionAltoTexto2(3), { baseline: "middle", lineBreak: false })
-        doc.fontSize(tamañoFuente2)
+        let tamañoPeso = tamañoSegunLargo("Peso declarado: " + peso, tamañoFuente1, 40)
+        doc.fontSize(tamañoPeso)
+        let anchoTextoPeso = doc.widthOfString("Peso declarado:", { font: "Helvetica", size: tamañoPeso })
+
+        doc.fontSize(tamañoPeso).font("Helvetica-Bold").text("Peso declarado:", posicionAnchoTexto2, posicionAltoTexto2(3), { baseline: "middle", lineBreak: false })
+        doc.fontSize(tamañoPeso)
             .font("Helvetica")
-            .text(esDatoValido(peso) ? cortarTexto(peso, 20) : "Sin información", posicionAnchoTexto2 + 65, posicionAltoTexto2(3), { baseline: "middle", lineBreak: false })
+            .text(esDatoValido(peso) ? cortarTexto(peso, 50) : "Sin información", posicionAnchoTexto2 + anchoTextoPeso, posicionAltoTexto2(3), { baseline: "middle", lineBreak: false })
 
         doc.fontSize(tamañoFuente2 - 2)
             .font("Helvetica-Bold")
@@ -203,28 +225,30 @@ const ea4P = async (doc, objData, index, distanciaAlto1, cantFullfilmentPag, alt
             distanciaCE = 0
             await camposEspeciales.map((campo) => {
                 if (siguiente < 6) {
-                    let anchoTextoEsp = doc.widthOfString(esDatoValido(campo["nombre"]) ? cortarTexto(campo["nombre"], 15) + ":" : "CampoEsp:", { font: "Helvetica-Bold", size: tamañoFuente3 })
+                    let tamañoCE = tamañoSegunLargo(campo["nombre"] + campo["valor"], tamañoFuente3, 40)
+                    doc.fontSize(tamañoCE)
+                    let anchoTextoEsp = doc.widthOfString(campo["nombre"] ? cortarTexto(campo["nombre"], 38) + ":" : "CampoEsp:", { font: "Helvetica-Bold", size: tamañoCE })
 
                     if (siguiente == 0 || siguiente % 2 == 0) {
                         altoContenedor += 19
                         altoSumaCamposEspeciales += 19
                         doc.roundedRect(distanciaAncho3, containerSiguiente3(distanciaCE), 261, altoContainer3, borderRadius3).fillAndStroke(colorGrisClaro, colorGrisClaro)
                         doc.fillAndStroke("black", "black")
-                        doc.fontSize(tamañoFuente3)
+                        doc.fontSize(tamañoCE)
                             .font("Helvetica-Bold")
-                            .text(esDatoValido(campo["nombre"]) ? cortarTexto(campo["nombre"], 15) + ":" : "CampoEsp:", posicionAnchoTexto3, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
-                        doc.fontSize(tamañoFuente2)
+                            .text(esDatoValido(campo["nombre"]) ? cortarTexto(campo["nombre"], 38) + ":" : "CampoEsp:", posicionAnchoTexto3, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
+                        doc.fontSize(tamañoCE)
                             .font("Helvetica")
-                            .text(esDatoValido(campo["valor"]) ? cortarTexto(campo["valor"], 25) : "Sin información", posicionAnchoTexto3 + anchoTextoEsp + 4, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
+                            .text(esDatoValido(campo["valor"]) ? cortarTexto(campo["valor"], 48) : "Sin información", posicionAnchoTexto3 + anchoTextoEsp + 15, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
                     } else {
                         doc.roundedRect(261 + 38, containerSiguiente3(distanciaCE), 261, altoContainer3, borderRadius3).fillAndStroke(colorGrisClaro, colorGrisClaro)
                         doc.fillAndStroke("black", "black")
-                        doc.fontSize(tamañoFuente3)
+                        doc.fontSize(tamañoCE)
                             .font("Helvetica-Bold")
-                            .text(esDatoValido(campo["nombre"]) ? cortarTexto(campo["nombre"], 15) + ":" : "CampoEsp:", 265 + 38 + padding3, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
-                        doc.fontSize(tamañoFuente2)
+                            .text(esDatoValido(campo["nombre"]) ? cortarTexto(campo["nombre"], 38) + ":" : "CampoEsp:", 265 + 38 + padding3, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
+                        doc.fontSize(tamañoCE)
                             .font("Helvetica")
-                            .text(esDatoValido(campo["valor"]) ? cortarTexto(campo["valor"], 25) : "Sin información", 265 + 38 + padding3 + anchoTextoEsp + 4, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
+                            .text(esDatoValido(campo["valor"]) ? cortarTexto(campo["valor"], 48) : "Sin información", 265 + 38 + padding3 + anchoTextoEsp + 15, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
                         distanciaCE += 1
                     }
                     siguiente += 1
@@ -304,7 +328,7 @@ const ea4P = async (doc, objData, index, distanciaAlto1, cantFullfilmentPag, alt
                     .text(esDatoValido(elemento["ean"]) ? cortarTexto(elemento["ean"], 25) : "Sin información", distanciaAncho4 + 104 + margin4 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
                 doc.fontSize(tamañoFuente4)
                     .font("Helvetica")
-                    .text(esDatoValido(elemento["descripcion"]) ? cortarTexto(elemento["descripcion"], 48) : "Sin información", distanciaAncho4 + 208 + margin4 * 2 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
+                    .text(esDatoValido(elemento["descripcion"]) ? cortarTexto(elemento["descripcion"].toLowerCase(), 75) : "Sin información", distanciaAncho4 + 208 + margin4 * 2 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
                 doc.fontSize(tamañoFuente4)
                     .font("Helvetica")
                     .text(esDatoValido(elemento["cantidad"]) ? cortarTexto(elemento["ean"], 25) : "Sin información", distanciaAncho4 + 414 + margin4 * 3 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
