@@ -9,8 +9,8 @@ const { colorGrisClaro, colorGrisOscuro } = require("../../utils/colores.js")
 const e10x10CE = async (doc, objData) => {
     let { nombreFantasia, logo, camposEspeciales, ciudad, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fullfillment } = objData
 
-    localidad = esDatoValido(ciudad) ? ciudad : localidad
     direccion = esDatoValido(ciudad) && esDatoValido(localidad) ? `${direccion}, ${localidad}` : direccion
+    localidad = esDatoValido(ciudad) ? ciudad : localidad
 
     for (let i = 0; i < bultos; i++) {
         distanciaAncho1 = 80
@@ -201,19 +201,22 @@ const e10x10CE = async (doc, objData) => {
             siguiente = 0
             await camposEspeciales.map((campo) => {
                 if (siguiente < 5) {
+                    let tamañoCE = tamañoSegunLargo(campo["nombre"] + campo["valor"], tamañoFuente3, 68)
+                    doc.fontSize(tamañoCE)
+                    let anchoTextoEsp = doc.widthOfString(campo["nombre"] ? cortarTexto(campo["nombre"], 25) + ":" : "CampoEsp:", { font: "Helvetica-Bold", size: tamañoCE })
+
                     doc.moveTo(distanciaAncho3, containerSiguiente3(siguiente) - 3)
                         .lineTo(275, containerSiguiente3(siguiente) - 3)
                         .fill(colorGrisOscuro)
 
                     doc.fillAndStroke("black", "black")
-                    doc.fontSize(tamañoFuente3)
+                    doc.fontSize(tamañoCE)
                         .font("Helvetica-Bold")
-                        .text(esDatoValido(campo["nombre"]) ? cortarTexto(campo["nombre"], 15) + ":" : "CampoEsp:", posicionAnchoTexto3, posicionAltoTexto3(siguiente), { baseline: "middle", lineBreak: false })
-                    let anchoTextoEsp = doc.widthOfString(esDatoValido(campo["nombre"]) ? cortarTexto(campo["nombre"], 15) + ":" : "CampoEsp:", { font: "Helvetica-Bold", size: tamañoFuente3 })
+                        .text(esDatoValido(campo["nombre"]) ? cortarTexto(campo["nombre"], 25) + ":" : "CampoEsp:", posicionAnchoTexto3, posicionAltoTexto3(siguiente), { baseline: "middle", lineBreak: false })
 
-                    doc.fontSize(tamañoFuente3)
+                    doc.fontSize(tamañoCE)
                         .font("Helvetica")
-                        .text(esDatoValido(campo["valor"]) ? cortarTexto(campo["valor"], 30) : "Sin información", posicionAnchoTexto3 + anchoTextoEsp + 2, posicionAltoTexto3(siguiente), { baseline: "middle", lineBreak: false })
+                        .text(esDatoValido(campo["valor"]) ? cortarTexto(campo["valor"], 60) : "Sin información", posicionAnchoTexto3 + anchoTextoEsp + 2, posicionAltoTexto3(siguiente), { baseline: "middle", lineBreak: false })
                     siguiente += 1
                 }
             })

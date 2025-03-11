@@ -10,8 +10,8 @@ const { colorGrisClaro, colorGrisOscuro } = require("../../utils/colores.js")
 const e10x10FF = async (doc, objData) => {
     let { nombreFantasia, logo, camposEspeciales, ciudad, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fullfillment } = objData
 
-    localidad = esDatoValido(ciudad) ? ciudad : localidad
     direccion = esDatoValido(ciudad) && esDatoValido(localidad) ? `${direccion}, ${localidad}` : direccion
+    localidad = esDatoValido(ciudad) ? ciudad : localidad
 
     for (let i = 0; i < bultos; i++) {
         distanciaAncho1 = 80

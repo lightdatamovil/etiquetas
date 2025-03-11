@@ -156,21 +156,21 @@ const ea4P = async (doc, objData, index, distanciaAlto1, cantFullfilmentPag, alt
         let tamañoNombre = tamañoSegunLargo(nombre, tamañoFuente1, 40)
         doc.fontSize(tamañoNombre)
             .font("Helvetica-Bold")
-            .text(esDatoValido(nombre) ? cortarTexto(nombre, 60) : "Sin información", posicionAnchoTexto2 + 12, posicionAltoTexto2(0), { baseline: "middle", lineBreak: false })
+            .text(esDatoValido(nombre) ? cortarTexto(nombre, 55) : "Sin información", posicionAnchoTexto2 + 12, posicionAltoTexto2(0), { baseline: "middle", lineBreak: false })
 
         SVGtoPDF(doc, iconTelefono, posicionAnchoTexto2, posicionAltoTexto2(1) - 5)
 
         let tamañoTelefono = tamañoSegunLargo(nroTelefono, tamañoFuente1, 40)
         doc.fontSize(tamañoTelefono)
             .font("Helvetica-Bold")
-            .text(esDatoValido(nroTelefono) ? cortarTexto(nroTelefono, 60) : "Sin información", posicionAnchoTexto2 + 12, posicionAltoTexto2(1), { baseline: "middle", lineBreak: false })
+            .text(esDatoValido(nroTelefono) ? cortarTexto(nroTelefono, 55) : "Sin información", posicionAnchoTexto2 + 12, posicionAltoTexto2(1), { baseline: "middle", lineBreak: false })
 
         SVGtoPDF(doc, iconUbicacion, posicionAnchoTexto2, posicionAltoTexto2(2) - 5)
 
-        let tamañoDireccion = tamañoSegunLargo(direccion, tamañoFuente1, 40)
+        let tamañoDireccion = tamañoSegunLargo(direccion, tamañoFuente1, 36)
         doc.fontSize(tamañoDireccion)
             .font("Helvetica-Bold")
-            .text(`${esDatoValido(direccion) ? cortarTexto(direccion, 50) : "Sin información"} ${esDatoValido(cp) ? "CP: " + cortarTexto(cp, 5) : ""}`, posicionAnchoTexto2 + 12, posicionAltoTexto2(2), { baseline: "middle", lineBreak: false })
+            .text(`${esDatoValido(direccion) ? cortarTexto(direccion, 45) : "Sin información"} ${esDatoValido(cp) ? "CP: " + cortarTexto(cp, 5) : ""}`, posicionAnchoTexto2 + 12, posicionAltoTexto2(2), { baseline: "middle", lineBreak: false })
 
         let tamañoPeso = tamañoSegunLargo("Peso declarado: " + peso, tamañoFuente1, 40)
         doc.fontSize(tamañoPeso)
@@ -179,7 +179,7 @@ const ea4P = async (doc, objData, index, distanciaAlto1, cantFullfilmentPag, alt
         doc.fontSize(tamañoPeso).font("Helvetica-Bold").text("Peso declarado:", posicionAnchoTexto2, posicionAltoTexto2(3), { baseline: "middle", lineBreak: false })
         doc.fontSize(tamañoPeso)
             .font("Helvetica")
-            .text(esDatoValido(peso) ? cortarTexto(peso, 50) : "Sin información", posicionAnchoTexto2 + anchoTextoPeso, posicionAltoTexto2(3), { baseline: "middle", lineBreak: false })
+            .text(esDatoValido(peso) ? cortarTexto(peso, 45) : "Sin información", posicionAnchoTexto2 + anchoTextoPeso, posicionAltoTexto2(3), { baseline: "middle", lineBreak: false })
 
         doc.fontSize(tamañoFuente2 - 2)
             .font("Helvetica-Bold")

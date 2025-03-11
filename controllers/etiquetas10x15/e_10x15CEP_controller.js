@@ -10,8 +10,8 @@ const { colorGrisClaro, colorGrisOscuro } = require("../../utils/colores.js")
 const e10x15CEP = async (doc, objData) => {
     let { nombreFantasia, logo, camposEspeciales, ciudad, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fullfillment } = objData
 
-    localidad = esDatoValido(ciudad) ? ciudad : localidad
     direccion = esDatoValido(ciudad) && esDatoValido(localidad) ? `${direccion}, ${localidad}` : direccion
+    localidad = esDatoValido(ciudad) ? ciudad : localidad
 
     for (let i = 0; i < bultos; i++) {
         distanciaAncho1 = 129
@@ -194,7 +194,7 @@ const e10x15CEP = async (doc, objData) => {
             siguiente = 0
             await camposEspeciales.map((campo) => {
                 if (siguiente < 5) {
-                    let tamañoCE = tamañoSegunLargo(campo["nombre"] + campo["valor"], tamañoFuente3, 68)
+                    let tamañoCE = tamañoSegunLargo(campo["nombre"] + campo["valor"], tamañoFuente3, 65)
                     doc.fontSize(tamañoCE)
                     let anchoTextoEsp = doc.widthOfString(campo["nombre"] ? cortarTexto(campo["nombre"], 25) + ":" : "CampoEsp:", { font: "Helvetica-Bold", size: tamañoCE })
 

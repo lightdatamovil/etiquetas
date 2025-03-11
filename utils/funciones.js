@@ -19,4 +19,8 @@ function tamañoSegunLargo(texto, tamaño, maximo) {
     return tamaño
 }
 
-module.exports = { esDatoValido, convertirFecha, cortarTexto, tamañoSegunLargo }
+function primeraLetraMayuscula(logistica) {
+    return logistica.charAt(0).toUpperCase() + logistica.slice(1)
+}
+
+module.exports = { esDatoValido, convertirFecha, cortarTexto, tamañoSegunLargo, primeraLetraMayuscula }
