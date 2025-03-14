@@ -180,7 +180,7 @@ const ea4 = async (doc, objData, index, distanciaAlto1, cantFullfilmentPag, alto
         let tamañoDireccion = tamañoSegunLargo(direccion, tamañoFuente1, 36)
         doc.fontSize(tamañoDireccion)
             .font("Helvetica-Bold")
-            .text(`${esDatoValido(direccion) ? cortarTexto(direccion, 45) : "Sin información"} ${esDatoValido(cp) ? "CP: " + cortarTexto(cp, 5) : ""}`, posicionAnchoTexto2 + 12, posicionAltoTexto2(2), { baseline: "middle", lineBreak: false })
+            .text(`${esDatoValido(direccion) ? cortarTexto(direccion, 40) : "Sin información"} ${esDatoValido(cp) ? "CP: " + cortarTexto(cp, 10) : ""}`, posicionAnchoTexto2 + 12, posicionAltoTexto2(2), { baseline: "middle", lineBreak: false })
 
         let tamañoPeso = tamañoSegunLargo("Peso declarado: " + peso, tamañoFuente1, 40)
         doc.fontSize(tamañoPeso)

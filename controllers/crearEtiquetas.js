@@ -1,5 +1,5 @@
 const PDFDocument = require("pdfkit")
-const { convertirFecha } = require("../utils/funciones")
+const { convertirFecha, cambiarACaba } = require("../utils/funciones")
 const exportsEtiquetas = require("../utils/exportsEtiquetas")
 const { medida10x10, medida10x15, medidaA4 } = require("../utils/medidasEtiquetas")
 
@@ -24,14 +24,14 @@ const crearEtiquetas = async (tipoEtiqueta, calidad, logistica, envios, res) => 
                 var objData = {
                     nombreFantasia: logistica.nombreFantasia,
                     logo: logistica.logo,
-                    localidad: paquete.localidad,
+                    localidad: cambiarACaba(paquete.localidad),
                     fecha: convertirFecha(paquete.fecha_inicio),
                     nroVenta: paquete.ml_venta_id,
                     nroEnvio: paquete.ml_shipment_id,
                     nombre: paquete.destination_receiver_name,
                     nroTelefono: paquete.destination_receiver_phone,
                     direccion: paquete.address_line,
-                    ciudad: paquete.ciudad,
+                    ciudad: cambiarACaba(paquete.ciudad),
                     cp: paquete.cp,
                     observacion: paquete.obs,
                     total: paquete.monto_total_a_cobrar,

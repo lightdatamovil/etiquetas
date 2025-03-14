@@ -148,7 +148,7 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
                     monto_total_a_cobrar: envio.monto_total_a_cobrar || null,
                     peso: envio.peso || null,
                     remitente: envio.nombre_fantasia || null,
-                    qr: envio.ml_qr_seguridad || null,
+                    qr: envio.ml_qr_seguridad || `{local: 1, did: ${envio.did}, cliente: ${envio.didCliente}, empresa: ${idempresa}}` || null,
                     bultos: envio.bultos || null,
                     camposEspeciales: [],
                     fullfillment: [],

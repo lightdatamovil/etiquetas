@@ -23,4 +23,16 @@ function primeraLetraMayuscula(logistica) {
     return logistica.charAt(0).toUpperCase() + logistica.slice(1)
 }
 
-module.exports = { esDatoValido, convertirFecha, cortarTexto, tamañoSegunLargo, primeraLetraMayuscula }
+function cambiarACaba(texto) {
+    if (esDatoValido(texto)) {
+        textoMinusculas = texto.toLowerCase()
+
+        if (textoMinusculas == "ciudad autonoma de buenos aires" || textoMinusculas == "ciudad autonoma buenos aires" || textoMinusculas == "ciudad de buenos aires") {
+            return "CABA"
+        } else {
+            return texto
+        }
+    }
+}
+
+module.exports = { esDatoValido, convertirFecha, cortarTexto, tamañoSegunLargo, primeraLetraMayuscula, cambiarACaba }
