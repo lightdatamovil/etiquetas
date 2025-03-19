@@ -1,18 +1,19 @@
 const mysql = require("mysql")
 const redis = require("redis")
+require("dotenv").config()
+const { REDIS_HOST, REDIS_PORT, REDIS_PASSWORD } = process.env
 
 const redisClient = redis.createClient({
     socket: {
-        host: "192.99.190.137",
-        port: 50301,
+        host: REDIS_HOST,
+        port: REDIS_PORT,
     },
-    password: "sdJmdxXC8luknTrqmHceJS48NTyzExQg",
+    password: REDIS_PASSWORD,
 })
 
 redisClient.on("error", (err) => {
     console.error("Error al conectar con Redis:", err)
 })
-
 ;(async () => {
     await redisClient.connect()
     console.log("Redis conectado")
