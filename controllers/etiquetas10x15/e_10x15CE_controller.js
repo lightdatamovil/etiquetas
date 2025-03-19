@@ -199,7 +199,7 @@ const e10x15CE = async (doc, objData) => {
             doc.circle(posicionAnchoTexto3, distanciaAlto3 - 11, 2.5).fillAndStroke(colorGrisOscuro, colorGrisOscuro)
             doc.fontSize(tamañoFuente3)
                 .font("Helvetica")
-                .text("Campos especiales", posicionAnchoTexto3 + 6, distanciaAlto3 - 10, { baseline: "middle", lineBreak: false })
+                .text("Campos extra", posicionAnchoTexto3 + 6, distanciaAlto3 - 10, { baseline: "middle", lineBreak: false })
 
             siguiente = 0
             await camposEspeciales.map((campo) => {
@@ -219,7 +219,7 @@ const e10x15CE = async (doc, objData) => {
 
                     doc.fontSize(tamañoCE)
                         .font("Helvetica")
-                        .text(esDatoValido(campo["valor"]) ? cortarTexto(campo["valor"], 50) : "Sin información", posicionAnchoTexto3 + anchoTextoEsp + 15, posicionAltoTexto3(siguiente), { baseline: "middle", lineBreak: false })
+                        .text(esDatoValido(campo["valor"]) ? cortarTexto(campo["valor"], 50) : "Sin información", posicionAnchoTexto3 + anchoTextoEsp + 10, posicionAltoTexto3(siguiente), { baseline: "middle", lineBreak: false })
                     siguiente += 1
                 }
             })

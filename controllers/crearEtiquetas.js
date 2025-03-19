@@ -1,5 +1,5 @@
 const PDFDocument = require("pdfkit")
-const { convertirFecha, cambiarACaba } = require("../utils/funciones")
+const { convertirFecha, cambiarACaba, combinarArrays } = require("../utils/funciones")
 const exportsEtiquetas = require("../utils/exportsEtiquetas")
 const { medida10x10, medida10x15, medidaA4 } = require("../utils/medidasEtiquetas")
 
@@ -21,6 +21,8 @@ const crearEtiquetas = async (tipoEtiqueta, calidad, logistica, envios, res) => 
             let mayorPorPag_a4 = 6
 
             for (const paquete of envios) {
+                let camposExtras = combinarArrays(paquete.camposEspeciales, paquete.camposCobranzas, paquete.camposLogi)
+
                 var objData = {
                     nombreFantasia: logistica.nombreFantasia,
                     logo: logistica.logo,
@@ -39,7 +41,7 @@ const crearEtiquetas = async (tipoEtiqueta, calidad, logistica, envios, res) => 
                     remitente: paquete.remitente,
                     qr: paquete.qr,
                     bultos: paquete.bultos < 2 ? 1 : paquete.bultos,
-                    camposEspeciales: paquete.camposEspeciales || [],
+                    camposEspeciales: camposExtras || [],
                     fullfillment: paquete.fullfillment || [],
                 }
 

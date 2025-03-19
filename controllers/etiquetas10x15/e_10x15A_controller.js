@@ -198,7 +198,7 @@ const e10x15A = async (doc, objData) => {
             doc.circle(posicionAnchoTexto3, distanciaAlto3 - 11, 2.5).fillAndStroke(colorGrisOscuro, colorGrisOscuro)
             doc.fontSize(tamañoFuente3)
                 .font("Helvetica")
-                .text("Campos especiales", posicionAnchoTexto3 + 6, distanciaAlto3 - 10, { baseline: "middle", lineBreak: false })
+                .text("Campos extra", posicionAnchoTexto3 + 6, distanciaAlto3 - 10, { baseline: "middle", lineBreak: false })
 
             siguiente = 0
             distanciaCE = 0

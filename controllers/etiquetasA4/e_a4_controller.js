@@ -26,7 +26,7 @@ const ea4 = async (doc, objData, index, distanciaAlto1, cantFullfilmentPag, alto
             distanciaAlto1 += altoContenedor + 10
         }
 
-        altoContenedor = 130
+        altoContenedor = 120
         distanciaAncho = 35
 
         if (esDatoValido(qr)) {
@@ -79,9 +79,9 @@ const ea4 = async (doc, objData, index, distanciaAlto1, cantFullfilmentPag, alto
         doc.moveTo(distanciaAncho1, containerSiguiente1(3) - 3)
             .lineTo(distanciaAncho1 + anchoContainer1, containerSiguiente1(3) - 3)
             .fill(colorGrisOscuro)
-        doc.moveTo(distanciaAncho1, containerSiguiente1(4) - 3)
-            .lineTo(distanciaAncho1 + anchoContainer1, containerSiguiente1(4) - 3)
-            .fill(colorGrisOscuro)
+        // doc.moveTo(distanciaAncho1, containerSiguiente1(4) - 3)
+        //     .lineTo(distanciaAncho1 + anchoContainer1, containerSiguiente1(4) - 3)
+        //     .fill(colorGrisOscuro)
 
         doc.fillAndStroke("black", "black")
         doc.fontSize(tamañoSegunLargo(localidad, tamañoFuente1, 13))
@@ -202,12 +202,12 @@ const ea4 = async (doc, objData, index, distanciaAlto1, cantFullfilmentPag, alto
         // ! SECCION CAMPOS ESPECIALES
         tamañoFuente3 = 8
         anchoContainer3 = 273
-        altoContainer3 = 13
+        altoContainer3 = 10
         margin3 = 6
         padding3 = 7
         borderRadius3 = 2
         distanciaAncho3 = distanciaAncho
-        distanciaAlto3 = distanciaAlto1 + 125
+        distanciaAlto3 = distanciaAlto1 + 117
         posicionAnchoTexto3 = distanciaAncho3 + padding3
         const containerSiguiente3 = (num) => distanciaAlto3 + altoContainer3 * num + margin3 * num
         const posicionAltoTexto3 = (num) => {
@@ -223,12 +223,12 @@ const ea4 = async (doc, objData, index, distanciaAlto1, cantFullfilmentPag, alto
             altoContenedor += 5
             altoSumaCamposEspeciales += 5
 
-            doc.circle(posicionAnchoTexto3, distanciaAlto3 - 11, 2.5).fillAndStroke(colorGrisOscuro, colorGrisOscuro)
+            doc.circle(posicionAnchoTexto3, distanciaAlto3 - 8, 2.5).fillAndStroke(colorGrisOscuro, colorGrisOscuro)
             doc.fontSize(tamañoFuente3)
                 .font("Helvetica")
-                .text("Campos especiales", posicionAnchoTexto3 + 6, distanciaAlto3 - 10, { baseline: "middle", lineBreak: false })
-            doc.moveTo(125, distanciaAlto3 - 10)
-                .lineTo(560, distanciaAlto3 - 10)
+                .text("Campos extra", posicionAnchoTexto3 + 6, distanciaAlto3 - 7, { baseline: "middle", lineBreak: false })
+            doc.moveTo(105, distanciaAlto3 - 7)
+                .lineTo(560, distanciaAlto3 - 7)
                 .fill(colorGrisOscuro)
 
             siguiente = 0
@@ -248,7 +248,7 @@ const ea4 = async (doc, objData, index, distanciaAlto1, cantFullfilmentPag, alto
                             .text(esDatoValido(campo["nombre"]) ? cortarTexto(campo["nombre"], 38) + ":" : "CampoEsp:", posicionAnchoTexto3, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
                         doc.fontSize(tamañoCE)
                             .font("Helvetica")
-                            .text(esDatoValido(campo["valor"]) ? cortarTexto(campo["valor"], 48) : "Sin información", posicionAnchoTexto3 + anchoTextoEsp + 15, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
+                            .text(esDatoValido(campo["valor"]) ? cortarTexto(campo["valor"], 48) : "Sin información", posicionAnchoTexto3 + anchoTextoEsp + 10, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
                     } else {
                         doc.moveTo(anchoContainer3 + 30, containerSiguiente3(distanciaCE) - 2)
                             .lineTo(anchoContainer3 + 30, containerSiguiente3(distanciaCE) + 12)
@@ -260,9 +260,9 @@ const ea4 = async (doc, objData, index, distanciaAlto1, cantFullfilmentPag, alto
                             .text(esDatoValido(campo["nombre"]) ? cortarTexto(campo["nombre"], 38) + ":" : "CampoEsp:", 265 + 38 + padding3, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
                         doc.fontSize(tamañoCE)
                             .font("Helvetica")
-                            .text(esDatoValido(campo["valor"]) ? cortarTexto(campo["valor"], 48) : "Sin información", 265 + 38 + padding3 + anchoTextoEsp + 15, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
+                            .text(esDatoValido(campo["valor"]) ? cortarTexto(campo["valor"], 48) : "Sin información", 265 + 38 + padding3 + anchoTextoEsp + 10, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
 
-                        if (siguiente < 4) {
+                        if (camposEspeciales.length > 2 && siguiente < 4) {
                             doc.moveTo(distanciaAncho3, containerSiguiente3(distanciaCE + 1) - 5)
                                 .lineTo(560, containerSiguiente3(distanciaCE + 1) - 5)
                                 .fill(colorGrisOscuro)

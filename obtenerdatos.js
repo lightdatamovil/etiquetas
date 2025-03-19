@@ -75,98 +75,112 @@ async function getFromRedis(key) {
 const obtenerDatosEnvios = async (idempresa, dids) => {
     try {
         let cacheLogos = {}
-        let arrEnvios = []
-        let logo
+        let enviosMap = {}
 
-        let { connection, empresasData } = await getConnection(idempresa)
+        const { connection, empresasData } = await getConnection(idempresa)
+        const empresa = empresasData[String(idempresa)] || {}
+        const logo = (cacheLogos[empresa.empresa] ||= `${empresa.url}/app-assets/images/logo/logo.png` || null)
 
-        const nombreFantasia = empresasData[String(idempresa)]?.empresa || null
-        const tieneFullfillment = empresasData[String(idempresa)]?.fullfilment || null
-
-        // Verificar si el logo ya está en la caché
-        if (cacheLogos[nombreFantasia]) {
-            logo = cacheLogos[nombreFantasia]
-        } else {
-            // Si no está en caché, lo generamos y guardamos
-            logo = `${empresasData[String(idempresa)]?.url}/app-assets/images/logo/logo.png` || null
-            cacheLogos[nombreFantasia] = logo
-        }
-
-        // Query para los envios
-        let query = `
-                    SELECT e.*, edd.localidad, edd.ciudad, edd.address_line, edd.cp, eo.observacion, c.nombre_fantasia, ec.valor AS campo_valor, sdp.nombre AS campo_nombre
+        const consultas = [
+            {
+                key: "envios",
+                query: `
+                    SELECT e.*, edd.localidad, edd.ciudad, edd.address_line, edd.cp, eo.observacion, c.nombre_fantasia
                     FROM envios e
                     LEFT JOIN envios_direcciones_destino edd ON e.did = edd.didEnvio AND edd.superado = 0 AND edd.elim = 0
                     LEFT JOIN envios_observaciones eo ON e.did = eo.didEnvio AND eo.superado = 0 AND eo.elim = 0
                     LEFT JOIN clientes c ON e.didCliente = c.did AND c.superado = 0
+                    WHERE e.did IN (?) AND e.superado = 0 AND e.elim = 0
+                `,
+            },
+            {
+                key: "camposEspeciales",
+                query: `
+                    SELECT e.did AS didEnvio, ec.valor AS campo_valor, sdp.nombre AS campo_nombre
+                    FROM envios e
                     LEFT JOIN envios_campos_extras ec ON e.did = ec.didEnvio AND ec.superado = 0 AND ec.elim = 0
                     LEFT JOIN sistema_datospaqueteria sdp ON ec.didCampo = sdp.did AND sdp.superado = 0 AND sdp.elim = 0
                     WHERE e.did IN (?) AND e.superado = 0 AND e.elim = 0
-                `
+                    AND (ec.valor IS NOT NULL OR sdp.nombre IS NOT NULL)
+                `,
+            },
+            {
+                key: "camposCobranzas",
+                query: `
+                    SELECT e.did AS didEnvio, eco.valor AS campo_valor, sdpc.nombre AS campo_nombre
+                    FROM envios e
+                    LEFT JOIN envios_cobranzas eco ON e.did = eco.didEnvio AND eco.superado = 0 AND eco.elim = 0
+                    LEFT JOIN sistema_datosPaqueteria_cobranzas sdpc ON eco.didCampoCobranza = sdpc.did AND sdpc.superado = 0 AND sdpc.elim = 0
+                    WHERE e.did IN (?) AND e.superado = 0 AND e.elim = 0
+                    AND (eco.valor IS NOT NULL OR sdpc.nombre IS NOT NULL)
+                `,
+            },
+            {
+                key: "camposLogi",
+                query: `
+                    SELECT e.did AS didEnvio, eli.valor AS campo_valor, sdpli.nombre AS campo_nombre
+                    FROM envios e
+                    LEFT JOIN envios_logisticainversa eli ON e.did = eli.didEnvio AND eli.superado = 0 AND eli.elim = 0
+                    LEFT JOIN sistema_datosPaqueteria_logisticainversa sdpli ON eli.didCampoLogistica = sdpli.did AND sdpli.superado = 0 AND sdpli.elim = 0
+                    WHERE e.did IN (?) AND e.superado = 0 AND e.elim = 0
+                    AND (eli.valor IS NOT NULL OR sdpli.nombre IS NOT NULL)
+                `,
+            },
+        ]
 
-        let envios = await new Promise((resolve, reject) => {
-            connection.query(query, [dids], (error, results) => {
-                if (error) return reject(error)
-                resolve(results)
-            })
-        })
-
-        let ordenes = []
-        if (tieneFullfillment != "0") {
-            // Query para fullfillment
-            let queryOrdenes = `
-                            SELECT o.did AS didOrden, oi.seller_sku, oi.cantidad, fp.sku, fp.ean, fp.descripcion
-                            FROM ordenes o
-                            LEFT JOIN ordenes_items oi ON o.did = oi.didOrden AND oi.superado = 0 AND oi.elim = 0
-                            LEFT JOIN fulfillment_productos fp ON oi.seller_sku = fp.sku AND fp.superado = 0 AND fp.elim = 0
-                            WHERE o.didEnvio IN (?) AND o.superado = 0 AND o.elim = 0
-                        `
-
-            ordenes = await new Promise((resolve, reject) => {
-                connection.query(queryOrdenes, [dids], (error, results) => {
-                    if (error) return reject(error)
-                    resolve(results)
-                })
+        if (empresa.fullfilment !== "0") {
+            consultas.push({
+                key: "ordenes",
+                query: `
+                    SELECT o.didEnvio, fp.sku, fp.ean, fp.descripcion, oi.cantidad
+                    FROM ordenes o
+                    LEFT JOIN ordenes_items oi ON o.did = oi.didOrden AND oi.superado = 0 AND oi.elim = 0
+                    LEFT JOIN fulfillment_productos fp ON oi.seller_sku = fp.sku AND fp.superado = 0 AND fp.elim = 0
+                    WHERE o.didEnvio IN (?) AND o.superado = 0 AND o.elim = 0
+                `,
             })
         }
 
-        // Mapeamos los resultados
-        let enviosMap = {}
-        envios.forEach((envio) => {
-            if (!enviosMap[envio.did]) {
-                enviosMap[envio.did] = {
-                    localidad: envio.localidad || null,
-                    fecha_inicio: envio.fecha_inicio || null,
-                    ml_venta_id: envio.ml_venta_id || null,
-                    ml_shipment_id: envio.ml_shipment_id || null,
-                    destination_receiver_name: envio.destination_receiver_name || null,
-                    destination_receiver_phone: envio.destination_receiver_phone || null,
-                    ciudad: envio.ciudad || null,
-                    address_line: envio.address_line || null,
-                    cp: envio.cp || null,
-                    obs: envio.observacion || null,
-                    monto_total_a_cobrar: envio.monto_total_a_cobrar || null,
-                    peso: envio.peso || null,
-                    remitente: envio.nombre_fantasia || null,
-                    qr: envio.ml_qr_seguridad || `{local: 1, did: ${envio.did}, cliente: ${envio.didCliente}, empresa: ${idempresa}}` || null,
-                    bultos: envio.bultos || null,
-                    camposEspeciales: [],
-                    fullfillment: [],
-                }
-            }
+        const resultados = await Promise.all(consultas.map(({ query }) => new Promise((resolve, reject) => connection.query(query, [dids], (error, results) => (error ? reject(error) : resolve(results))))))
 
-            // Agregamos los campos especiales si los hay
-            if (envio.campo_nombre) {
-                enviosMap[envio.did].camposEspeciales.push({
-                    nombre: envio.campo_nombre,
-                    valor: envio.campo_valor,
-                })
+        const datos = Object.fromEntries(consultas.map((c, i) => [c.key, resultados[i]]))
+
+        datos.envios.forEach((envio) => {
+            enviosMap[envio.did] = {
+                localidad: envio.localidad || null,
+                fecha_inicio: envio.fecha_inicio || null,
+                ml_venta_id: envio.ml_venta_id || null,
+                ml_shipment_id: envio.ml_shipment_id || null,
+                destination_receiver_name: envio.destination_receiver_name || null,
+                destination_receiver_phone: envio.destination_receiver_phone || null,
+                ciudad: envio.ciudad || null,
+                address_line: envio.address_line || null,
+                cp: envio.cp || null,
+                obs: envio.observacion || null,
+                monto_total_a_cobrar: envio.monto_total_a_cobrar || null,
+                peso: envio.peso || null,
+                remitente: envio.nombre_fantasia || null,
+                qr: envio.ml_qr_seguridad || `{local: 1, did: ${envio.did}, cliente: ${envio.didCliente}, empresa: ${idempresa}}`,
+                bultos: envio.bultos || null,
+                camposEspeciales: [],
+                camposCobranzas: [],
+                camposLogi: [],
+                fullfillment: [],
             }
         })
+        ;["camposEspeciales", "camposCobranzas", "camposLogi"].forEach((key) => {
+            datos[key].forEach((campo) => {
+                if (enviosMap[campo.didEnvio] && campo.campo_valor) {
+                    enviosMap[campo.didEnvio][key].push({
+                        nombre: campo.campo_nombre || null,
+                        valor: campo.campo_valor,
+                    })
+                }
+            })
+        })
 
-        // Agregamos los datos de fulfillment
-        if (ordenes.length > 0) {
-            ordenes.forEach((orden) => {
+        if (datos.ordenes) {
+            datos.ordenes.forEach((orden) => {
                 if (enviosMap[orden.didEnvio]) {
                     enviosMap[orden.didEnvio].fullfillment.push({
                         sku: orden.sku || null,
@@ -176,21 +190,15 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
                     })
                 }
             })
-
-            // Convertimos el objeto a array
         }
-
-        arrEnvios = Object.values(enviosMap)
 
         connection.end()
 
-        const jsonResponse = {
-            nombreFantasia: nombreFantasia,
-            logo: logo,
-            envios: arrEnvios,
+        return {
+            nombreFantasia: empresa.empresa || null,
+            logo,
+            envios: Object.values(enviosMap),
         }
-
-        return jsonResponse
     } catch (error) {
         console.error("Error al obtener datos de las tablas:", error.message)
     }

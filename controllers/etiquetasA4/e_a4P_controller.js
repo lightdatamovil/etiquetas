@@ -216,8 +216,8 @@ const ea4P = async (doc, objData, index, distanciaAlto1, cantFullfilmentPag, alt
             doc.circle(posicionAnchoTexto3, distanciaAlto3 - 11, 2.5).fillAndStroke(colorGrisOscuro, colorGrisOscuro)
             doc.fontSize(tamañoFuente3)
                 .font("Helvetica")
-                .text("Campos especiales", posicionAnchoTexto3 + 6, distanciaAlto3 - 10, { baseline: "middle", lineBreak: false })
-            doc.moveTo(125, distanciaAlto3 - 10)
+                .text("Campos extra", posicionAnchoTexto3 + 6, distanciaAlto3 - 10, { baseline: "middle", lineBreak: false })
+            doc.moveTo(106, distanciaAlto3 - 10)
                 .lineTo(560, distanciaAlto3 - 10)
                 .fill(colorGrisOscuro)
 
@@ -239,7 +239,7 @@ const ea4P = async (doc, objData, index, distanciaAlto1, cantFullfilmentPag, alt
                             .text(esDatoValido(campo["nombre"]) ? cortarTexto(campo["nombre"], 38) + ":" : "CampoEsp:", posicionAnchoTexto3, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
                         doc.fontSize(tamañoCE)
                             .font("Helvetica")
-                            .text(esDatoValido(campo["valor"]) ? cortarTexto(campo["valor"], 48) : "Sin información", posicionAnchoTexto3 + anchoTextoEsp + 15, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
+                            .text(esDatoValido(campo["valor"]) ? cortarTexto(campo["valor"], 48) : "Sin información", posicionAnchoTexto3 + anchoTextoEsp + 10, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
                     } else {
                         doc.roundedRect(261 + 38, containerSiguiente3(distanciaCE), 261, altoContainer3, borderRadius3).fillAndStroke(colorGrisClaro, colorGrisClaro)
                         doc.fillAndStroke("black", "black")
@@ -248,7 +248,7 @@ const ea4P = async (doc, objData, index, distanciaAlto1, cantFullfilmentPag, alt
                             .text(esDatoValido(campo["nombre"]) ? cortarTexto(campo["nombre"], 38) + ":" : "CampoEsp:", 265 + 38 + padding3, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
                         doc.fontSize(tamañoCE)
                             .font("Helvetica")
-                            .text(esDatoValido(campo["valor"]) ? cortarTexto(campo["valor"], 48) : "Sin información", 265 + 38 + padding3 + anchoTextoEsp + 15, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
+                            .text(esDatoValido(campo["valor"]) ? cortarTexto(campo["valor"], 48) : "Sin información", 265 + 38 + padding3 + anchoTextoEsp + 10, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
                         distanciaCE += 1
                     }
                     siguiente += 1
