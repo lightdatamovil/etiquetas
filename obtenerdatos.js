@@ -87,12 +87,19 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
             {
                 key: "envios",
                 query: `
-                    SELECT e.*, edd.localidad, edd.ciudad, edd.address_line, edd.cp, eo.observacion, c.nombre_fantasia
+                   SELECT 
+                        e.*, 
+                        COALESCE(edd.localidad, e.destination_city_name) AS localidad,
+                        COALESCE(edd.address_line, e.destination_shipping_address_line) AS address_line,
+                        COALESCE(edd.cp, e.destination_shipping_zip_code) AS cp,
+                        edd.ciudad,
+                        eo.observacion,
+                        c.nombre_fantasia
                     FROM envios e
                     LEFT JOIN envios_direcciones_destino edd ON e.did = edd.didEnvio AND edd.superado = 0 AND edd.elim = 0
                     LEFT JOIN envios_observaciones eo ON e.did = eo.didEnvio AND eo.superado = 0 AND eo.elim = 0
                     LEFT JOIN clientes c ON e.didCliente = c.did AND c.superado = 0
-                    WHERE e.did IN (?) AND e.superado = 0 AND e.elim = 0
+                    WHERE e.did IN (?) AND e.superado = 0 AND e.elim = 0;
                 `,
             },
             {
