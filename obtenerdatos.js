@@ -169,7 +169,7 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
                 monto_total_a_cobrar: envio.monto_total_a_cobrar || null,
                 peso: envio.peso || null,
                 remitente: envio.nombre_fantasia || null,
-                qr: envio.ml_qr_seguridad || `{local: 1, did: ${envio.did}, cliente: ${envio.didCliente}, empresa: ${idempresa}}`,
+                qr: envio.ml_qr_seguridad || `{"local": 1, "did": "${envio.did}", "cliente": ${envio.didCliente}, "empresa": ${idempresa}}`,
                 bultos: envio.bultos || null,
                 camposEspeciales: [],
                 camposCobranzas: [],
@@ -222,20 +222,36 @@ const registrarReimpresion = async (idempresa, dids, modulo, quien) => {
     }
 
     try {
-        let values = dids.map(() => "(?, ?, ?)").join(", ")
-        let query = `INSERT INTO reimpresion_historial (didEnvio, modulo, quien) VALUES ${values}`
-        let params = dids.flatMap((did) => [did, modulo, quien])
+        await connection.beginTransaction() // Inicia la transacción
 
-        let result = await new Promise((resolve, reject) => {
-            connection.query(query, params, (error, results) => {
+        // Insertar en reimpresion_historial
+        let values = dids.map(() => "(?, ?, ?)").join(", ")
+        let queryInsert = `INSERT INTO reimpresion_historial (didEnvio, modulo, quien) VALUES ${values}`
+        let paramsInsert = dids.flatMap((did) => [did, modulo, quien])
+
+        await new Promise((resolve, reject) => {
+            connection.query(queryInsert, paramsInsert, (error, results) => {
                 if (error) return reject(error)
                 resolve(results)
             })
         })
 
-        return result
+        // Actualizar la columna "impreso" en la tabla "envios"
+        let queryUpdate = `UPDATE envios SET impreso = 1 WHERE did IN (${dids.map(() => "?").join(", ")}) AND superado = 0 AND elim = 0`
+
+        await new Promise((resolve, reject) => {
+            connection.query(queryUpdate, dids, (error, results) => {
+                if (error) return reject(error)
+                resolve(results)
+            })
+        })
+
+        await connection.commit() // Confirma la transacción
+
+        return { success: true, message: "Reimpresión registrada y estado actualizado correctamente." }
     } catch (error) {
-        console.error("Error al insertar en reimpresion_historial:", error.message)
+        await connection.rollback() // Revierte la transacción si hay un error
+        console.error("Error en registrarReimpresion:", error.message)
         throw error
     }
 }
