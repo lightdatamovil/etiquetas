@@ -8,10 +8,12 @@ const { colorGrisClaro, colorGrisOscuro } = require("../../utils/colores.js")
 // ! ETIQUETA a4 CON AMBOS SIMPLE
 
 const ea4 = async (doc, objData, index, distanciaAlto1, cantFullfilmentPag, altoContenedor, mayorPorPag) => {
-    let { nombreFantasia, logo, camposEspeciales, ciudad, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fullfillment } = objData
+    let { nombreFantasia, logo, camposEspeciales, ciudad, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, ref, total, peso, remitente, qr, bultos, fullfillment } = objData
 
     direccion = esDatoValido(ciudad) && esDatoValido(localidad) ? `${direccion}, ${localidad}` : direccion
     localidad = esDatoValido(ciudad) ? ciudad : localidad
+    
+    observacion = esDatoValido(observacion) && esDatoValido(ref) ? `${observacion} / Ref: ${ref}` : esDatoValido(ref) ? `Ref: ${ref}`: observacion
 
     for (let i = 0; i < bultos; i++) {
         cantFullfilmentPag += camposEspeciales.length > 5 ? fullfillment.length + 3 : fullfillment.length + Math.ceil(camposEspeciales.length / 2)

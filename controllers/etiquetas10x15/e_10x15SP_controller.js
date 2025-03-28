@@ -8,10 +8,12 @@ const { colorGrisClaro, colorGrisOscuro } = require("../../utils/colores.js")
 //ETIQUETA 10X15 CON SOLO PREMIUM
 
 const e10x15SP = async (doc, objData) => {
-    let { nombreFantasia, logo, camposEspeciales, ciudad, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fullfillment } = objData
+    let { nombreFantasia, logo, camposEspeciales, ciudad, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, ref, total, peso, remitente, qr, bultos, fullfillment } = objData
 
     direccion = esDatoValido(ciudad) && esDatoValido(localidad) ? `${direccion}, ${localidad}` : direccion
     localidad = esDatoValido(ciudad) ? ciudad : localidad
+    
+    observacion = esDatoValido(observacion) && esDatoValido(ref) ? `${observacion} / Ref: ${ref}` : esDatoValido(ref) ? `Ref: ${ref}`: observacion
 
     for (let i = 0; i < bultos; i++) {
         distanciaAncho1 = 129
@@ -134,7 +136,7 @@ const e10x15SP = async (doc, objData) => {
         doc.roundedRect(distanciaAncho2, containerSiguiente2(0), anchoContainer2, altoContainer2, borderRadius2).fillAndStroke(colorGrisClaro, colorGrisClaro)
         doc.roundedRect(distanciaAncho2, containerSiguiente2(1), anchoContainer2, altoContainer2, borderRadius2).fillAndStroke(colorGrisClaro, colorGrisClaro)
         doc.roundedRect(distanciaAncho2, containerSiguiente2(2), anchoContainer2, altoContainer2, borderRadius2).fillAndStroke(colorGrisClaro, colorGrisClaro)
-        doc.roundedRect(distanciaAncho2, containerSiguiente2(3), anchoContainer2, altoContainer2 * 1.5, borderRadius2).fillAndStroke(colorGrisClaro, colorGrisClaro)
+        doc.roundedRect(distanciaAncho2, containerSiguiente2(3), anchoContainer2, altoContainer2 * 2.2, borderRadius2).fillAndStroke(colorGrisClaro, colorGrisClaro)
 
         doc.fillAndStroke("black", "black")
 
@@ -164,7 +166,7 @@ const e10x15SP = async (doc, objData) => {
             .text("Observación:", posicionAnchoTexto2, posicionAltoTexto2(3), { baseline: "middle", lineBreak: false })
         doc.fontSize(tamañoFuente2 - 2)
             .font("Helvetica")
-            .text(esDatoValido(observacion) ? cortarTexto(observacion, 195) : "Sin información", posicionAnchoTexto2, posicionAltoTexto2(3), { baseline: "middle", indent: 55, width: anchoContainer2 - 8, height: altoContainer2 * 1.5 })
+            .text(esDatoValido(observacion) ? cortarTexto(observacion, 330) : "Sin información", posicionAnchoTexto2, posicionAltoTexto2(3), { baseline: "middle", indent: 55, width: anchoContainer2 - 8, height: altoContainer2 * 2.2 })
         // ! /SECCION DESTINATARIO
 
         if (bultos > 1 && i < bultos) {

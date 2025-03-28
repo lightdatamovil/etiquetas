@@ -36,6 +36,7 @@ const crearEtiquetas = async (tipoEtiqueta, calidad, logistica, envios, res) => 
                     ciudad: cambiarACaba(paquete.ciudad),
                     cp: paquete.cp,
                     observacion: paquete.obs,
+                    ref: paquete.ref,
                     total: paquete.monto_total_a_cobrar,
                     peso: paquete.peso,
                     remitente: paquete.remitente,

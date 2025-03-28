@@ -7,10 +7,12 @@ const { colorGrisClaro, colorGrisOscuro } = require("../../utils/colores.js")
 //ETIQUETA 10X15 CON CAMPOS ESPECIALES
 
 const e10x15CE = async (doc, objData) => {
-    let { nombreFantasia, logo, camposEspeciales, ciudad, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fullfillment } = objData
+    let { nombreFantasia, logo, camposEspeciales, ciudad, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, ref, total, peso, remitente, qr, bultos, fullfillment } = objData
 
     direccion = esDatoValido(ciudad) && esDatoValido(localidad) ? `${direccion}, ${localidad}` : direccion
     localidad = esDatoValido(ciudad) ? ciudad : localidad
+    
+    observacion = esDatoValido(observacion) && esDatoValido(ref) ? `${observacion} / Ref: ${ref}` : esDatoValido(ref) ? `Ref: ${ref}`: observacion
 
     for (let i = 0; i < bultos; i++) {
         distanciaAncho1 = 129

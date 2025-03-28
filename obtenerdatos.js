@@ -92,6 +92,7 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
                         COALESCE(edd.localidad, e.destination_city_name) AS localidad,
                         COALESCE(edd.address_line, e.destination_shipping_address_line) AS address_line,
                         COALESCE(edd.cp, e.destination_shipping_zip_code) AS cp,
+                        edd.destination_comments AS ref,
                         edd.ciudad,
                         eo.observacion,
                         c.nombre_fantasia
@@ -165,6 +166,7 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
                 ciudad: envio.ciudad || null,
                 address_line: envio.address_line || null,
                 cp: envio.cp || null,
+                ref: envio.ref || null,
                 obs: envio.observacion || null,
                 monto_total_a_cobrar: envio.monto_total_a_cobrar || null,
                 peso: envio.peso || null,

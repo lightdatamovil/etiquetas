@@ -22,7 +22,7 @@ const postEtiqueta = async (req, res) => {
             const result = await crearEtiquetas(tipoEtiqueta, calidad, logistica, envios, res)
 
             if (result) {
-                await registrarReimpresion(didEmpresa, didEnvios, modulo, quien)
+                // await registrarReimpresion(didEmpresa, didEnvios, modulo, quien)
                 return res.end()
             } else {
                 return res.status(500).json({ error: "No se pudo generar el PDF" })

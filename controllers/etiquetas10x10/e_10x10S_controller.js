@@ -8,10 +8,12 @@ const { colorGrisClaro, colorGrisOscuro } = require("../../utils/colores.js")
 //ETIQUETA 10x10 CON SOLO
 
 const e10x10S = async (doc, objData) => {
-    let { nombreFantasia, logo, camposEspeciales, ciudad, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fullfillment } = objData
+    let { nombreFantasia, logo, camposEspeciales, ciudad, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, ref, total, peso, remitente, qr, bultos, fullfillment } = objData
 
     direccion = esDatoValido(ciudad) && esDatoValido(localidad) ? `${direccion}, ${localidad}` : direccion
     localidad = esDatoValido(ciudad) ? ciudad : localidad
+    
+    observacion = esDatoValido(observacion) && esDatoValido(ref) ? `${observacion} / Ref: ${ref}` : esDatoValido(ref) ? `Ref: ${ref}`: observacion
 
     for (let i = 0; i < bultos; i++) {
         distanciaAncho1 = 80
@@ -167,7 +169,7 @@ const e10x10S = async (doc, objData) => {
             .text("Observación:", posicionAnchoTexto2, posicionAltoTexto2(3), { baseline: "middle", lineBreak: false })
         doc.fontSize(tamañoFuente2 - 2)
             .font("Helvetica")
-            .text(esDatoValido(observacion) ? cortarTexto(observacion, 195) : "Sin información", posicionAnchoTexto2, posicionAltoTexto2(3), { baseline: "middle", indent: 55, width: anchoContainer2 - 8, height: altoContainer2 * 1.5 })
+            .text(esDatoValido(observacion) ? cortarTexto(observacion, 330) : "Sin información", posicionAnchoTexto2, posicionAltoTexto2(3), { baseline: "middle", indent: 55, width: anchoContainer2 - 8, height: altoContainer2 * 2.2 })
         // ! /SECCION DESTINATARIO
 
         if (bultos > 1 && i < bultos) {
