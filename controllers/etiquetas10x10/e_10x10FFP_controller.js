@@ -3,7 +3,7 @@ const SVGtoPDF = require("svg-to-pdfkit")
 
 const { iconCalendarChico, iconNombre, iconTelefono, iconUbicacion } = require("../../utils/icons.js")
 const { esDatoValido, cortarTexto, tamañoSegunLargo } = require("../../utils/funciones.js")
-const { colorGrisClaro, colorGrisOscuro } = require("../../utils/colores.js")
+const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../utils/colores.js")
 
 //ETIQUETA 10x10 CON FULLFILLMENT PREMIUM
 
@@ -39,8 +39,8 @@ const e10x10FF = async (doc, objData) => {
 
         // ! SECCION SUPERIOR
         tamañoFuente1 = 8
-        altoContainer1 = 13
-        margin1 = 6
+        altoContainer1 = 12
+        margin1 = 3
         padding1 = 7
         borderRadius1 = 2
         distanciaAlto1 = 10
@@ -66,6 +66,7 @@ const e10x10FF = async (doc, objData) => {
         doc.roundedRect(distanciaAncho1, containerSiguiente1(1), anchoContainer1, altoContainer1, borderRadius1).fillAndStroke(colorGrisClaro, colorGrisClaro)
         doc.roundedRect(distanciaAncho1, containerSiguiente1(2), anchoContainer1, altoContainer1, borderRadius1).fillAndStroke(colorGrisClaro, colorGrisClaro)
         doc.roundedRect(distanciaAncho1, containerSiguiente1(3), anchoContainer1, altoContainer1, borderRadius1).fillAndStroke(colorGrisClaro, colorGrisClaro)
+        doc.roundedRect(distanciaAncho1, containerSiguiente1(4), anchoContainer1, altoContainer1, borderRadius1).fillAndStroke(colorGrisClaro, colorGrisClaro)
 
         doc.fillAndStroke("white", "white")
         doc.fontSize(tamañoSegunLargo(localidad, tamañoFuente1, anchoCaracteres1))
@@ -74,33 +75,43 @@ const e10x10FF = async (doc, objData) => {
 
         doc.fillAndStroke("black", "black")
 
-        SVGtoPDF(doc, iconCalendarChico, posicionAnchoTexto1, posicionAltoTexto1(0) + 13)
+        SVGtoPDF(doc, iconCalendarChico, posicionAnchoTexto1, posicionAltoTexto1(0) + 10)
 
         doc.fontSize(tamañoSegunLargo(fecha, tamañoFuente1, 15))
             .font("Helvetica-Bold")
             .text(esDatoValido(fecha) ? cortarTexto(fecha, anchoCaracteres2) : "Sin información", posicionAnchoTexto1 + 20, posicionAltoTexto1(1), { baseline: "middle", lineBreak: false })
 
+
+            let tamañoRem = tamañoSegunLargo("Rte.: " + remitente, tamañoFuente1, 20)
+            doc.fontSize(tamañoRem)
+            let anchoTextoRem = doc.widthOfString("Rte.:", { font: "Helvetica", size: tamañoRem })
+    
+            doc.fontSize(tamañoRem).font("Helvetica").text("Rte.:", posicionAnchoTexto1, posicionAltoTexto1(2), { baseline: "middle", lineBreak: false })
+            doc.fontSize(tamañoRem)
+                .font("Helvetica-Bold")
+                .text(esDatoValido(remitente) ? cortarTexto(remitente, 23) : "Sin información", posicionAnchoTexto1 + anchoTextoRem, posicionAltoTexto1(2), { baseline: "middle", lineBreak: false })
+
         let tamañoVenta = tamañoSegunLargo("Venta: " + nroVenta, tamañoFuente1, 22)
         doc.fontSize(tamañoVenta)
         let anchoTextoVenta = doc.widthOfString("Venta:", { font: "Helvetica", size: tamañoVenta })
 
-        doc.fontSize(tamañoVenta).font("Helvetica").text("Venta:", posicionAnchoTexto1, posicionAltoTexto1(2), { baseline: "middle", lineBreak: false })
+        doc.fontSize(tamañoVenta).font("Helvetica").text("Venta:", posicionAnchoTexto1, posicionAltoTexto1(3), { baseline: "middle", lineBreak: false })
         doc.fontSize(tamañoVenta)
             .font("Helvetica-Bold")
-            .text(esDatoValido(nroVenta) ? cortarTexto(nroVenta, 23) : "Sin información", posicionAnchoTexto1 + anchoTextoVenta, posicionAltoTexto1(2), { baseline: "middle", lineBreak: false })
+            .text(esDatoValido(nroVenta) ? cortarTexto(nroVenta, 23) : "Sin información", posicionAnchoTexto1 + anchoTextoVenta, posicionAltoTexto1(3), { baseline: "middle", lineBreak: false })
 
         let tamañoEnvio = tamañoSegunLargo("Envio: " + nroEnvio, tamañoFuente1, 22)
         doc.fontSize(tamañoEnvio)
         let anchoTextoEnvio = doc.widthOfString("Envio:", { font: "Helvetica", size: tamañoEnvio })
 
-        doc.fontSize(tamañoEnvio).font("Helvetica").text("Envio:", posicionAnchoTexto1, posicionAltoTexto1(3), { baseline: "middle", lineBreak: false })
+        doc.fontSize(tamañoEnvio).font("Helvetica").text("Envio:", posicionAnchoTexto1, posicionAltoTexto1(4), { baseline: "middle", lineBreak: false })
         doc.fontSize(tamañoEnvio)
             .font("Helvetica-Bold")
-            .text(esDatoValido(nroEnvio) ? cortarTexto(nroEnvio, 23) : "Sin información", posicionAnchoTexto1 + anchoTextoEnvio, posicionAltoTexto1(3), { baseline: "middle", lineBreak: false })
+            .text(esDatoValido(nroEnvio) ? cortarTexto(nroEnvio, 23) : "Sin información", posicionAnchoTexto1 + anchoTextoEnvio, posicionAltoTexto1(4), { baseline: "middle", lineBreak: false })
 
         doc.fontSize(tamañoFuente1)
             .font("Helvetica-Bold")
-            .text(esDatoValido(nombreFantasia) ? cortarTexto(nombreFantasia.toUpperCase(), 25) : "LOGISTICA", distanciaAncho1 + anchoContainer1 + margin1, posicionAltoTexto1(3), { baseline: "middle", lineBreak: false, width: 87, align: "center" })
+            .text(esDatoValido(nombreFantasia) ? cortarTexto(nombreFantasia.toUpperCase(), 25) : "LOGISTICA", distanciaAncho1 + anchoContainer1 + margin1, posicionAltoTexto1(4), { baseline: "middle", lineBreak: false, width: 87, align: "center" })
 
         // ! /SECCION SUPERIOR
 
@@ -123,7 +134,7 @@ const e10x10FF = async (doc, objData) => {
             }
         }
 
-        doc.circle(posicionAnchoTexto2, distanciaAlto2 - 11, 2.5).fillAndStroke(colorGrisOscuro, colorGrisOscuro)
+        doc.circle(posicionAnchoTexto2, distanciaAlto2 - 11, 2.5).fillAndStroke(colorNegroClaro, colorNegroClaro)
         doc.fontSize(tamañoFuente2)
             .font("Helvetica")
             .text("Destinatario", posicionAnchoTexto2 + 6, distanciaAlto2 - 10, { baseline: "middle", lineBreak: false })
@@ -159,12 +170,17 @@ const e10x10FF = async (doc, objData) => {
             .font("Helvetica-Bold")
             .text(`${esDatoValido(direccion) ? cortarTexto(direccion, 70) : "Sin información"} ${esDatoValido(cp) ? "CP: " + cp : ""}`, posicionAnchoTexto2 + 12, posicionAltoTexto2(1), { baseline: "middle", lineBreak: false })
 
-        doc.fontSize(tamañoFuente2 - 2)
-            .font("Helvetica-Bold")
-            .text("Observación:", posicionAnchoTexto2, posicionAltoTexto2(2), { baseline: "middle", lineBreak: false })
-        doc.fontSize(tamañoFuente2 - 2)
-            .font("Helvetica")
-            .text(esDatoValido(observacion) ? cortarTexto(observacion, 170) : "Sin información", posicionAnchoTexto2, posicionAltoTexto2(2), { baseline: "middle", indent: 40, width: anchoContainer2 - 10 })
+       
+            let tamañoObs = tamañoSegunLargo("Observacion: " + observacion, tamañoFuente2, 130)
+            doc.fontSize(tamañoObs)
+            comienzoObs = tamañoObs == tamañoFuente2 ? 53 : 40
+    
+            doc.fontSize(tamañoObs)
+                .font("Helvetica-Bold")
+                .text("Observación:", posicionAnchoTexto2, posicionAltoTexto2(2), { baseline: "middle", lineBreak: false })
+            doc.fontSize(tamañoObs)
+                .font("Helvetica")
+                .text(esDatoValido(observacion) ? cortarTexto(observacion, 165) : "Sin información", posicionAnchoTexto2, posicionAltoTexto2(2), { baseline: "middle", indent: comienzoObs, width: anchoContainer2 - 10 })
         // ! /SECCION DESTINATARIO
 
         // ! SECCION FULLFILLMENT
@@ -188,7 +204,7 @@ const e10x10FF = async (doc, objData) => {
 
         indexFF = 0
         if (fullfillment.length > 0) {
-            doc.circle(12, distanciaAlto4 - 21, 2.5).fillAndStroke(colorGrisOscuro, colorGrisOscuro)
+            doc.circle(12, distanciaAlto4 - 21, 2.5).fillAndStroke(colorNegroClaro, colorNegroClaro)
             doc.fontSize(tamañoFuente2)
                 .font("Helvetica")
                 .text("Fullfillment", 12 + 6, distanciaAlto4 - 20, { baseline: "middle", lineBreak: false })

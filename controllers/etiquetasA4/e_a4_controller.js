@@ -3,7 +3,7 @@ const SVGtoPDF = require("svg-to-pdfkit")
 
 const { iconCalendarChico, iconNombre, iconTelefono, iconUbicacion, iconNoQr } = require("../../utils/icons.js")
 const { esDatoValido, cortarTexto, tamañoSegunLargo } = require("../../utils/funciones.js")
-const { colorGrisClaro, colorGrisOscuro } = require("../../utils/colores.js")
+const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../utils/colores.js")
 
 // ! ETIQUETA a4 CON AMBOS SIMPLE
 
@@ -96,11 +96,11 @@ const ea4 = async (doc, objData, index, distanciaAlto1, cantFullfilmentPag, alto
             .font("Helvetica-Bold")
             .text(esDatoValido(fecha) ? fecha : "Sin información", posicionAnchoTexto1 + 15, posicionAltoTexto1(0), { baseline: "middle", lineBreak: false })
 
-        let tamañoRem = tamañoSegunLargo("Remitente: " + remitente, tamañoFuente1, 21)
+        let tamañoRem = tamañoSegunLargo("Rte.: " + remitente, tamañoFuente1, 21)
         doc.fontSize(tamañoRem)
-        let anchoTextoRem = doc.widthOfString("Remitente:", { font: "Helvetica", size: tamañoRem })
+        let anchoTextoRem = doc.widthOfString("Rte.:", { font: "Helvetica", size: tamañoRem })
 
-        doc.fontSize(tamañoRem).font("Helvetica").text("Remitente:", posicionAnchoTexto1, posicionAltoTexto1(1), { baseline: "middle", lineBreak: false })
+        doc.fontSize(tamañoRem).font("Helvetica").text("Rte.:", posicionAnchoTexto1, posicionAltoTexto1(1), { baseline: "middle", lineBreak: false })
         doc.fontSize(tamañoRem)
             .font("Helvetica-Bold")
             .text(esDatoValido(remitente) ? cortarTexto(remitente, 22) : "Sin información", posicionAnchoTexto1 + anchoTextoRem, posicionAltoTexto1(1), { baseline: "middle", lineBreak: false })
@@ -225,7 +225,7 @@ const ea4 = async (doc, objData, index, distanciaAlto1, cantFullfilmentPag, alto
             altoContenedor += 5
             altoSumaCamposEspeciales += 5
 
-            doc.circle(posicionAnchoTexto3, distanciaAlto3 - 8, 2.5).fillAndStroke(colorGrisOscuro, colorGrisOscuro)
+            doc.circle(posicionAnchoTexto3, distanciaAlto3 - 8, 2.5).fillAndStroke(colorNegroClaro, colorNegroClaro)
             doc.fontSize(tamañoFuente3)
                 .font("Helvetica")
                 .text("Campos extra", posicionAnchoTexto3 + 6, distanciaAlto3 - 7, { baseline: "middle", lineBreak: false })
@@ -305,7 +305,7 @@ const ea4 = async (doc, objData, index, distanciaAlto1, cantFullfilmentPag, alto
         if (fullfillment.length > 0) {
             altoContenedor += 30
 
-            doc.circle(posicionAnchoTexto3, distanciaAlto4 - 21, 2.5).fillAndStroke(colorGrisOscuro, colorGrisOscuro)
+            doc.circle(posicionAnchoTexto3, distanciaAlto4 - 21, 2.5).fillAndStroke(colorNegroClaro, colorNegroClaro)
             doc.fontSize(tamañoFuente2)
                 .font("Helvetica")
                 .text("Fullfillment", posicionAnchoTexto3 + 6, distanciaAlto4 - 20, { baseline: "middle", lineBreak: false })

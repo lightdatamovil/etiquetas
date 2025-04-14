@@ -79,9 +79,13 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
         let cacheLogos = {}
         let enviosMap = {}
 
-        const { connection, empresasData } = await getConnection(idempresa)
-        const empresa = empresasData[String(idempresa)] || {}
-        const logo = (cacheLogos[empresa.empresa] ||= `${empresa.url}/app-assets/images/logo/logo.png` || null)
+        let { connection, empresasData } = await getConnection(idempresa)
+        let empresa = empresasData[String(idempresa)] || {}
+        let logo = (cacheLogos[empresa.empresa] || `${empresa.url}/app-assets/images/logo/logo.png` || null)
+
+        if (idempresa == 288) {
+            logo = `${empresa.url}/app-assets/images/logo/logov1.png`
+        }
 
         const consultas = [
             {
@@ -171,14 +175,14 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
                 obs: envio.observacion || null,
                 monto_total_a_cobrar: envio.monto_total_a_cobrar || null,
                 peso: envio.peso || null,
-                remitente: envio.nombre_fantasia || null,
+                remitente: envio.nombre_fantasia + "asda" || null,
                 qr: envio.ml_qr_seguridad || `{"local": 1, "did": "${envio.did}", "cliente": ${envio.didCliente}, "empresa": ${idempresa}}`,
                 bultos: envio.bultos || null,
                 municipio: envio.destination_municipality_name || null,
                 camposEspeciales: [],
                 camposCobranzas: [],
                 camposLogi: [],
-                fullfillment: [],
+                fullfillment:[],
             }
         })
         ;["camposEspeciales", "camposCobranzas", "camposLogi"].forEach((key) => {
