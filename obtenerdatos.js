@@ -95,6 +95,7 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
                         edd.destination_comments AS ref,
                         edd.ciudad,
                         eo.observacion,
+                        e.destination_municipality_name,
                         c.nombre_fantasia
                     FROM envios e
                     LEFT JOIN envios_direcciones_destino edd ON e.did = edd.didEnvio AND edd.superado = 0 AND edd.elim = 0
@@ -173,6 +174,7 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
                 remitente: envio.nombre_fantasia || null,
                 qr: envio.ml_qr_seguridad || `{"local": 1, "did": "${envio.did}", "cliente": ${envio.didCliente}, "empresa": ${idempresa}}`,
                 bultos: envio.bultos || null,
+                municipio: envio.destination_municipality_name || null,
                 camposEspeciales: [],
                 camposCobranzas: [],
                 camposLogi: [],
