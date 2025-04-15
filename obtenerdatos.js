@@ -257,7 +257,10 @@ const registrarReimpresion = async (idempresa, dids, modulo, quien) => {
         await connection.rollback() // Revierte la transacción si hay un error
         console.error("Error en registrarReimpresion:", error.message)
         throw error
+    }finally{
+        connection.end() // Cierra la conexión
     }
+
 }
 
 module.exports = { getConnection, getFromRedis, redisClient, obtenerDatosEnvios, registrarReimpresion }
