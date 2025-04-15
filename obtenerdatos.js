@@ -175,7 +175,7 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
                 obs: envio.observacion || null,
                 monto_total_a_cobrar: envio.monto_total_a_cobrar || null,
                 peso: envio.peso || null,
-                remitente: envio.nombre_fantasia + "asda" || null,
+                remitente: envio.nombre_fantasia || null,
                 qr: envio.ml_qr_seguridad || `{"local": 1, "did": "${envio.did}", "cliente": ${envio.didCliente}, "empresa": ${idempresa}}`,
                 bultos: envio.bultos || null,
                 municipio: envio.destination_municipality_name || null,

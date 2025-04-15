@@ -8,10 +8,10 @@ const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../util
 // ! ETIQUETA a4 CON AMBOS SIMPLE
 
 const ea4 = async (doc, objData, index, distanciaAlto1, cantFullfilmentPag, altoContenedor, mayorPorPag) => {
-    let { nombreFantasia, logo, camposEspeciales, ciudad, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, ref, total, peso, remitente, qr, bultos, fullfillment } = objData
+    let { nombreFantasia, logo, camposEspeciales, ciudad, localidad, municipio, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, ref, total, peso, remitente, qr, bultos, fullfillment } = objData
 
     direccion = esDatoValido(ciudad) && esDatoValido(localidad) ? `${direccion}, ${localidad}` : direccion
-    localidad = esDatoValido(ciudad) ? ciudad : localidad
+    localidad = (!esDatoValido(ciudad) && !esDatoValido(localidad) && esDatoValido(municipio)) ? municipio : esDatoValido(ciudad) ? ciudad : localidad
     
     observacion = esDatoValido(observacion) && esDatoValido(ref) ? `${observacion} / Ref: ${ref}` : esDatoValido(ref) ? `Ref: ${ref}`: observacion
 
@@ -96,14 +96,14 @@ const ea4 = async (doc, objData, index, distanciaAlto1, cantFullfilmentPag, alto
             .font("Helvetica-Bold")
             .text(esDatoValido(fecha) ? fecha : "Sin información", posicionAnchoTexto1 + 15, posicionAltoTexto1(0), { baseline: "middle", lineBreak: false })
 
-        let tamañoRem = tamañoSegunLargo("Rte.: " + remitente, tamañoFuente1, 21)
+        let tamañoRem = tamañoSegunLargo("Rte.: " + remitente, tamañoFuente1, 19)
         doc.fontSize(tamañoRem)
         let anchoTextoRem = doc.widthOfString("Rte.:", { font: "Helvetica", size: tamañoRem })
 
         doc.fontSize(tamañoRem).font("Helvetica").text("Rte.:", posicionAnchoTexto1, posicionAltoTexto1(1), { baseline: "middle", lineBreak: false })
         doc.fontSize(tamañoRem)
             .font("Helvetica-Bold")
-            .text(esDatoValido(remitente) ? cortarTexto(remitente, 22) : "Sin información", posicionAnchoTexto1 + anchoTextoRem, posicionAltoTexto1(1), { baseline: "middle", lineBreak: false })
+            .text(esDatoValido(remitente) ? cortarTexto(remitente, 20) : "Sin información", posicionAnchoTexto1 + anchoTextoRem, posicionAltoTexto1(1), { baseline: "middle", lineBreak: false })
 
         let tamañoVenta = tamañoSegunLargo("Venta: " + nroVenta, tamañoFuente1, 20)
         doc.fontSize(tamañoVenta)
