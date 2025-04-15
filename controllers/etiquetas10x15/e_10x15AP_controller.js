@@ -3,15 +3,15 @@ const SVGtoPDF = require("svg-to-pdfkit")
 
 const { iconCalendar, iconNombre, iconTelefono, iconUbicacion } = require("../../utils/icons.js")
 const { esDatoValido, cortarTexto, tamañoSegunLargo } = require("../../utils/funciones.js")
-const { colorGrisClaro, colorGrisOscuro } = require("../../utils/colores.js")
+const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../utils/colores.js")
 
 //ETIQUETA 10X15 CON AMBOS PREMIUM
 
 const e10x15AP = async (doc, objData) => {
-    let { nombreFantasia, logo, camposEspeciales, ciudad, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, ref, total, peso, remitente, qr, bultos, fullfillment } = objData
+    let { nombreFantasia, logo, camposEspeciales, ciudad, localidad, municipio, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, ref, total, peso, remitente, qr, bultos, fulfillment } = objData
 
     direccion = esDatoValido(ciudad) && esDatoValido(localidad) ? `${direccion}, ${localidad}` : direccion
-    localidad = esDatoValido(ciudad) ? ciudad : localidad
+    localidad = (!esDatoValido(ciudad) && !esDatoValido(localidad) && esDatoValido(municipio)) ? municipio : esDatoValido(ciudad) ? ciudad : localidad
     
     observacion = esDatoValido(observacion) && esDatoValido(ref) ? `${observacion} / Ref: ${ref}` : esDatoValido(ref) ? `Ref: ${ref}`: observacion
 
@@ -48,8 +48,8 @@ const e10x15AP = async (doc, objData) => {
 
         // ! SECCION SUPERIOR
         tamañoFuente1 = 10
-        altoContainer1 = 22
-        margin1 = 6
+        altoContainer1 = 21
+        margin1 = 3
         padding1 = 7
         borderRadius1 = 5
         distanciaAlto1 = 48
@@ -69,6 +69,7 @@ const e10x15AP = async (doc, objData) => {
         doc.roundedRect(distanciaAncho1, containerSiguiente1(1), anchoContainer1, altoContainer1, borderRadius1).fillAndStroke(colorGrisClaro, colorGrisClaro)
         doc.roundedRect(distanciaAncho1, containerSiguiente1(2), anchoContainer1, altoContainer1, borderRadius1).fillAndStroke(colorGrisClaro, colorGrisClaro)
         doc.roundedRect(distanciaAncho1, containerSiguiente1(3), anchoContainer1, altoContainer1, borderRadius1).fillAndStroke(colorGrisClaro, colorGrisClaro)
+        doc.roundedRect(distanciaAncho1, containerSiguiente1(4), anchoContainer1, altoContainer1, borderRadius1).fillAndStroke(colorGrisClaro, colorGrisClaro)
 
         doc.fillAndStroke("white", "white")
         doc.fontSize(tamañoSegunLargo(localidad, tamañoFuente1, anchoCaracteres1))
@@ -77,29 +78,39 @@ const e10x15AP = async (doc, objData) => {
 
         doc.fillAndStroke("black", "black")
 
-        SVGtoPDF(doc, iconCalendar, posicionAnchoTexto1, posicionAltoTexto1(0) + 20)
+        SVGtoPDF(doc, iconCalendar, posicionAnchoTexto1, posicionAltoTexto1(0) + 17)
 
         doc.fontSize(tamañoSegunLargo(fecha, tamañoFuente1, 15))
             .font("Helvetica-Bold")
             .text(esDatoValido(fecha) ? cortarTexto(fecha, anchoCaracteres2) : "Sin información", posicionAnchoTexto1 + 20, posicionAltoTexto1(1), { baseline: "middle", lineBreak: false })
 
+            let tamañoRem = tamañoSegunLargo("Rte.: " + remitente, tamañoFuente1, 20)
+            doc.fontSize(tamañoRem)
+            let anchoTextoRem = doc.widthOfString("Rte.:", { font: "Helvetica", size: tamañoRem })
+    
+            doc.fontSize(tamañoRem).font("Helvetica").text("Rte.:", posicionAnchoTexto1, posicionAltoTexto1(2), { baseline: "middle", lineBreak: false })
+            doc.fontSize(tamañoRem)
+                .font("Helvetica-Bold")
+                .text(esDatoValido(remitente) ? cortarTexto(remitente, 23) : "Sin información", posicionAnchoTexto1 + anchoTextoRem, posicionAltoTexto1(2), { baseline: "middle", lineBreak: false })
+    
+
         let tamañoVenta = tamañoSegunLargo("Venta: " + nroVenta, tamañoFuente1, anchoCaracteres2)
         doc.fontSize(tamañoVenta)
         let anchoTextoVenta = doc.widthOfString("Venta:", { font: "Helvetica", size: tamañoVenta })
 
-        doc.fontSize(tamañoVenta).font("Helvetica").text("Venta:", posicionAnchoTexto1, posicionAltoTexto1(2), { baseline: "middle", lineBreak: false })
+        doc.fontSize(tamañoVenta).font("Helvetica").text("Venta:", posicionAnchoTexto1, posicionAltoTexto1(3), { baseline: "middle", lineBreak: false })
         doc.fontSize(tamañoVenta)
             .font("Helvetica-Bold")
-            .text(esDatoValido(nroVenta) ? cortarTexto(nroVenta, anchoCaracteres2 + 8) : "Sin información", posicionAnchoTexto1 + anchoTextoVenta, posicionAltoTexto1(2), { baseline: "middle", lineBreak: false })
+            .text(esDatoValido(nroVenta) ? cortarTexto(nroVenta, anchoCaracteres2 + 8) : "Sin información", posicionAnchoTexto1 + anchoTextoVenta, posicionAltoTexto1(3), { baseline: "middle", lineBreak: false })
 
         let tamañoEnvio = tamañoSegunLargo("Envio: " + nroEnvio, tamañoFuente1, anchoCaracteres2)
         doc.fontSize(tamañoEnvio)
         let anchoTextoEnvio = doc.widthOfString("Envio:", { font: "Helvetica", size: tamañoEnvio })
 
-        doc.fontSize(tamañoEnvio).font("Helvetica").text("Envio:", posicionAnchoTexto1, posicionAltoTexto1(3), { baseline: "middle", lineBreak: false })
+        doc.fontSize(tamañoEnvio).font("Helvetica").text("Envio:", posicionAnchoTexto1, posicionAltoTexto1(4), { baseline: "middle", lineBreak: false })
         doc.fontSize(tamañoEnvio)
             .font("Helvetica-Bold")
-            .text(esDatoValido(nroEnvio) ? cortarTexto(nroEnvio, anchoCaracteres2 + 8) : "Sin información", posicionAnchoTexto1 + anchoTextoEnvio, posicionAltoTexto1(3), { baseline: "middle", lineBreak: false })
+            .text(esDatoValido(nroEnvio) ? cortarTexto(nroEnvio, anchoCaracteres2 + 8) : "Sin información", posicionAnchoTexto1 + anchoTextoEnvio, posicionAltoTexto1(4), { baseline: "middle", lineBreak: false })
         // ! /SECCION SUPERIOR
 
         // ! SECCION DESTINATARIO
@@ -121,7 +132,7 @@ const e10x15AP = async (doc, objData) => {
             }
         }
 
-        doc.circle(posicionAnchoTexto2, distanciaAlto2 - 11, 2.5).fillAndStroke(colorGrisOscuro, colorGrisOscuro)
+        doc.circle(posicionAnchoTexto2, distanciaAlto2 - 11, 2.5).fillAndStroke(colorNegroClaro, colorNegroClaro)
         doc.fontSize(tamañoFuente2)
             .font("Helvetica")
             .text("Destinatario", posicionAnchoTexto2 + 6, distanciaAlto2 - 10, { baseline: "middle", lineBreak: false })
@@ -157,12 +168,17 @@ const e10x15AP = async (doc, objData) => {
             .font("Helvetica-Bold")
             .text(`${esDatoValido(direccion) ? cortarTexto(direccion, 70) : "Sin información"} ${esDatoValido(cp) ? "CP: " + cp : ""}`, posicionAnchoTexto2 + 12, posicionAltoTexto2(1), { baseline: "middle", lineBreak: false })
 
-        doc.fontSize(tamañoFuente2 - 2)
-            .font("Helvetica-Bold")
-            .text("Observación:", posicionAnchoTexto2, posicionAltoTexto2(2), { baseline: "middle", lineBreak: false })
-        doc.fontSize(tamañoFuente2 - 2)
-            .font("Helvetica")
-            .text(esDatoValido(observacion) ? cortarTexto(observacion, 180) : "Sin información", posicionAnchoTexto2, posicionAltoTexto2(2), { baseline: "middle", indent: 40, width: anchoContainer2 - 10 })
+            let tamañoObs = tamañoSegunLargo("Observacion: " + observacion, tamañoFuente2, 130)
+            doc.fontSize(tamañoObs)
+            comienzoObs = tamañoObs == tamañoFuente2 ? 53 : 40
+    
+            doc.fontSize(tamañoObs)
+                .font("Helvetica-Bold")
+                .text("Observación:", posicionAnchoTexto2, posicionAltoTexto2(2), { baseline: "middle", lineBreak: false })
+            doc.fontSize(tamañoObs)
+                .font("Helvetica")
+                .text(esDatoValido(observacion) ? cortarTexto(observacion, 180) : "Sin información", posicionAnchoTexto2, posicionAltoTexto2(2), { baseline: "middle", indent: comienzoObs, width: anchoContainer2 - 10 })
+      
         // ! /SECCION DESTINATARIO
 
         // ! SECCION CAMPOS ESPECIALES
@@ -185,7 +201,7 @@ const e10x15AP = async (doc, objData) => {
         }
 
         if (camposEspeciales.length > 0) {
-            doc.circle(posicionAnchoTexto3, distanciaAlto3 - 11, 2.5).fillAndStroke(colorGrisOscuro, colorGrisOscuro)
+            doc.circle(posicionAnchoTexto3, distanciaAlto3 - 11, 2.5).fillAndStroke(colorNegroClaro, colorNegroClaro)
             doc.fontSize(tamañoFuente3)
                 .font("Helvetica")
                 .text("Campos extra", posicionAnchoTexto3 + 6, distanciaAlto3 - 10, { baseline: "middle", lineBreak: false })
@@ -201,24 +217,36 @@ const e10x15AP = async (doc, objData) => {
                     doc.fontSize(tamañoCE)
                     let anchoTextoEsp = doc.widthOfString(campo["nombre"] ? cortarTexto(campo["nombre"], 15) + ":" : "CampoEsp:", { font: "Helvetica-Bold", size: tamañoCE })
 
+                    nombresConPrecio = ["total", "total a cobrar", "total a pagar"];
+                    campoValor = esDatoValido(campo["valor"])
+                        ? nombresConPrecio.includes(campo["nombre"].toLowerCase())
+                        ? cortarTexto(`$${Number(campo["valor"]).toLocaleString("es-AR")}`, 25)
+                        : cortarTexto(campo["valor"], 25)
+                        : "Sin información";
+                    
+
                     if (siguiente == 0 || siguiente % 2 == 0) {
                         doc.roundedRect(distanciaAncho3, containerSiguiente3(distanciaCE), 134, altoContainer3, borderRadius3).fillAndStroke(colorGrisClaro, colorGrisClaro)
                         doc.fillAndStroke("black", "black")
                         doc.fontSize(tamañoCE)
                             .font("Helvetica-Bold")
                             .text(esDatoValido(campo["nombre"]) ? cortarTexto(campo["nombre"], 15) + ":" : "CampoEsp:", posicionAnchoTexto3, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
-                        doc.fontSize(tamañoCE)
-                            .font("Helvetica")
-                            .text(esDatoValido(campo["valor"]) ? cortarTexto(campo["valor"], 25) : "Sin información", posicionAnchoTexto3 + anchoTextoEsp + 10, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
+                        
+                            doc.fontSize(tamañoCE)
+                            .font("Helvetica-Bold")
+                            .text(campoValor, posicionAnchoTexto3 + anchoTextoEsp + 10, posicionAltoTexto3(distanciaCE), {baseline: "middle",lineBreak: false,});
+                        
                     } else {
                         doc.roundedRect(134 + 11, containerSiguiente3(distanciaCE), 134, altoContainer3, borderRadius3).fillAndStroke(colorGrisClaro, colorGrisClaro)
                         doc.fillAndStroke("black", "black")
                         doc.fontSize(tamañoCE)
                             .font("Helvetica-Bold")
                             .text(esDatoValido(campo["nombre"]) ? cortarTexto(campo["nombre"], 15) + ":" : "", 134 + 11 + padding3, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
-                        doc.fontSize(tamañoCE)
-                            .font("Helvetica")
-                            .text(esDatoValido(campo["valor"]) ? cortarTexto(campo["valor"], 25) : "Sin información", 134 + 11 + padding3 + anchoTextoEsp + 10, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
+                       
+                            doc.fontSize(tamañoCE)
+                            .font("Helvetica-Bold")
+                            .text(campoValor,134 + 11 + padding3 + anchoTextoEsp + 10, posicionAltoTexto3(distanciaCE), {baseline: "middle",lineBreak: false,});
+                                               
                         distanciaCE += 1
                     }
                     siguiente += 1
@@ -227,7 +255,7 @@ const e10x15AP = async (doc, objData) => {
         }
         // ! /SECCION CAMPOS ESPECIALES
 
-        // ! SECCION FULLFILLMENT
+        // ! SECCION FULFILLMENT
         tamañoFuente4 = 6
         anchoContainer4 = 273
         altoContainer4 = 13
@@ -248,10 +276,10 @@ const e10x15AP = async (doc, objData) => {
         }
 
         indexFF = Math.ceil(camposEspeciales.length / 2)
-        paginasMultiples = fullfillment.length + Math.ceil(camposEspeciales.length / 2)
+        paginasMultiples = fulfillment.length + Math.ceil(camposEspeciales.length / 2)
 
-        if (fullfillment.length > 0) {
-            doc.circle(posicionAnchoTexto3, distanciaAlto4 - 21, 2.5).fillAndStroke(colorGrisOscuro, colorGrisOscuro)
+        if (fulfillment.length > 0) {
+            doc.circle(posicionAnchoTexto3, distanciaAlto4 - 21, 2.5).fillAndStroke(colorNegroClaro, colorNegroClaro)
             doc.fontSize(tamañoFuente2)
                 .font("Helvetica")
                 .text("Fullfillment", posicionAnchoTexto3 + 6, distanciaAlto4 - 20, { baseline: "middle", lineBreak: false })
@@ -273,7 +301,7 @@ const e10x15AP = async (doc, objData) => {
                 .font("Helvetica")
                 .text("Cantidad", distanciaAncho4 + 211 + margin4 * 3 + padding4, posicionAltoTexto4(0) - 12, { baseline: "middle", lineBreak: false })
 
-            await fullfillment.map((elemento) => {
+            await fulfillment.map((elemento) => {
                 indexFF += 1
 
                 if (indexFF > 33) {
@@ -324,7 +352,7 @@ const e10x15AP = async (doc, objData) => {
             })
         }
 
-        // ! /SECCION FULLFILLMENT
+        // ! /SECCION FULFILLMENT
 
         if (bultos > 1 && i < bultos && indexFF < 9) {
             doc.fontSize(5)

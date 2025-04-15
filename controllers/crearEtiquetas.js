@@ -16,7 +16,7 @@ const crearEtiquetas = async (tipoEtiqueta, calidad, logistica, envios, res) => 
             let index = 0
             let index_a4 = 1
             let distanciaAlto_a4 = 15
-            let cantFullfilmentPag_a4 = 0
+            let cantFulfillmentPag_a4 = 0
             let altoContenedor_a4 = 130
             let mayorPorPag_a4 = 6
 
@@ -34,6 +34,7 @@ const crearEtiquetas = async (tipoEtiqueta, calidad, logistica, envios, res) => 
                     nroTelefono: paquete.destination_receiver_phone,
                     direccion: paquete.address_line,
                     ciudad: cambiarACaba(paquete.ciudad),
+                    municipio: cambiarACaba(paquete.municipio),
                     cp: paquete.cp,
                     observacion: paquete.obs,
                     ref: paquete.ref,
@@ -43,10 +44,10 @@ const crearEtiquetas = async (tipoEtiqueta, calidad, logistica, envios, res) => 
                     qr: paquete.qr,
                     bultos: paquete.bultos < 2 ? 1 : paquete.bultos,
                     camposEspeciales: camposExtras || [],
-                    fullfillment: paquete.fullfillment || [],
+                    fulfillment: paquete.fulfillment || [],
                 }
 
-                let cualEtiqueta = objData.camposEspeciales.length > 0 ? (objData.fullfillment.length == 0 ? "CE" : "A") : objData.fullfillment.length == 0 ? "S" : "FF"
+                let cualEtiqueta = objData.camposEspeciales.length > 0 ? (objData.fulfillment.length == 0 ? "CE" : "A") : objData.fulfillment.length == 0 ? "S" : "FF"
                 let funcionName = medidaEtiqueta + cualEtiqueta + calidadEtiqueta
                 let funcionNameA4 = medidaEtiqueta + calidadEtiqueta
 
@@ -57,17 +58,17 @@ const crearEtiquetas = async (tipoEtiqueta, calidad, logistica, envios, res) => 
                         doc.addPage()
                     }
                 } else {
-                    if ((index_a4 == 2 && cantFullfilmentPag_a4 > 28) || (index_a4 == 3 && cantFullfilmentPag_a4 > 16) || (index_a4 == 4 && cantFullfilmentPag_a4 > 10) || (index_a4 == 5 && cantFullfilmentPag_a4 > 4) || (index_a4 == 6 && cantFullfilmentPag_a4 > 0) || index_a4 > mayorPorPag_a4) {
+                    if ((index_a4 == 2 && cantFulfillmentPag_a4 > 28) || (index_a4 == 3 && cantFulfillmentPag_a4 > 16) || (index_a4 == 4 && cantFulfillmentPag_a4 > 10) || (index_a4 == 5 && cantFulfillmentPag_a4 > 4) || (index_a4 == 6 && cantFulfillmentPag_a4 > 0) || index_a4 > mayorPorPag_a4) {
                         doc.addPage()
-                        cantFullfilmentPag_a4 = 0
+                        cantFulfillmentPag_a4 = 0
                         index_a4 = 1
                         distanciaAlto_a4 = 15
                     }
 
-                    const result = await exportsEtiquetas[funcionNameA4](doc, objData, index_a4, distanciaAlto_a4, cantFullfilmentPag_a4, altoContenedor_a4, mayorPorPag_a4)
+                    const result = await exportsEtiquetas[funcionNameA4](doc, objData, index_a4, distanciaAlto_a4, cantFulfillmentPag_a4, altoContenedor_a4, mayorPorPag_a4)
 
                     index_a4 = result.index
-                    cantFullfilmentPag_a4 = result.cantFullfilmentPag
+                    cantFulfillmentPag_a4 = result.cantFulfillmentPag
                     distanciaAlto_a4 = result.distanciaAlto1
                     altoContenedor_a4 = result.altoContenedor
                 }

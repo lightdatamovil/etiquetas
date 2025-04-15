@@ -79,9 +79,13 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
         let cacheLogos = {}
         let enviosMap = {}
 
-        const { connection, empresasData } = await getConnection(idempresa)
-        const empresa = empresasData[String(idempresa)] || {}
-        const logo = (cacheLogos[empresa.empresa] ||= `${empresa.url}/app-assets/images/logo/logo.png` || null)
+        let { connection, empresasData } = await getConnection(idempresa)
+        let empresa = empresasData[String(idempresa)] || {}
+        let logo = (cacheLogos[empresa.empresa] || `${empresa.url}/app-assets/images/logo/logo.png` || null)
+
+        if (idempresa == 288) {
+            logo = `${empresa.url}/app-assets/images/logo/logov1.png`
+        }
 
         const consultas = [
             {
@@ -175,10 +179,10 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
                 qr: envio.ml_qr_seguridad || `{"local": 1, "did": "${envio.did}", "cliente": ${envio.didCliente}, "empresa": ${idempresa}}`,
                 bultos: envio.bultos || null,
                 municipio: envio.destination_municipality_name || null,
-                camposEspeciales: [],
+                camposEspeciales:[],
                 camposCobranzas: [],
                 camposLogi: [],
-                fullfillment: [],
+                fulfillment:[],
             }
         })
         ;["camposEspeciales", "camposCobranzas", "camposLogi"].forEach((key) => {
@@ -195,7 +199,7 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
         if (datos.ordenes) {
             datos.ordenes.forEach((orden) => {
                 if (enviosMap[orden.didEnvio]) {
-                    enviosMap[orden.didEnvio].fullfillment.push({
+                    enviosMap[orden.didEnvio].fulfillment.push({
                         sku: orden.sku || null,
                         ean: orden.ean || null,
                         descripcion: orden.descripcion || null,
