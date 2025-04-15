@@ -8,7 +8,7 @@ const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../util
 //ETIQUETA 10X15 CON CAMPOS ESPECIALES PREMIUM
 
 const e10x15CEP = async (doc, objData) => {
-    let { nombreFantasia, logo, camposEspeciales, ciudad, localidad, municipio, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, ref, total, peso, remitente, qr, bultos, fullfillment } = objData
+    let { nombreFantasia, logo, camposEspeciales, ciudad, localidad, municipio, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, ref, total, peso, remitente, qr, bultos, fulfillment } = objData
 
     direccion = esDatoValido(ciudad) && esDatoValido(localidad) ? `${direccion}, ${localidad}` : direccion
     localidad = (!esDatoValido(ciudad) && !esDatoValido(localidad) && esDatoValido(municipio)) ? municipio : esDatoValido(ciudad) ? ciudad : localidad

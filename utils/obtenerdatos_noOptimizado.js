@@ -173,7 +173,7 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
 
         let ordenes = []
         if (tieneFullfillment != "0") {
-            // Query para fullfillment
+            // Query para fulfillment
             let queryOrdenes = `
                             SELECT o.did AS didOrden, oi.seller_sku, oi.cantidad, fp.sku, fp.ean, fp.descripcion
                             FROM ordenes o
@@ -213,7 +213,7 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
                     camposEspeciales: [],
                     camposCobranzas: [],
                     camposLogi: [],
-                    fullfillment: [],
+                    fulfillment: [],
                 }
             }
         })
@@ -255,7 +255,7 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
         if (ordenes.length > 0) {
             ordenes.forEach((orden) => {
                 if (enviosMap[orden.didEnvio]) {
-                    enviosMap[orden.didEnvio].fullfillment.push({
+                    enviosMap[orden.didEnvio].fulfillment.push({
                         sku: orden.sku || null,
                         ean: orden.ean || null,
                         descripcion: orden.descripcion || null,

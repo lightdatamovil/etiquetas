@@ -34,12 +34,12 @@ Cuenta con 8 variantes para los tamaños 10x10 y 10x15:
 | :------------------------ | :-------------------------------------- | :----- |
 | SOLO                      | info                                    | S      |
 | SOLO PREMIUM              | info                                    | SP     |
-| FULLFILLMENT              | info + fullfillment                     | FF     |
-| FULLFILLMENT PREMIUM      | info + fullfillment                     | FFP    |
+| FULFILLMENT              | info + fulfillment                     | FF     |
+| FULFILLMENT PREMIUM      | info + fulfillment                     | FFP    |
 | CAMPOS ESPECIALES         | info + campos especiales                | CE     |
 | CAMPOS ESPECIALES PREMIUM | info + campos especiales                | CEP    |
-| AMBAS                     | info + campos especiales + fullfillment | A      |
-| AMBAS PREMIUM             | info + campos especiales + fullfillment | AP     |
+| AMBAS                     | info + campos especiales + fulfillment | A      |
+| AMBAS PREMIUM             | info + campos especiales + fulfillment | AP     |
 
 Y para A4 hay dos variantes que son la SIMPLE Y la PREMIUM, que contemplan las 4 variantes correspondientes cada una
 
@@ -66,7 +66,7 @@ Y para A4 hay dos variantes que son la SIMPLE Y la PREMIUM, que contemplan las 4
 | PESO                 | `string`                                                     |
 | CODIGO QR            | `img`                                                        |
 | CAMPOS ESPECIALES    | `array`                                                      |
-| LISTADO FULLFILLMENT | `array`                                                      |
+| LISTADO FULFILLMENT | `array`                                                      |
 | BULTOS               | `number` (Dependiendo la cantidad se replican las etiquetas) |
 
 ---

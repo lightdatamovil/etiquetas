@@ -8,7 +8,7 @@ const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../util
 //ETIQUETA 10x10 CON AMBOS PREMIUM
 
 const e10x10AP = async (doc, objData) => {
-    let { nombreFantasia, logo, camposEspeciales, ciudad, localidad, municipio, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, ref, total, peso, remitente, qr, bultos, fullfillment } = objData
+    let { nombreFantasia, logo, camposEspeciales, ciudad, localidad, municipio, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, ref, total, peso, remitente, qr, bultos, fulfillment } = objData
 
     direccion = esDatoValido(ciudad) && esDatoValido(localidad) ? `${direccion}, ${localidad}` : direccion
     localidad = (!esDatoValido(ciudad) && !esDatoValido(localidad) && esDatoValido(municipio)) ? municipio : esDatoValido(ciudad) ? ciudad : localidad
@@ -254,7 +254,7 @@ const e10x10AP = async (doc, objData) => {
         }
         // ! /SECCION CAMPOS ESPECIALES
 
-        // ! SECCION FULLFILLMENT
+        // ! SECCION FULFILLMENT
         tamañoFuente4 = 6
         anchoContainer4 = 273
         altoContainer4 = 13
@@ -277,9 +277,9 @@ const e10x10AP = async (doc, objData) => {
         maximoCampoEspeciales = camposEspeciales.length > 6 ? 6 : camposEspeciales.length
 
         indexFF = Math.ceil(maximoCampoEspeciales / 2)
-        paginasMultiples = fullfillment.length + Math.ceil(camposEspeciales.length / 2)
+        paginasMultiples = fulfillment.length + Math.ceil(camposEspeciales.length / 2)
 
-        if (fullfillment.length > 0) {
+        if (fulfillment.length > 0) {
             doc.circle(posicionAnchoTexto3, distanciaAlto4 - 21, 2.5).fillAndStroke(colorNegroClaro, colorNegroClaro)
             doc.fontSize(tamañoFuente2)
                 .font("Helvetica")
@@ -302,7 +302,7 @@ const e10x10AP = async (doc, objData) => {
                 .font("Helvetica")
                 .text("Cantidad", distanciaAncho4 + 211 + margin4 * 3 + padding4, posicionAltoTexto4(0) - 12, { baseline: "middle", lineBreak: false })
 
-            await fullfillment.map((elemento) => {
+            await fulfillment.map((elemento) => {
                 indexFF += 1
 
                 if (indexFF > 20) {
@@ -352,7 +352,7 @@ const e10x10AP = async (doc, objData) => {
             })
         }
 
-        // ! /SECCION FULLFILLMENT
+        // ! /SECCION FULFILLMENT
 
         if (bultos > 1 && i < bultos && paginasMultiples < 5) {
             doc.fontSize(5)

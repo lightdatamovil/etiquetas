@@ -179,10 +179,10 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
                 qr: envio.ml_qr_seguridad || `{"local": 1, "did": "${envio.did}", "cliente": ${envio.didCliente}, "empresa": ${idempresa}}`,
                 bultos: envio.bultos || null,
                 municipio: envio.destination_municipality_name || null,
-                camposEspeciales: [],
+                camposEspeciales:[],
                 camposCobranzas: [],
                 camposLogi: [],
-                fullfillment:[],
+                fulfillment:[],
             }
         })
         ;["camposEspeciales", "camposCobranzas", "camposLogi"].forEach((key) => {
@@ -199,7 +199,7 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
         if (datos.ordenes) {
             datos.ordenes.forEach((orden) => {
                 if (enviosMap[orden.didEnvio]) {
-                    enviosMap[orden.didEnvio].fullfillment.push({
+                    enviosMap[orden.didEnvio].fulfillment.push({
                         sku: orden.sku || null,
                         ean: orden.ean || null,
                         descripcion: orden.descripcion || null,

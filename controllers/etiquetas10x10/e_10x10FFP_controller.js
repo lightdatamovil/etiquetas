@@ -5,10 +5,10 @@ const { iconCalendarChico, iconNombre, iconTelefono, iconUbicacion } = require("
 const { esDatoValido, cortarTexto, tamañoSegunLargo } = require("../../utils/funciones.js")
 const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../utils/colores.js")
 
-//ETIQUETA 10x10 CON FULLFILLMENT PREMIUM
+//ETIQUETA 10x10 CON FULFILLMENT PREMIUM
 
 const e10x10FF = async (doc, objData) => {
-    let { nombreFantasia, logo, camposEspeciales, ciudad, localidad, municipio, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, ref, total, peso, remitente, qr, bultos, fullfillment } = objData
+    let { nombreFantasia, logo, camposEspeciales, ciudad, localidad, municipio, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, ref, total, peso, remitente, qr, bultos, fulfillment } = objData
 
     direccion = esDatoValido(ciudad) && esDatoValido(localidad) ? `${direccion}, ${localidad}` : direccion
     localidad = (!esDatoValido(ciudad) && !esDatoValido(localidad) && esDatoValido(municipio)) ? municipio : esDatoValido(ciudad) ? ciudad : localidad
@@ -183,7 +183,7 @@ const e10x10FF = async (doc, objData) => {
                 .text(esDatoValido(observacion) ? cortarTexto(observacion, 165) : "Sin información", posicionAnchoTexto2, posicionAltoTexto2(2), { baseline: "middle", indent: comienzoObs, width: anchoContainer2 - 10 })
         // ! /SECCION DESTINATARIO
 
-        // ! SECCION FULLFILLMENT
+        // ! SECCION FULFILLMENT
         tamañoFuente4 = 6
         anchoContainer4 = 273
         altoContainer4 = 13
@@ -203,7 +203,7 @@ const e10x10FF = async (doc, objData) => {
         }
 
         indexFF = 0
-        if (fullfillment.length > 0) {
+        if (fulfillment.length > 0) {
             doc.circle(12, distanciaAlto4 - 21, 2.5).fillAndStroke(colorNegroClaro, colorNegroClaro)
             doc.fontSize(tamañoFuente2)
                 .font("Helvetica")
@@ -226,7 +226,7 @@ const e10x10FF = async (doc, objData) => {
                 .font("Helvetica")
                 .text("Cantidad", distanciaAncho4 + 211 + margin4 * 3 + padding4, posicionAltoTexto4(0) - 12, { baseline: "middle", lineBreak: false })
 
-            await fullfillment.map((elemento) => {
+            await fulfillment.map((elemento) => {
                 indexFF += 1
 
                 if (indexFF > 21) {
@@ -279,9 +279,9 @@ const e10x10FF = async (doc, objData) => {
             })
         }
 
-        // ! /SECCION FULLFILLMENT
+        // ! /SECCION FULFILLMENT
 
-        if (bultos > 1 && i < bultos && fullfillment.length < 6) {
+        if (bultos > 1 && i < bultos && fulfillment.length < 6) {
             doc.fontSize(5)
                 .font("Helvetica")
                 .text(`Bulto ${i + 1} / ${bultos}`, 100, 10, {
