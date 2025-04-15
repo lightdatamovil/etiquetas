@@ -241,6 +241,13 @@ const ea4 = async (doc, objData, index, distanciaAlto1, cantFullfilmentPag, alto
                     doc.fontSize(tamañoCE)
                     let anchoTextoEsp = doc.widthOfString(campo["nombre"] ? cortarTexto(campo["nombre"], 38) + ":" : "CampoEsp:", { font: "Helvetica-Bold", size: tamañoCE })
 
+                    nombresConPrecio = ["total", "total a cobrar", "total a pagar"];
+                    campoValor = esDatoValido(campo["valor"])
+                        ? nombresConPrecio.includes(campo["nombre"].toLowerCase())
+                        ? cortarTexto(`$${Number(campo["valor"]).toLocaleString("es-AR")}`, 48)
+                        : cortarTexto(campo["valor"], 48)
+                        : "Sin información";
+
                     if (siguiente == 0 || siguiente % 2 == 0) {
                         altoContenedor += 19
                         altoSumaCamposEspeciales += 19
@@ -248,9 +255,11 @@ const ea4 = async (doc, objData, index, distanciaAlto1, cantFullfilmentPag, alto
                         doc.fontSize(tamañoCE)
                             .font("Helvetica-Bold")
                             .text(esDatoValido(campo["nombre"]) ? cortarTexto(campo["nombre"], 38) + ":" : "CampoEsp:", posicionAnchoTexto3, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
-                        doc.fontSize(tamañoCE)
-                            .font("Helvetica")
-                            .text(esDatoValido(campo["valor"]) ? cortarTexto(campo["valor"], 48) : "Sin información", posicionAnchoTexto3 + anchoTextoEsp + 10, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
+                       
+                            doc.fontSize(tamañoCE)
+                            .font("Helvetica-Bold")
+                            .text(campoValor, posicionAnchoTexto3 + anchoTextoEsp + 10, posicionAltoTexto3(distanciaCE), {baseline: "middle",lineBreak: false,});
+                       
                     } else {
                         doc.moveTo(anchoContainer3 + 30, containerSiguiente3(distanciaCE) - 2)
                             .lineTo(anchoContainer3 + 30, containerSiguiente3(distanciaCE) + 12)
@@ -260,9 +269,10 @@ const ea4 = async (doc, objData, index, distanciaAlto1, cantFullfilmentPag, alto
                         doc.fontSize(tamañoCE)
                             .font("Helvetica-Bold")
                             .text(esDatoValido(campo["nombre"]) ? cortarTexto(campo["nombre"], 38) + ":" : "CampoEsp:", 265 + 38 + padding3, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
-                        doc.fontSize(tamañoCE)
-                            .font("Helvetica")
-                            .text(esDatoValido(campo["valor"]) ? cortarTexto(campo["valor"], 48) : "Sin información", 265 + 38 + padding3 + anchoTextoEsp + 10, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
+                       
+                            doc.fontSize(tamañoCE)
+                            .font("Helvetica-Bold")
+                            .text(campoValor, 265 + 38 + padding3 + anchoTextoEsp + 10, posicionAltoTexto3(distanciaCE), {baseline: "middle",lineBreak: false,});
 
                         if (camposEspeciales.length > 2 && siguiente < 4) {
                             doc.moveTo(distanciaAncho3, containerSiguiente3(distanciaCE + 1) - 5)
