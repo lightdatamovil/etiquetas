@@ -81,7 +81,7 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
 
         let { connection, empresasData } = await getConnection(idempresa)
         let empresa = empresasData[String(idempresa)] || {}
-        let logo = (cacheLogos[empresa.empresa] || `${empresa.url}/app-assets/images/logo/logo.png` || null)
+        let logo = cacheLogos[empresa.empresa] || `${empresa.url}/app-assets/images/logo/logo.png` || null
 
         if (idempresa == 288) {
             logo = `${empresa.url}/app-assets/images/logo/logov1.png`
@@ -179,17 +179,17 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
                 qr: envio.ml_qr_seguridad || `{"local": 1, "did": "${envio.did}", "cliente": ${envio.didCliente}, "empresa": ${idempresa}}`,
                 bultos: envio.bultos || null,
                 municipio: envio.destination_municipality_name || null,
-                camposEspeciales:[],
+                camposEspeciales: [],
                 camposCobranzas: [],
                 camposLogi: [],
-                fulfillment:[],
+                fulfillment: [],
             }
         })
         ;["camposEspeciales", "camposCobranzas", "camposLogi"].forEach((key) => {
             datos[key].forEach((campo) => {
-                if (enviosMap[campo.didEnvio] && campo.campo_valor) {
+                if (enviosMap[campo.didEnvio] && campo.campo_nombre && campo.campo_valor) {
                     enviosMap[campo.didEnvio][key].push({
-                        nombre: campo.campo_nombre || null,
+                        nombre: campo.campo_nombre,
                         valor: campo.campo_valor,
                     })
                 }
