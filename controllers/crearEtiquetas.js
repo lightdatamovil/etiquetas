@@ -7,7 +7,7 @@ const crearEtiquetas = async (tipoEtiqueta, calidad, logistica, envios, res) => 
     return new Promise(async (resolve, reject) => {
         try {
             let tamañoHoja = tipoEtiqueta == 0 ? medida10x10 : tipoEtiqueta == 1 ? medida10x15 : medidaA4
-            let medidaEtiqueta = tipoEtiqueta == 0 ? "e10x10" : tipoEtiqueta == 1 ? "e10x15" : "ea4"
+            let medidaEtiqueta = tipoEtiqueta == 0 ? "e10x10" : tipoEtiqueta == 1 || tipoEtiqueta == 3 ? "e10x15" : "ea4"
             let calidadEtiqueta = calidad == 1 ? "P" : ""
 
             const doc = new PDFDocument({ size: tamañoHoja, margin: 0 })
@@ -51,8 +51,12 @@ const crearEtiquetas = async (tipoEtiqueta, calidad, logistica, envios, res) => 
                 let funcionName = medidaEtiqueta + cualEtiqueta + calidadEtiqueta
                 let funcionNameA4 = medidaEtiqueta + calidadEtiqueta
 
-                if (tipoEtiqueta == 0 || tipoEtiqueta == 1) {
+                if (tipoEtiqueta == 0 || tipoEtiqueta == 1 || tipoEtiqueta == 3) {
                     await exportsEtiquetas[funcionName](doc, objData)
+                    if (tipoEtiqueta == 3) {
+                        doc.roundedRect(0, 0, 283.5, 425.25) // x, y, ancho, alto
+                            .stroke("black")
+                    }
 
                     if (envios.length > 1 && index < envios.length - 1) {
                         doc.addPage()
