@@ -211,8 +211,6 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
 
         connection.end()
 
-        console.log("Datos obtenidos de las tablas:", enviosMap)
-
         return {
             nombreFantasia: empresa.empresa || null,
             logo,
