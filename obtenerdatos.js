@@ -96,7 +96,7 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
                         COALESCE(edd.localidad, e.destination_city_name) AS localidad,
                         COALESCE(edd.address_line, e.destination_shipping_address_line) AS address_line,
                         COALESCE(edd.cp, e.destination_shipping_zip_code) AS cp,
-                        edd.destination_comments AS ref,
+                        COALESCE(edd.destination_comments, e.destination_comments) AS ref,
                         edd.ciudad,
                         eo.observacion,
                         e.destination_municipality_name,
@@ -211,6 +211,8 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
 
         connection.end()
 
+        console.log("Datos obtenidos de las tablas:", enviosMap)
+
         return {
             nombreFantasia: empresa.empresa || null,
             logo,
@@ -261,10 +263,9 @@ const registrarReimpresion = async (idempresa, dids, modulo, quien) => {
         await connection.rollback() // Revierte la transacción si hay un error
         console.error("Error en registrarReimpresion:", error.message)
         throw error
-    }finally{
+    } finally {
         connection.end() // Cierra la conexión
     }
-
 }
 
 module.exports = { getConnection, getFromRedis, redisClient, obtenerDatosEnvios, registrarReimpresion }
