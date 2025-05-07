@@ -8,12 +8,7 @@ const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../util
 //ETIQUETA 10x10 CON AMBOS PREMIUM
 
 const e10x10AP = async (doc, objData) => {
-    let { nombreFantasia, logo, camposEspeciales, ciudad, localidad, municipio, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, ref, total, peso, remitente, qr, bultos, fulfillment } = objData
-
-    direccion = esDatoValido(ciudad) && esDatoValido(localidad) ? `${direccion}, ${localidad}` : direccion
-    localidad = (!esDatoValido(ciudad) && !esDatoValido(localidad) && esDatoValido(municipio)) ? municipio : esDatoValido(ciudad) ? ciudad : localidad
-    
-    observacion = esDatoValido(observacion) && esDatoValido(ref) ? `${observacion} / Ref: ${ref}` : esDatoValido(ref) ? `Ref: ${ref}`: observacion
+    let { nombreFantasia, logo, camposEspeciales, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fulfillment } = objData
 
     for (let i = 0; i < bultos; i++) {
         distanciaAncho1 = 80
@@ -80,7 +75,6 @@ const e10x10AP = async (doc, objData) => {
         doc.fontSize(tamañoSegunLargo(fecha, tamañoFuente1, 15))
             .font("Helvetica-Bold")
             .text(esDatoValido(fecha) ? cortarTexto(fecha, anchoCaracteres2) : "Sin información", posicionAnchoTexto1 + 20, posicionAltoTexto1(1), { baseline: "middle", lineBreak: false })
-
 
         let tamañoRem = tamañoSegunLargo("Rte.: " + remitente, tamañoFuente1, 20)
         doc.fontSize(tamañoRem)
@@ -170,16 +164,14 @@ const e10x10AP = async (doc, objData) => {
             .font("Helvetica-Bold")
             .text(`${esDatoValido(direccion) ? cortarTexto(direccion, 70) : "Sin información"} ${esDatoValido(cp) ? "CP: " + cp : ""}`, posicionAnchoTexto2 + 12, posicionAltoTexto2(1), { baseline: "middle", lineBreak: false })
 
-            let tamañoObs = tamañoSegunLargo("Observacion: " + observacion, tamañoFuente2, 130)
-            doc.fontSize(tamañoObs)
-            comienzoObs = tamañoObs == tamañoFuente2 ? 53 : 40
-    
-            doc.fontSize(tamañoObs)
-                .font("Helvetica-Bold")
-                .text("Observación:", posicionAnchoTexto2, posicionAltoTexto2(2), { baseline: "middle", lineBreak: false })
-            doc.fontSize(tamañoObs)
-                .font("Helvetica")
-                .text(esDatoValido(observacion) ? cortarTexto(observacion, 165) : "Sin información", posicionAnchoTexto2, posicionAltoTexto2(2), { baseline: "middle", indent: comienzoObs, width: anchoContainer2 - 10 })
+        let tamañoObs = tamañoSegunLargo("Observacion: " + observacion, tamañoFuente2, 130)
+        doc.fontSize(tamañoObs)
+        comienzoObs = tamañoObs == tamañoFuente2 ? 53 : 40
+
+        doc.fontSize(tamañoObs).font("Helvetica-Bold").text("Observación:", posicionAnchoTexto2, posicionAltoTexto2(2), { baseline: "middle", lineBreak: false })
+        doc.fontSize(tamañoObs)
+            .font("Helvetica")
+            .text(esDatoValido(observacion) ? cortarTexto(observacion, 165) : "Sin información", posicionAnchoTexto2, posicionAltoTexto2(2), { baseline: "middle", indent: comienzoObs, width: anchoContainer2 - 10 })
         // ! /SECCION DESTINATARIO
 
         // ! SECCION CAMPOS ESPECIALES
@@ -218,23 +210,18 @@ const e10x10AP = async (doc, objData) => {
                     doc.fontSize(tamañoCE)
                     let anchoTextoEsp = doc.widthOfString(campo["nombre"] ? cortarTexto(campo["nombre"], 15) + ":" : "CampoEsp:", { font: "Helvetica-Bold", size: tamañoCE })
 
-                    nombresConPrecio = ["total", "total a cobrar", "total a pagar"];
-                    campoValor = esDatoValido(campo["valor"])
-                        ? nombresConPrecio.includes(campo["nombre"].toLowerCase())
-                        ? cortarTexto(`$${Number(campo["valor"]).toLocaleString("es-AR")}`, 25)
-                        : cortarTexto(campo["valor"], 25)
-                        : "Sin información";
-                    
+                    nombresConPrecio = ["total", "total a cobrar", "total a pagar"]
+                    campoValor = esDatoValido(campo["valor"]) ? (nombresConPrecio.includes(campo["nombre"].toLowerCase()) ? cortarTexto(`$${Number(campo["valor"]).toLocaleString("es-AR")}`, 25) : cortarTexto(campo["valor"], 25)) : "Sin información"
+
                     if (siguiente == 0 || siguiente % 2 == 0) {
                         doc.roundedRect(distanciaAncho3, containerSiguiente3(distanciaCE), 134, altoContainer3, borderRadius3).fillAndStroke(colorGrisClaro, colorGrisClaro)
                         doc.fillAndStroke("black", "black")
                         doc.fontSize(tamañoCE)
                             .font("Helvetica-Bold")
                             .text(esDatoValido(campo["nombre"]) ? cortarTexto(campo["nombre"], 15) + ":" : "CampoEsp:", posicionAnchoTexto3, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
-                            doc.fontSize(tamañoCE)
+                        doc.fontSize(tamañoCE)
                             .font("Helvetica-Bold")
-                            .text(campoValor, posicionAnchoTexto3 + anchoTextoEsp + 10, posicionAltoTexto3(distanciaCE), {baseline: "middle",lineBreak: false,});
-                          
+                            .text(campoValor, posicionAnchoTexto3 + anchoTextoEsp + 10, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
                     } else {
                         doc.roundedRect(134 + 11, containerSiguiente3(distanciaCE), 134, altoContainer3, borderRadius3).fillAndStroke(colorGrisClaro, colorGrisClaro)
                         doc.fillAndStroke("black", "black")
@@ -242,9 +229,9 @@ const e10x10AP = async (doc, objData) => {
                             .font("Helvetica-Bold")
                             .text(esDatoValido(campo["nombre"]) ? cortarTexto(campo["nombre"], 15) + ":" : "CampoEsp:", 134 + 11 + padding3, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
 
-                            doc.fontSize(tamañoCE)
+                        doc.fontSize(tamañoCE)
                             .font("Helvetica-Bold")
-                            .text(campoValor, 134 + 11 + padding3 + anchoTextoEsp + 10, posicionAltoTexto3(distanciaCE), {baseline: "middle",lineBreak: false,});
+                            .text(campoValor, 134 + 11 + padding3 + anchoTextoEsp + 10, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
 
                         distanciaCE += 1
                     }

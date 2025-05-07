@@ -30,14 +30,14 @@ Cuenta con 3 opciones de tamaños:
 
 Cuenta con 8 variantes para los tamaños 10x10 y 10x15:
 
-| Variante                  | Contiene                                | Codigo |
-| :------------------------ | :-------------------------------------- | :----- |
-| SOLO                      | info                                    | S      |
-| SOLO PREMIUM              | info                                    | SP     |
-| FULFILLMENT              | info + fulfillment                     | FF     |
-| FULFILLMENT PREMIUM      | info + fulfillment                     | FFP    |
-| CAMPOS ESPECIALES         | info + campos especiales                | CE     |
-| CAMPOS ESPECIALES PREMIUM | info + campos especiales                | CEP    |
+| Variante                  | Contiene                               | Codigo |
+| :------------------------ | :------------------------------------- | :----- |
+| SOLO                      | info                                   | S      |
+| SOLO PREMIUM              | info                                   | SP     |
+| FULFILLMENT               | info + fulfillment                     | FF     |
+| FULFILLMENT PREMIUM       | info + fulfillment                     | FFP    |
+| CAMPOS ESPECIALES         | info + campos especiales               | CE     |
+| CAMPOS ESPECIALES PREMIUM | info + campos especiales               | CEP    |
 | AMBAS                     | info + campos especiales + fulfillment | A      |
 | AMBAS PREMIUM             | info + campos especiales + fulfillment | AP     |
 
@@ -49,25 +49,25 @@ Y para A4 hay dos variantes que son la SIMPLE Y la PREMIUM, que contemplan las 4
 
 ## **🗂️ ¿QUE CONTIENEN LAS ETIQUETAS?**
 
-| Variable             | Tipo de dato                                                 |
-| :------------------- | :----------------------------------------------------------- |
-| NOMBRE LOGISTICA     | `string`                                                     |
-| LOGO                 | `img`                                                        |
-| LOCALIDAD            | `string`                                                     |
-| FECHA                | `string`                                                     |
-| NUMERO VENTA         | `number`                                                     |
-| NUMERO ENVIO         | `number`                                                     |
-| NOMBRE RECEPTOR      | `string`                                                     |
-| TELEFONO RECEPTOR    | `string`                                                     |
-| DIRECCION            | `string`                                                     |
-| CP                   | `string`                                                     |
-| OBSERVACIONES        | `string`                                                     |
-| TOTAL A COBRAR       | `string`                                                     |
-| PESO                 | `string`                                                     |
-| CODIGO QR            | `img`                                                        |
-| CAMPOS ESPECIALES    | `array`                                                      |
+| Variable            | Tipo de dato                                                 |
+| :------------------ | :----------------------------------------------------------- |
+| NOMBRE LOGISTICA    | `string`                                                     |
+| LOGO                | `img`                                                        |
+| LOCALIDAD           | `string`                                                     |
+| FECHA               | `string`                                                     |
+| NUMERO VENTA        | `number`                                                     |
+| NUMERO ENVIO        | `number`                                                     |
+| NOMBRE RECEPTOR     | `string`                                                     |
+| TELEFONO RECEPTOR   | `string`                                                     |
+| DIRECCION           | `string`                                                     |
+| CP                  | `string`                                                     |
+| OBSERVACIONES       | `string`                                                     |
+| TOTAL A COBRAR      | `string`                                                     |
+| PESO                | `string`                                                     |
+| CODIGO QR           | `img`                                                        |
+| CAMPOS ESPECIALES   | `array`                                                      |
 | LISTADO FULFILLMENT | `array`                                                      |
-| BULTOS               | `number` (Dependiendo la cantidad se replican las etiquetas) |
+| BULTOS              | `number` (Dependiendo la cantidad se replican las etiquetas) |
 
 ---
 
@@ -137,7 +137,7 @@ Ejemplo del JSON que recibe por body:
 {
 	"didEmpresa" : 4,
 	"didEnvios": [1,2,3],
-	"tipoEtiqueta": 3,
+	"tipoEtiqueta": 1,
 	"calidad": 0,
 	"quien": 1
 }

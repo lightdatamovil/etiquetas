@@ -1,9 +1,9 @@
 const PDFDocument = require("pdfkit")
-const { convertirFecha, cambiarACaba, combinarArrays } = require("../utils/funciones")
+const { convertirFecha, cambiarACaba, combinarArrays, esDatoValido } = require("../utils/funciones")
 const exportsEtiquetas = require("../utils/exportsEtiquetas")
 const { medida10x10, medida10x15, medidaA4 } = require("../utils/medidasEtiquetas")
 
-const crearEtiquetas = async (tipoEtiqueta, calidad, logistica, envios, res) => {
+const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envios, res) => {
     return new Promise(async (resolve, reject) => {
         try {
             let tamañoHoja = tipoEtiqueta == 0 ? medida10x10 : tipoEtiqueta == 1 ? medida10x15 : medidaA4
@@ -26,18 +26,15 @@ const crearEtiquetas = async (tipoEtiqueta, calidad, logistica, envios, res) => 
                 var objData = {
                     nombreFantasia: logistica.nombreFantasia,
                     logo: logistica.logo,
-                    localidad: cambiarACaba(paquete.localidad),
+                    localidad: cambiarACaba(!esDatoValido(paquete.ciudad) && !esDatoValido(paquete.localidad) && esDatoValido(paquete.municipio) ? paquete.municipio : esDatoValido(paquete.ciudad) ? paquete.ciudad : paquete.localidad),
                     fecha: convertirFecha(paquete.fecha_inicio),
-                    nroVenta: paquete.ml_venta_id,
+                    nroVenta: esDatoValido(paquete.ml_venta_id) ? paquete.ml_venta_id : paquete.ml_shipment_id,
                     nroEnvio: paquete.ml_shipment_id,
                     nombre: paquete.destination_receiver_name,
                     nroTelefono: paquete.destination_receiver_phone,
-                    direccion: paquete.address_line,
-                    ciudad: cambiarACaba(paquete.ciudad),
-                    municipio: cambiarACaba(paquete.municipio),
+                    direccion: esDatoValido(paquete.ciudad) && esDatoValido(paquete.localidad) ? `${paquete.address_line}, ${paquete.localidad}` : paquete.address_line,
                     cp: paquete.cp,
-                    observacion: paquete.obs,
-                    ref: paquete.ref,
+                    observacion: esDatoValido(paquete.obs) && esDatoValido(paquete.ref) ? `${paquete.obs} / Ref: ${paquete.ref}` : esDatoValido(paquete.ref) ? `Ref: ${paquete.ref}` : paquete.obs,
                     total: paquete.monto_total_a_cobrar,
                     peso: paquete.peso,
                     remitente: paquete.remitente,
@@ -45,6 +42,16 @@ const crearEtiquetas = async (tipoEtiqueta, calidad, logistica, envios, res) => 
                     bultos: paquete.bultos < 2 ? 1 : paquete.bultos,
                     camposEspeciales: camposExtras || [],
                     fulfillment: paquete.fulfillment || [],
+                }
+
+                if (didEmpresa == 288 && paquete.didCliente == 157) {
+                    obsConMetodo = []
+
+                    if (esDatoValido(paquete.obs)) obsConMetodo.push(paquete.obs)
+                    if (esDatoValido(paquete.ref)) obsConMetodo.push(`Ref: ${paquete.ref}`)
+                    if (esDatoValido(paquete.metodo_name)) obsConMetodo.push(paquete.metodo_name)
+
+                    objData.observacion = obsConMetodo.join(" / ")
                 }
 
                 let cualEtiqueta = objData.camposEspeciales.length > 0 ? (objData.fulfillment.length == 0 ? "CE" : "A") : objData.fulfillment.length == 0 ? "S" : "FF"

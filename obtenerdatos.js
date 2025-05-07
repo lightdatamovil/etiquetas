@@ -173,6 +173,8 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
                 cp: envio.cp || null,
                 ref: envio.ref || null,
                 obs: envio.observacion || null,
+                metodo_name: envio.lead_time_shipping_method_name || null,
+                didCliente: envio.didCliente || null,
                 monto_total_a_cobrar: envio.monto_total_a_cobrar || null,
                 peso: envio.peso || null,
                 remitente: envio.nombre_fantasia || null,

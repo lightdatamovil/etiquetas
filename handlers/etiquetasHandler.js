@@ -19,7 +19,7 @@ const postEtiqueta = async (req, res) => {
             res.setHeader("Content-Type", "application/pdf")
             res.setHeader("Content-Disposition", 'attachment; filename="etiqueta.pdf"')
 
-            const result = await crearEtiquetas(tipoEtiqueta, calidad, logistica, envios, res)
+            const result = await crearEtiquetas(didEmpresa, tipoEtiqueta, calidad, logistica, envios, res)
 
             if (result) {
                 await registrarReimpresion(didEmpresa, didEnvios, modulo, quien)

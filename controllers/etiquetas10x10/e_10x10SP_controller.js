@@ -8,12 +8,7 @@ const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../util
 //ETIQUETA 10x10 CON SOLO PREMIUM
 
 const e10x10SP = async (doc, objData) => {
-    let { nombreFantasia, logo, camposEspeciales, ciudad, localidad, municipio, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, ref, total, peso, remitente, qr, bultos, fulfillment } = objData
-
-    direccion = esDatoValido(ciudad) && esDatoValido(localidad) ? `${direccion}, ${localidad}` : direccion
-    localidad = (!esDatoValido(ciudad) && !esDatoValido(localidad) && esDatoValido(municipio)) ? municipio : esDatoValido(ciudad) ? ciudad : localidad
-    
-    observacion = esDatoValido(observacion) && esDatoValido(ref) ? `${observacion} / Ref: ${ref}` : esDatoValido(ref) ? `Ref: ${ref}`: observacion
+    let { nombreFantasia, logo, camposEspeciales, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fulfillment } = objData
 
     for (let i = 0; i < bultos; i++) {
         distanciaAncho1 = 80
@@ -88,7 +83,6 @@ const e10x10SP = async (doc, objData) => {
         doc.fontSize(tamañoRem)
             .font("Helvetica-Bold")
             .text(esDatoValido(remitente) ? cortarTexto(remitente, 23) : "Sin información", posicionAnchoTexto1 + anchoTextoRem, posicionAltoTexto1(2), { baseline: "middle", lineBreak: false })
-    
 
         let tamañoVenta = tamañoSegunLargo("Venta: " + nroVenta, tamañoFuente1, 22)
         doc.fontSize(tamañoVenta)
@@ -169,16 +163,14 @@ const e10x10SP = async (doc, objData) => {
             .font("Helvetica-Bold")
             .text(`${esDatoValido(direccion) ? cortarTexto(direccion, 60) : "Sin información"} ${esDatoValido(cp) ? "CP: " + cortarTexto(cp, 10) : ""}`, posicionAnchoTexto2 + 22, posicionAltoTexto2(2), { baseline: "middle", lineBreak: false })
 
-            let tamañoObs = tamañoSegunLargo("Observacion: " + observacion, tamañoFuente2, 180)
-            doc.fontSize(tamañoObs)
-            comienzoObs = tamañoObs == tamañoFuente2 ? 67 : 55
-    
-            doc.fontSize(tamañoObs)
-                .font("Helvetica-Bold")
-                .text("Observación:", posicionAnchoTexto2, posicionAltoTexto2(3), { baseline: "middle", lineBreak: false })
-            doc.fontSize(tamañoObs)
-                .font("Helvetica")
-                .text(esDatoValido(observacion) ? cortarTexto(observacion, 330) : "Sin información", posicionAnchoTexto2, posicionAltoTexto2(3), { baseline: "middle", indent: comienzoObs, width: anchoContainer2 - 8, height: altoContainer2 * 2.2 })
+        let tamañoObs = tamañoSegunLargo("Observacion: " + observacion, tamañoFuente2, 180)
+        doc.fontSize(tamañoObs)
+        comienzoObs = tamañoObs == tamañoFuente2 ? 67 : 55
+
+        doc.fontSize(tamañoObs).font("Helvetica-Bold").text("Observación:", posicionAnchoTexto2, posicionAltoTexto2(3), { baseline: "middle", lineBreak: false })
+        doc.fontSize(tamañoObs)
+            .font("Helvetica")
+            .text(esDatoValido(observacion) ? cortarTexto(observacion, 330) : "Sin información", posicionAnchoTexto2, posicionAltoTexto2(3), { baseline: "middle", indent: comienzoObs, width: anchoContainer2 - 8, height: altoContainer2 * 2.2 })
 
         // ! /SECCION DESTINATARIO
 

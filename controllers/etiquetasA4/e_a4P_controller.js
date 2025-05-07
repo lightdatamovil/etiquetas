@@ -8,12 +8,7 @@ const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../util
 // ! ETIQUETA a4 CON AMBOS PREMIUM
 
 const ea4P = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, altoContenedor, mayorPorPag) => {
-    let { nombreFantasia, logo, camposEspeciales, ciudad, localidad, municipio, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, ref, total, peso, remitente, qr, bultos, fulfillment } = objData
-
-    direccion = esDatoValido(ciudad) && esDatoValido(localidad) ? `${direccion}, ${localidad}` : direccion
-    localidad = (!esDatoValido(ciudad) && !esDatoValido(localidad) && esDatoValido(municipio)) ? municipio : esDatoValido(ciudad) ? ciudad : localidad
-
-    observacion = esDatoValido(observacion) && esDatoValido(ref) ? `${observacion} / Ref: ${ref}` : esDatoValido(ref) ? `Ref: ${ref}`: observacion
+    let { nombreFantasia, logo, camposEspeciales, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fulfillment } = objData
 
     for (let i = 0; i < bultos; i++) {
         cantFulfillmentPag += camposEspeciales.length > 5 ? fulfillment.length + 3 : fulfillment.length + Math.ceil(camposEspeciales.length / 2)
@@ -230,14 +225,10 @@ const ea4P = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, alt
                     let tamañoCE = tamañoSegunLargo(campo["nombre"] + campo["valor"], tamañoFuente3, 40)
                     doc.fontSize(tamañoCE)
                     let anchoTextoEsp = doc.widthOfString(campo["nombre"] ? cortarTexto(campo["nombre"], 38) + ":" : "CampoEsp:", { font: "Helvetica-Bold", size: tamañoCE })
-                    
-                    nombresConPrecio = ["total", "total a cobrar", "total a pagar"];
-                    campoValor = esDatoValido(campo["valor"])
-                        ? nombresConPrecio.includes(campo["nombre"].toLowerCase())
-                        ? cortarTexto(`$${Number(campo["valor"]).toLocaleString("es-AR")}`, 48)
-                        : cortarTexto(campo["valor"], 48)
-                        : "Sin información";
-                    
+
+                    nombresConPrecio = ["total", "total a cobrar", "total a pagar"]
+                    campoValor = esDatoValido(campo["valor"]) ? (nombresConPrecio.includes(campo["nombre"].toLowerCase()) ? cortarTexto(`$${Number(campo["valor"]).toLocaleString("es-AR")}`, 48) : cortarTexto(campo["valor"], 48)) : "Sin información"
+
                     if (siguiente == 0 || siguiente % 2 == 0) {
                         altoContenedor += 19
                         altoSumaCamposEspeciales += 19
@@ -246,23 +237,22 @@ const ea4P = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, alt
                         doc.fontSize(tamañoCE)
                             .font("Helvetica-Bold")
                             .text(esDatoValido(campo["nombre"]) ? cortarTexto(campo["nombre"], 38) + ":" : "CampoEsp:", posicionAnchoTexto3, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
-                       
-                            doc.fontSize(tamañoCE)
+
+                        doc.fontSize(tamañoCE)
                             .font("Helvetica-Bold")
-                            .text(campoValor, posicionAnchoTexto3 + anchoTextoEsp + 10, posicionAltoTexto3(distanciaCE), {baseline: "middle",lineBreak: false,});
-                       
+                            .text(campoValor, posicionAnchoTexto3 + anchoTextoEsp + 10, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
                     } else {
                         doc.roundedRect(261 + 38, containerSiguiente3(distanciaCE), 261, altoContainer3, borderRadius3).fillAndStroke(colorGrisClaro, colorGrisClaro)
                         doc.fillAndStroke("black", "black")
                         doc.fontSize(tamañoCE)
                             .font("Helvetica-Bold")
                             .text(esDatoValido(campo["nombre"]) ? cortarTexto(campo["nombre"], 38) + ":" : "CampoEsp:", 265 + 38 + padding3, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
-                       
-                            doc.fontSize(tamañoCE)
-                            .font("Helvetica-Bold")
-                            .text(campoValor, 265 + 38 + padding3 + anchoTextoEsp + 10, posicionAltoTexto3(distanciaCE), {baseline: "middle",lineBreak: false,});
 
-                            distanciaCE += 1
+                        doc.fontSize(tamañoCE)
+                            .font("Helvetica-Bold")
+                            .text(campoValor, 265 + 38 + padding3 + anchoTextoEsp + 10, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
+
+                        distanciaCE += 1
                     }
                     siguiente += 1
                 }
@@ -282,7 +272,7 @@ const ea4P = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, alt
         if (camposEspeciales.length == 0) {
             altoContenedor -= 10
         }
-        
+
         posicionAnchoTexto4 = distanciaAncho4 + padding4
         const containerSiguiente4 = (num) => distanciaAlto4 + altoContainer4 * num + margin4 * num
         const posicionAltoTexto4 = (num) => {
