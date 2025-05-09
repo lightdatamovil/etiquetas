@@ -161,6 +161,15 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
         const datos = Object.fromEntries(consultas.map((c, i) => [c.key, resultados[i]]))
 
         datos.envios.forEach((envio) => {
+            
+            let qre = "";
+            
+            if(envio.flex == 1){
+                qre = envio.ml_qr_seguridad;
+            }else{
+                qre = `{"local": 1, "did": "${envio.did}", "cliente": ${envio.didCliente}, "empresa": ${idempresa}}`;
+            }
+            
             enviosMap[envio.did] = {
                 localidad: envio.localidad || null,
                 fecha_inicio: envio.fecha_inicio || null,
@@ -178,7 +187,7 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
                 monto_total_a_cobrar: envio.monto_total_a_cobrar || null,
                 peso: envio.peso || null,
                 remitente: envio.nombre_fantasia || null,
-                qr: envio.ml_qr_seguridad || `{"local": 1, "did": "${envio.did}", "cliente": ${envio.didCliente}, "empresa": ${idempresa}}`,
+                qr: qre,
                 bultos: envio.bultos || null,
                 municipio: envio.destination_municipality_name || null,
                 camposEspeciales: [],
