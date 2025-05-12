@@ -147,7 +147,7 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
             consultas.push({
                 key: "ordenes",
                 query: `
-                    SELECT o.didEnvio, fp.sku, fp.ean, fp.descripcion, oi.cantidad
+                    SELECT o.didEnvio, oi.seller_sku AS sku, fp.ean, oi.descripcion, oi.cantidad
                     FROM ordenes o
                     LEFT JOIN ordenes_items oi ON o.did = oi.didOrden AND oi.superado = 0 AND oi.elim = 0
                     LEFT JOIN fulfillment_productos fp ON oi.seller_sku = fp.sku AND fp.superado = 0 AND fp.elim = 0
@@ -161,15 +161,14 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
         const datos = Object.fromEntries(consultas.map((c, i) => [c.key, resultados[i]]))
 
         datos.envios.forEach((envio) => {
-            
-            let qre = "";
-            
-            if(envio.flex == 1){
-                qre = envio.ml_qr_seguridad;
-            }else{
-                qre = `{"local": 1, "did": "${envio.did}", "cliente": ${envio.didCliente}, "empresa": ${idempresa}}`;
+            let qre = ""
+
+            if (envio.flex == 1) {
+                qre = envio.ml_qr_seguridad
+            } else {
+                qre = `{"local": 1, "did": "${envio.did}", "cliente": ${envio.didCliente}, "empresa": ${idempresa}}`
             }
-            
+
             enviosMap[envio.did] = {
                 localidad: envio.localidad || null,
                 fecha_inicio: envio.fecha_inicio || null,

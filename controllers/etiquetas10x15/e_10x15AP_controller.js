@@ -285,7 +285,7 @@ const e10x15AP = async (doc, objData) => {
                 .text("Descripción", distanciaAncho4 + 104 + margin4 * 2 + padding4, posicionAltoTexto4(0) - 12, { baseline: "middle", lineBreak: false })
             doc.fontSize(tamañoFuente3)
                 .font("Helvetica")
-                .text("Cantidad", distanciaAncho4 + 211 + margin4 * 3 + padding4, posicionAltoTexto4(0) - 12, { baseline: "middle", lineBreak: false })
+                .text("Cantidad", distanciaAncho4 + 224 + margin4 * 3 + padding4, posicionAltoTexto4(0) - 12, { baseline: "middle", lineBreak: false })
 
             await fulfillment.map((elemento) => {
                 indexFF += 1
@@ -296,8 +296,8 @@ const e10x15AP = async (doc, objData) => {
 
                 doc.roundedRect(distanciaAncho4, distanciaAlto4, 51, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
                 doc.roundedRect(distanciaAncho4 + 52 + margin4, distanciaAlto4, 51, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
-                doc.roundedRect(distanciaAncho4 + 104 + margin4 * 2, distanciaAlto4, 106, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
-                doc.roundedRect(distanciaAncho4 + 211 + margin4 * 3, distanciaAlto4, 51, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
+                doc.roundedRect(distanciaAncho4 + 104 + margin4 * 2, distanciaAlto4, 126, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
+                doc.roundedRect(distanciaAncho4 + 231 + margin4 * 3, distanciaAlto4, 31, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
 
                 doc.fillAndStroke("black", "black")
                 doc.fontSize(tamañoFuente4)
@@ -308,10 +308,10 @@ const e10x15AP = async (doc, objData) => {
                     .text(esDatoValido(elemento["ean"]) ? cortarTexto(elemento["ean"], 11) : "Sin información", distanciaAncho4 + 52 + margin4 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
                 doc.fontSize(tamañoFuente4)
                     .font("Helvetica")
-                    .text(esDatoValido(elemento["descripcion"]) ? cortarTexto(elemento["descripcion"].toLowerCase(), 35) : "Sin información", distanciaAncho4 + 104 + margin4 * 2 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
+                    .text(esDatoValido(elemento["descripcion"]) ? cortarTexto(elemento["descripcion"].toLowerCase(), 40) : "Sin información", distanciaAncho4 + 104 + margin4 * 2 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
                 doc.fontSize(tamañoFuente4)
                     .font("Helvetica")
-                    .text(esDatoValido(elemento["cantidad"]) ? cortarTexto(elemento["cantidad"], 11) : "Sin información", distanciaAncho4 + 211 + margin4 * 3 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
+                    .text(esDatoValido(elemento["cantidad"]) ? cortarTexto(elemento["cantidad"], 6) : "Sin información", distanciaAncho4 + 231 + margin4 * 3 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
 
                 let mensajePagina1 = `Etiqueta 1`
                 let mensajePagina2 = `Etiqueta 2`
