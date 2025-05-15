@@ -171,7 +171,7 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
 
             enviosMap[envio.did] = {
                 localidad: envio.localidad || null,
-                fecha_inicio: envio.fecha_inicio || null,
+                fecha_inicio: envio.fecha_venta || null,
                 ml_venta_id: envio.ml_venta_id || null,
                 ml_shipment_id: envio.ml_shipment_id || null,
                 destination_receiver_name: envio.destination_receiver_name || null,
