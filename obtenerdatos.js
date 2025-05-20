@@ -93,10 +93,10 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
                 query: `
                    SELECT 
                         e.*, 
-                        COALESCE(edd.localidad, e.destination_city_name) AS localidad,
-                        COALESCE(edd.address_line, e.destination_shipping_address_line) AS address_line,
-                        COALESCE(edd.cp, e.destination_shipping_zip_code) AS cp,
-                        COALESCE(edd.destination_comments, e.destination_comments) AS ref,
+                        COALESCE(NULLIF(edd.localidad, ''), NULLIF(e.destination_city_name, '')) AS localidad,
+                        COALESCE(NULLIF(edd.address_line, ''), NULLIF(e.destination_shipping_address_line, '')) AS address_line,
+                        COALESCE(NULLIF(edd.cp, ''), NULLIF(e.destination_shipping_zip_code, '')) AS cp,
+                        COALESCE(NULLIF(edd.destination_comments, ''), NULLIF(e.destination_comments, '')) AS ref,
                         edd.ciudad,
                         eo.observacion,
                         e.destination_municipality_name,
@@ -147,7 +147,11 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
             consultas.push({
                 key: "ordenes",
                 query: `
-                    SELECT o.didEnvio, oi.seller_sku AS sku, fp.ean, oi.descripcion, oi.cantidad
+                    SELECT o.didEnvio,
+                    COALESCE(NULLIF(oi.seller_sku, ''), NULLIF(fp.sku, '')) AS sku,
+                    fp.ean,
+                    COALESCE(NULLIF(oi.descripcion, ''), NULLIF(fp.descripcion, '')) AS descripcion,
+                    oi.cantidad
                     FROM ordenes o
                     LEFT JOIN ordenes_items oi ON o.did = oi.didOrden AND oi.superado = 0 AND oi.elim = 0
                     LEFT JOIN fulfillment_productos fp ON oi.seller_sku = fp.sku AND fp.superado = 0 AND fp.elim = 0
@@ -161,17 +165,9 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
         const datos = Object.fromEntries(consultas.map((c, i) => [c.key, resultados[i]]))
 
         datos.envios.forEach((envio) => {
-            let qre = ""
-
-            if (envio.flex == 1) {
-                qre = envio.ml_qr_seguridad
-            } else {
-                qre = `{"local": 1, "did": "${envio.did}", "cliente": ${envio.didCliente}, "empresa": ${idempresa}}`
-            }
-
             enviosMap[envio.did] = {
                 localidad: envio.localidad || null,
-                fecha_inicio: envio.fecha_venta || null,
+                fecha_venta: envio.fecha_venta || null,
                 ml_venta_id: envio.ml_venta_id || null,
                 ml_shipment_id: envio.ml_shipment_id || null,
                 destination_receiver_name: envio.destination_receiver_name || null,
@@ -186,7 +182,7 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
                 monto_total_a_cobrar: envio.monto_total_a_cobrar || null,
                 peso: envio.peso || null,
                 remitente: envio.nombre_fantasia || null,
-                qr: qre,
+                qr: envio.flex == 1 ? envio.ml_qr_seguridad : `{"local": 1, "did": "${envio.did}", "cliente": ${envio.didCliente}, "empresa": ${idempresa}}`,
                 bultos: envio.bultos || null,
                 municipio: envio.destination_municipality_name || null,
                 camposEspeciales: [],

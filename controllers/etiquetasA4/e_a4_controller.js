@@ -1,7 +1,7 @@
 const QRCode = require("qrcode")
 const SVGtoPDF = require("svg-to-pdfkit")
 
-const { iconCalendarChico, iconNombre, iconTelefono, iconUbicacion, iconNoQr } = require("../../utils/icons.js")
+const { iconCalendarChico, iconNombre, iconTelefono, iconUbicacion, iconNoQr, iconPeso } = require("../../utils/icons.js")
 const { esDatoValido, cortarTexto, tamañoSegunLargo } = require("../../utils/funciones.js")
 const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../utils/colores.js")
 
@@ -146,14 +146,14 @@ const ea4 = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, alto
         doc.moveTo(distanciaAncho2, containerSiguiente2(1) - 3)
             .lineTo(distanciaAncho2 + anchoContainer2, containerSiguiente2(1) - 3)
             .fill(colorGrisOscuro)
+        doc.moveTo(distanciaAncho2 + anchoContainer2 / 2, containerSiguiente2(1) - 3 + 3)
+            .lineTo(distanciaAncho2 + anchoContainer2 / 2, containerSiguiente2(2) - 3 - 3)
+            .fill(colorGrisOscuro)
         doc.moveTo(distanciaAncho2, containerSiguiente2(2) - 3)
             .lineTo(distanciaAncho2 + anchoContainer2, containerSiguiente2(2) - 3)
             .fill(colorGrisOscuro)
-        doc.moveTo(distanciaAncho2, containerSiguiente2(3) - 3)
-            .lineTo(distanciaAncho2 + anchoContainer2, containerSiguiente2(3) - 3)
-            .fill(colorGrisOscuro)
-        doc.moveTo(distanciaAncho2, containerSiguiente2(4) - 3)
-            .lineTo(distanciaAncho2 + anchoContainer2, containerSiguiente2(4) - 3)
+        doc.moveTo(distanciaAncho2, containerSiguiente2(3) - 3 + 8)
+            .lineTo(distanciaAncho2 + anchoContainer2, containerSiguiente2(3) - 3 + 8)
             .fill(colorGrisOscuro)
 
         doc.fillAndStroke("black", "black")
@@ -172,28 +172,26 @@ const ea4 = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, alto
             .font("Helvetica-Bold")
             .text(esDatoValido(nroTelefono) ? cortarTexto(nroTelefono, 55) : "Sin información", posicionAnchoTexto2 + 12, posicionAltoTexto2(1), { baseline: "middle", lineBreak: false })
 
+        SVGtoPDF(doc, iconPeso, posicionAnchoTexto2 + 2.5 + anchoContainer2 / 2, posicionAltoTexto2(1) - 5)
+
+        let tamañoPeso = tamañoSegunLargo(peso, tamañoFuente1, 40)
+        doc.fontSize(tamañoPeso)
+            .font("Helvetica-Bold")
+            .text(esDatoValido(peso) ? `${cortarTexto(peso, 45)} kg.` : "Sin información", posicionAnchoTexto2 + 12 + 2.5 + anchoContainer2 / 2, posicionAltoTexto2(1), { baseline: "middle", lineBreak: false })
+
         SVGtoPDF(doc, iconUbicacion, posicionAnchoTexto2, posicionAltoTexto2(2) - 5)
 
-        let tamañoDireccion = tamañoSegunLargo(direccion, tamañoFuente1, 36)
+        let tamañoDireccion = tamañoSegunLargo(direccion, tamañoFuente1, 68)
         doc.fontSize(tamañoDireccion)
             .font("Helvetica-Bold")
-            .text(`${esDatoValido(direccion) ? cortarTexto(direccion, 40) : "Sin información"} ${esDatoValido(cp) ? "CP: " + cortarTexto(cp, 10) : ""}`, posicionAnchoTexto2 + 12, posicionAltoTexto2(2), { baseline: "middle", lineBreak: false })
-
-        let tamañoPeso = tamañoSegunLargo("Peso declarado: " + peso, tamañoFuente1, 40)
-        doc.fontSize(tamañoPeso)
-        let anchoTextoPeso = doc.widthOfString("Peso declarado:", { font: "Helvetica", size: tamañoPeso })
-
-        doc.fontSize(tamañoPeso).font("Helvetica-Bold").text("Peso declarado:", posicionAnchoTexto2, posicionAltoTexto2(3), { baseline: "middle", lineBreak: false })
-        doc.fontSize(tamañoPeso)
-            .font("Helvetica")
-            .text(esDatoValido(peso) ? cortarTexto(peso, 45) : "Sin información", posicionAnchoTexto2 + anchoTextoPeso, posicionAltoTexto2(3), { baseline: "middle", lineBreak: false })
+            .text(`${esDatoValido(direccion) ? cortarTexto(direccion, 105) : "Sin información"} ${esDatoValido(cp) ? "CP: " + cortarTexto(cp, 10) : ""}`, posicionAnchoTexto2 + 12, posicionAltoTexto2(2), { baseline: "middle", width: anchoContainer2 - 10 })
 
         doc.fontSize(tamañoFuente2 - 2)
             .font("Helvetica-Bold")
-            .text("Observación:", posicionAnchoTexto2, posicionAltoTexto2(4), { baseline: "middle", lineBreak: false })
+            .text("Observación:", posicionAnchoTexto2, posicionAltoTexto2(4) - 10, { baseline: "middle", lineBreak: false })
         doc.fontSize(tamañoFuente2 - 2)
             .font("Helvetica")
-            .text(esDatoValido(observacion) ? cortarTexto(observacion, 190) : "Sin información", posicionAnchoTexto2, posicionAltoTexto2(4), { baseline: "middle", indent: 40, width: anchoContainer2 - 10 })
+            .text(esDatoValido(observacion) ? cortarTexto(observacion, 250) : "Sin información", posicionAnchoTexto2, posicionAltoTexto2(4) - 10, { baseline: "middle", indent: 40, width: anchoContainer2 - 10 })
         // ! /SECCION DESTINATARIO
 
         // ! SECCION CAMPOS ESPECIALES

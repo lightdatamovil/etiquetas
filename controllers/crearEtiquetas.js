@@ -27,7 +27,7 @@ const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envi
                     nombreFantasia: logistica.nombreFantasia,
                     logo: logistica.logo,
                     localidad: cambiarACaba(!esDatoValido(paquete.ciudad) && !esDatoValido(paquete.localidad) && esDatoValido(paquete.municipio) ? paquete.municipio : esDatoValido(paquete.ciudad) ? paquete.ciudad : paquete.localidad),
-                    fecha: convertirFecha(paquete.fecha_inicio),
+                    fecha: convertirFecha(paquete.fecha_venta),
                     nroVenta: esDatoValido(paquete.ml_venta_id) ? paquete.ml_venta_id : paquete.ml_shipment_id,
                     nroEnvio: paquete.ml_shipment_id,
                     nombre: paquete.destination_receiver_name,
