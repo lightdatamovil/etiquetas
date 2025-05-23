@@ -106,9 +106,10 @@ const e10x10FF = async (doc, objData) => {
             .font("Helvetica-Bold")
             .text(esDatoValido(nroEnvio) ? cortarTexto(nroEnvio, anchoCaracteres2 + 8) : "Sin información", posicionAnchoTexto1 + anchoTextoEnvio, posicionAltoTexto1(4), { baseline: "middle", lineBreak: false })
 
-        doc.fontSize(tamañoFuente1)
+        let tamañoNombreFantasia = tamañoSegunLargo(nombreFantasia, tamañoFuente1, 19)
+        doc.fontSize(tamañoNombreFantasia)
             .font("Helvetica-Bold")
-            .text(esDatoValido(nombreFantasia) ? cortarTexto(nombreFantasia.toUpperCase(), 25) : "LOGISTICA", distanciaAncho1 + anchoContainer1 + margin1, posicionAltoTexto1(4), { baseline: "middle", lineBreak: false, width: 87, align: "center" })
+            .text(esDatoValido(nombreFantasia) ? cortarTexto(nombreFantasia.toUpperCase(), 30) : "LOGISTICA", distanciaAncho1 + anchoContainer1 + margin1, posicionAltoTexto1(4), { baseline: "middle", lineBreak: false, width: 87, align: "center" })
 
         // ! /SECCION SUPERIOR
 

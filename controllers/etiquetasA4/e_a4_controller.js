@@ -118,9 +118,10 @@ const ea4 = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, alto
             .font("Helvetica-Bold")
             .text(esDatoValido(nroEnvio) ? cortarTexto(nroEnvio, 23) : "Sin información", posicionAnchoTexto1 + anchoTextoEnvio, posicionAltoTexto1(3), { baseline: "middle", lineBreak: false })
 
-        doc.fontSize(tamañoFuente1 + 2)
+        let tamañoNombreFantasia = tamañoSegunLargo(nombreFantasia, tamañoFuente1 + 2, 19)
+        doc.fontSize(tamañoNombreFantasia)
             .font("Helvetica-Bold")
-            .text(esDatoValido(nombreFantasia) ? cortarTexto(nombreFantasia.toUpperCase(), 25) : "LOGISTICA", distanciaAncho + 425, posicionAltoTexto1(3), { baseline: "middle", lineBreak: false, width: 100, align: "center" })
+            .text(esDatoValido(nombreFantasia) ? cortarTexto(nombreFantasia.toUpperCase(), 30) : "LOGISTICA", distanciaAncho + 425, posicionAltoTexto1(3), { baseline: "middle", lineBreak: false, width: 100, align: "center" })
 
         // ! /SECCION SUPERIOR
 
@@ -214,6 +215,9 @@ const ea4 = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, alto
         }
         altoSumaCamposEspeciales = 0
 
+        camposEspeciales = camposEspeciales.slice(0, 6)
+        const esModoUnaColumna = camposEspeciales.length <= 3
+
         if (camposEspeciales.length > 0) {
             altoContenedor += 10
             altoSumaCamposEspeciales += 10
@@ -228,18 +232,41 @@ const ea4 = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, alto
 
             siguiente = 0
             distanciaCE = 0
-            await camposEspeciales.map((campo) => {
-                if (siguiente < 6) {
-                    let tamañoCE = tamañoSegunLargo(campo["nombre"] + campo["valor"], tamañoFuente3, 40)
+
+            await camposEspeciales.map((campo, index) => {
+                let tamañoCE = tamañoSegunLargo(campo["nombre"] + campo["valor"], tamañoFuente3, esModoUnaColumna ? 52 : 40)
+                doc.fontSize(tamañoCE)
+                let anchoTextoEsp = doc.widthOfString(campo["nombre"] ? cortarTexto(campo["nombre"], esModoUnaColumna ? 50 : 38) + ":" : "CampoEsp:", { font: "Helvetica-Bold", size: tamañoCE })
+
+                nombresConPrecio = ["total", "total a cobrar", "total a pagar"]
+                campoValor = esDatoValido(campo["valor"]) ? (nombresConPrecio.includes(campo["nombre"].toLowerCase()) ? cortarTexto(`$${Number(campo["valor"]).toLocaleString("es-AR")}`, esModoUnaColumna ? 150 : 48) : cortarTexto(campo["valor"], esModoUnaColumna ? 150 : 48)) : "Sin información"
+
+                if (esModoUnaColumna) {
+                    let y = containerSiguiente3(index)
+                    altoContenedor += 19
+                    altoSumaCamposEspeciales += 19
+
+                    // Línea separadora horizontal
+                    if (index !== 0) {
+                        doc.moveTo(distanciaAncho3, y - 5)
+                            .lineTo(560, y - 5)
+                            .fill(colorGrisOscuro)
+                    }
+
+                    doc.fillAndStroke("black", "black")
                     doc.fontSize(tamañoCE)
-                    let anchoTextoEsp = doc.widthOfString(campo["nombre"] ? cortarTexto(campo["nombre"], 38) + ":" : "CampoEsp:", { font: "Helvetica-Bold", size: tamañoCE })
+                        .font("Helvetica-Bold")
+                        .text(esDatoValido(campo["nombre"]) ? cortarTexto(campo["nombre"], 50) + ":" : "CampoEsp:", posicionAnchoTexto3, posicionAltoTexto3(index), { baseline: "middle", lineBreak: false })
 
-                    nombresConPrecio = ["total", "total a cobrar", "total a pagar"]
-                    campoValor = esDatoValido(campo["valor"]) ? (nombresConPrecio.includes(campo["nombre"].toLowerCase()) ? cortarTexto(`$${Number(campo["valor"]).toLocaleString("es-AR")}`, 48) : cortarTexto(campo["valor"], 48)) : "Sin información"
-
+                    doc.fontSize(tamañoCE)
+                        .font("Helvetica-Bold")
+                        .text(campoValor, posicionAnchoTexto3 + anchoTextoEsp + 10, posicionAltoTexto3(index), { baseline: "middle", lineBreak: false })
+                } else {
+                    // Diseño original en dos columnas con líneas
                     if (siguiente == 0 || siguiente % 2 == 0) {
                         altoContenedor += 19
                         altoSumaCamposEspeciales += 19
+
                         doc.fillAndStroke("black", "black")
                         doc.fontSize(tamañoCE)
                             .font("Helvetica-Bold")
@@ -249,8 +276,8 @@ const ea4 = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, alto
                             .font("Helvetica-Bold")
                             .text(campoValor, posicionAnchoTexto3 + anchoTextoEsp + 10, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
                     } else {
-                        doc.moveTo(anchoContainer3 + 30, containerSiguiente3(distanciaCE) - 2)
-                            .lineTo(anchoContainer3 + 30, containerSiguiente3(distanciaCE) + 12)
+                        doc.moveTo(anchoContainer3 + 30, containerSiguiente3(distanciaCE) - 3)
+                            .lineTo(anchoContainer3 + 30, containerSiguiente3(distanciaCE) + 9)
                             .fill(colorGrisOscuro)
 
                         doc.fillAndStroke("black", "black")
@@ -273,8 +300,8 @@ const ea4 = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, alto
                     siguiente += 1
                 }
             })
-        } else {
         }
+
         // ! /SECCION CAMPOS ESPECIALES
 
         // ! SECCION FULFILLMENT

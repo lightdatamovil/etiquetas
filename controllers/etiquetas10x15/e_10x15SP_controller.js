@@ -38,10 +38,9 @@ const e10x15SP = async (doc, objData) => {
             doc.image(Buffer.from(imageBuffer), 10, 10, { fit: [50, 35] })
         }
 
-        doc.fontSize(tamañoSegunLargo(nombreFantasia, 23, 14))
+        doc.fontSize(tamañoSegunLargo(nombreFantasia, 20, 14))
             .font("Helvetica-Bold")
-            .text(esDatoValido(nombreFantasia) ? cortarTexto(nombreFantasia, 18) : "Logistica", 63, 30, { lineBreak: false, baseline: "middle" })
-
+            .text(esDatoValido(nombreFantasia) ? cortarTexto(nombreFantasia, 20) : "Logistica", 63, 30, { lineBreak: false, baseline: "middle" })
         // ! SECCION SUPERIOR
         tamañoFuente1 = 11
         anchoContainer12 = 273
