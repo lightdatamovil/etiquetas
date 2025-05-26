@@ -25,11 +25,6 @@ const e10x15AP = async (doc, objData) => {
                 })
             })
             doc.image(codigoQR, 0, 40, { height: 125 })
-        } else {
-            distanciaAncho1 = 5
-            anchoContainer1 = 273
-            anchoCaracteres1 = 35
-            anchoCaracteres2 = 30
         }
 
         if (esDatoValido(logo)) {

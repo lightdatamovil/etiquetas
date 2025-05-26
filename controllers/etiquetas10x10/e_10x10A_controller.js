@@ -25,11 +25,6 @@ const e10x10A = async (doc, objData) => {
                 })
             })
             doc.image(codigoQR, 0, 5, { height: 80 })
-        } else {
-            distanciaAncho1 = 5
-            anchoContainer1 = 180
-            anchoCaracteres1 = 30
-            anchoCaracteres2 = 25
         }
 
         // ! SECCION SUPERIOR
