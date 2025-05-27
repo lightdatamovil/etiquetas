@@ -3,6 +3,8 @@ function esDatoValido(dato) {
 }
 
 function convertirFecha(newFecha) {
+    if (!newFecha) return null
+
     let date = new Date(newFecha)
     return date.toLocaleDateString("es-ES")
 }

@@ -80,7 +80,9 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
         let enviosMap = {}
 
         let { connection, empresasData } = await getConnection(idempresa)
+
         let empresa = empresasData[String(idempresa)] || {}
+
         let logo = cacheLogos[empresa.empresa] || `${empresa.url}/app-assets/images/logo/logo.png` || null
 
         if (idempresa == 288) {
@@ -167,7 +169,7 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
         datos.envios.forEach((envio) => {
             enviosMap[envio.did] = {
                 localidad: envio.localidad || null,
-                fecha_venta: envio.fecha_venta || null,
+                fecha_venta: envio.fecha_venta !== "0000-00-00 00:00:00" ? envio.fecha_venta : envio.fecha_inicio !== "0000-00-00 00:00:00" ? envio.fecha_inicio : null,
                 ml_venta_id: envio.ml_venta_id || null,
                 ml_shipment_id: envio.ml_shipment_id || null,
                 destination_receiver_name: envio.destination_receiver_name || null,
