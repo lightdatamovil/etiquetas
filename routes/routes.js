@@ -8,7 +8,7 @@ const router = Router();
 router.post("/print/etiqueta", postEtiqueta);
 router.post("/print/guia", postGuia);
 router.get(
-  "/print/comprobacion/:token/:didEmpresa/:didEnvio",
+  "/print/v1/:token/:didEmpresa/:didEnvio",
   comprobacionEtiquetas,
   postEtiqueta2
 );
