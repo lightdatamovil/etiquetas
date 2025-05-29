@@ -292,7 +292,10 @@ const registrarReimpresion = async (idempresa, dids, modulo, quien) => {
 
         await connection.commit() // Confirma la transacción
 
-        return { success: true, message: "Reimpresión registrada y estado actualizado correctamente." }
+        return {
+            success: true,
+            message: "Reimpresión registrada y estado actualizado correctamente.",
+        }
     } catch (error) {
         await connection.rollback() // Revierte la transacción si hay un error
         console.error("Error en registrarReimpresion:", error.message)
@@ -302,4 +305,10 @@ const registrarReimpresion = async (idempresa, dids, modulo, quien) => {
     }
 }
 
-module.exports = { getConnection, getFromRedis, redisClient, obtenerDatosEnvios, registrarReimpresion }
+module.exports = {
+    getConnection,
+    getFromRedis,
+    redisClient,
+    obtenerDatosEnvios,
+    registrarReimpresion,
+}
