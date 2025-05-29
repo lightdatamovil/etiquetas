@@ -44,6 +44,14 @@ const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envi
                     fulfillment: paquete.fulfillment || [],
                 }
 
+                for (let key in objData) {
+                    if (typeof objData[key] === "string") {
+                        objData[key] = objData[key].replace(/\s+/g, " ").trim()
+                    }
+                }
+
+                console.log("Object data", objData)
+
                 if (didEmpresa == 288 && paquete.didCliente == 157) {
                     obsConMetodo = []
 

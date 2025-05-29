@@ -162,6 +162,18 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
             })
         }
 
+        if (idempresa == 82) {
+            consultas.push({
+                key: "items",
+                query: `
+                    SELECT i.didEnvio, i.codigo AS sku, i.descripcion, i.cantidad
+                    FROM envios_items i
+                    WHERE didEnvio IN (?) AND superado = 0 AND elim = 0    
+                
+                `,
+            })
+        }
+
         const resultados = await Promise.all(consultas.map(({ query }) => new Promise((resolve, reject) => connection.query(query, [dids], (error, results) => (error ? reject(error) : resolve(results))))))
 
         const datos = Object.fromEntries(consultas.map((c, i) => [c.key, resultados[i]]))
@@ -217,7 +229,23 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
             })
         }
 
+        if (idempresa == 82 && datos.items) {
+            datos.items.forEach((item) => {
+                enviosMap[item.didEnvio]["didCliente"]
+                if (enviosMap[item.didEnvio] && enviosMap[item.didEnvio]["didCliente"] == 37) {
+                    enviosMap[item.didEnvio].fulfillment.push({
+                        sku: item.sku || null,
+                        ean: item.ean || null,
+                        descripcion: item.descripcion || null,
+                        cantidad: item.cantidad || 1,
+                    })
+                }
+            })
+        }
+
         connection.end()
+
+        console.log(enviosMap)
 
         return {
             nombreFantasia: empresa.empresa || null,

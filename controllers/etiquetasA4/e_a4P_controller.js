@@ -190,7 +190,7 @@ const ea4P = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, alt
         // ! /SECCION DESTINATARIO
 
         // ! SECCION CAMPOS ESPECIALES
-        tamañoFuente3 = 8
+        tamañoFuente3 = 9
         anchoContainer3 = 273
         altoContainer3 = 13
         margin3 = 6
@@ -228,12 +228,12 @@ const ea4P = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, alt
             const esModoUnaColumna = camposEspeciales.length <= 3
 
             await camposEspeciales.map((campo, index) => {
-                let tamañoCE = tamañoSegunLargo(campo["nombre"] + campo["valor"], tamañoFuente3, esModoUnaColumna ? 52 : 40)
+                nombresConPrecio = ["total", "total a cobrar", "total a pagar"]
+                campoValor = esDatoValido(campo["valor"]) ? (nombresConPrecio.includes(campo["nombre"].toLowerCase()) ? cortarTexto(` $${Number(campo["valor"]).toLocaleString("es-AR")}`, esModoUnaColumna ? 130 : 48) : cortarTexto(campo["valor"], esModoUnaColumna ? 130 : 48)) : "Sin información"
+
+                let tamañoCE = tamañoSegunLargo(campo["nombre"] + campoValor, tamañoFuente3, esModoUnaColumna ? 115 : 40)
                 doc.fontSize(tamañoCE)
                 let anchoTextoEsp = doc.widthOfString(campo["nombre"] ? cortarTexto(campo["nombre"], esModoUnaColumna ? 50 : 38) + ":" : "CampoEsp:", { font: "Helvetica-Bold", size: tamañoCE })
-
-                nombresConPrecio = ["total", "total a cobrar", "total a pagar"]
-                campoValor = esDatoValido(campo["valor"]) ? (nombresConPrecio.includes(campo["nombre"].toLowerCase()) ? cortarTexto(`$${Number(campo["valor"]).toLocaleString("es-AR")}`, esModoUnaColumna ? 150 : 48) : cortarTexto(campo["valor"], esModoUnaColumna ? 150 : 48)) : "Sin información"
 
                 if (esModoUnaColumna) {
                     // Modo de una sola columna
@@ -250,7 +250,7 @@ const ea4P = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, alt
 
                     doc.fontSize(tamañoCE)
                         .font("Helvetica-Bold")
-                        .text(campoValor, posicionAnchoTexto3 + anchoTextoEsp + 10, posicionAltoTexto3(index), { baseline: "middle", lineBreak: false })
+                        .text(campoValor, posicionAnchoTexto3 + anchoTextoEsp + 5, posicionAltoTexto3(index), { baseline: "middle", lineBreak: false })
                 } else {
                     // Modo dos columnas
                     if (siguiente == 0 || siguiente % 2 == 0) {
@@ -265,7 +265,7 @@ const ea4P = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, alt
 
                         doc.fontSize(tamañoCE)
                             .font("Helvetica-Bold")
-                            .text(campoValor, posicionAnchoTexto3 + anchoTextoEsp + 10, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
+                            .text(campoValor, posicionAnchoTexto3 + anchoTextoEsp + 5, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
                     } else {
                         doc.roundedRect(261 + 38, containerSiguiente3(distanciaCE), 261, altoContainer3, borderRadius3).fillAndStroke(colorGrisClaro, colorGrisClaro)
                         doc.fillAndStroke("black", "black")
@@ -276,7 +276,7 @@ const ea4P = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, alt
 
                         doc.fontSize(tamañoCE)
                             .font("Helvetica-Bold")
-                            .text(campoValor, 265 + 38 + padding3 + anchoTextoEsp + 10, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
+                            .text(campoValor, 265 + 38 + padding3 + anchoTextoEsp + 5, posicionAltoTexto3(distanciaCE), { baseline: "middle", lineBreak: false })
 
                         distanciaCE += 1
                     }
