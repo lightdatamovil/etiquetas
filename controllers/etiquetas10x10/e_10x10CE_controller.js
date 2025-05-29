@@ -11,10 +11,10 @@ const e10x10CE = async (doc, objData) => {
     let { nombreFantasia, logo, camposEspeciales, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fulfillment } = objData
 
     for (let i = 0; i < bultos; i++) {
-        distanciaAncho1 = 80
-        anchoContainer1 = 110
-        anchoCaracteres1 = 20
-        anchoCaracteres2 = 15
+        const distanciaAncho1 = 80
+        const anchoContainer1 = 110
+        const anchoCaracteres1 = 20
+        const anchoCaracteres2 = 15
 
         if (esDatoValido(qr)) {
             // qr = JSON.stringify(qr)
