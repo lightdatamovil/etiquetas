@@ -85,7 +85,8 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
 
         let logo = cacheLogos[empresa.empresa] || `${empresa.url}/app-assets/images/logo/logo.png` || null
 
-        if (idempresa == 288) {
+        const empresasLogoGrandes = [288, 285]
+        if (empresasLogoGrandes.includes(idempresa)) {
             logo = `${empresa.url}/app-assets/images/logo/logov1.png`
         }
 
@@ -244,8 +245,6 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
         }
 
         connection.end()
-
-        console.log(enviosMap)
 
         return {
             nombreFantasia: empresa.empresa || null,

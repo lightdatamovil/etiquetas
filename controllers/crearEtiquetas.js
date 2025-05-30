@@ -50,8 +50,6 @@ const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envi
                     }
                 }
 
-                console.log("Object data", objData)
-
                 if (didEmpresa == 288 && paquete.didCliente == 157) {
                     obsConMetodo = []
 
