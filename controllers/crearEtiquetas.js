@@ -67,6 +67,11 @@ const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envi
                     llevaCodigo = true
                 }
 
+                let totalGrande = false
+                if (didEmpresa == 137) {
+                    totalGrande = true
+                }
+
                 let cualEtiqueta = objData.camposEspeciales.length > 0 ? (objData.fulfillment.length == 0 ? "CE" : "A") : objData.fulfillment.length == 0 ? "S" : "FF"
                 let funcionName = medidaEtiqueta + cualEtiqueta + calidadEtiqueta
                 let funcionNameA4 = medidaEtiqueta + calidadEtiqueta
@@ -89,7 +94,7 @@ const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envi
                         distanciaAlto_a4 = 15
                     }
 
-                    const result = await exportsEtiquetas[funcionNameA4](doc, objData, index_a4, distanciaAlto_a4, cantFulfillmentPag_a4, altoContenedor_a4, mayorPorPag_a4, llevaCodigo)
+                    const result = await exportsEtiquetas[funcionNameA4](doc, objData, index_a4, distanciaAlto_a4, cantFulfillmentPag_a4, altoContenedor_a4, mayorPorPag_a4, llevaCodigo, totalGrande)
 
                     index_a4 = result.index
                     cantFulfillmentPag_a4 = result.cantFulfillmentPag

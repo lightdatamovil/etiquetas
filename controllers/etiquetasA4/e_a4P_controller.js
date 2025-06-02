@@ -7,7 +7,7 @@ const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../util
 
 // ! ETIQUETA a4 CON AMBOS PREMIUM
 
-const ea4P = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, altoContenedor, mayorPorPag, llevaCodigo) => {
+const ea4P = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, altoContenedor, mayorPorPag, llevaCodigo, totalGrande) => {
     let { did, didCliente, nombreFantasia, logo, camposEspeciales, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fulfillment } = objData
 
     for (let i = 0; i < bultos; i++) {
@@ -239,6 +239,10 @@ const ea4P = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, alt
                 campoValor = esDatoValido(campo["valor"]) ? (nombresConPrecio.includes(campo["nombre"].toLowerCase()) ? cortarTexto(` $${Number(campo["valor"]).toLocaleString("es-AR")}`, esModoUnaColumna ? 130 : 48) : cortarTexto(campo["valor"], esModoUnaColumna ? 130 : 48)) : "Sin información"
 
                 let tamañoCE = tamañoSegunLargo(campo["nombre"] + campoValor, tamañoFuente3, esModoUnaColumna ? 115 : 40)
+                if (totalGrande) {
+                    tamañoCE = tamañoSegunLargo(campo["nombre"] + campoValor, nombresConPrecio.includes(campo["nombre"].toLowerCase()) ? tamañoFuente3 + 5 : tamañoFuente3, esModoUnaColumna ? 115 : 40)
+                }
+
                 doc.fontSize(tamañoCE)
                 let anchoTextoEsp = doc.widthOfString(campo["nombre"] ? cortarTexto(campo["nombre"], esModoUnaColumna ? 50 : 38) + ":" : "CampoEsp:", { font: "Helvetica-Bold", size: tamañoCE })
 
