@@ -7,8 +7,8 @@ const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../util
 
 // ! ETIQUETA a4 CON AMBOS SIMPLE
 
-const ea4 = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, altoContenedor, mayorPorPag) => {
-    let { nombreFantasia, logo, camposEspeciales, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fulfillment } = objData
+const ea4 = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, altoContenedor, mayorPorPag, llevaCodigo) => {
+    let { did, didCliente, nombreFantasia, logo, camposEspeciales, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fulfillment } = objData
 
     for (let i = 0; i < bultos; i++) {
         cantFulfillmentPag += camposEspeciales.length > 5 ? fulfillment.length + 3 : fulfillment.length + Math.ceil(camposEspeciales.length / 2)
@@ -34,7 +34,15 @@ const ea4 = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, alto
                     resolve(buffer)
                 })
             })
-            doc.image(codigoQR, distanciaAncho - 5, distanciaAlto1 + 20, { height: 90 })
+
+            if (llevaCodigo) {
+                doc.image(codigoQR, distanciaAncho, distanciaAlto1 + 15, { height: 80 })
+                doc.fontSize(8)
+                    .font("Helvetica-Bold")
+                    .text(`${did}d54df4s8a${didCliente}`, distanciaAncho, distanciaAlto1 + 97, { baseline: "middle", lineBreak: false, width: 85, align: "center" })
+            } else {
+                doc.image(codigoQR, distanciaAncho - 5, distanciaAlto1 + 20, { height: 90 })
+            }
         } else {
             SVGtoPDF(doc, iconNoQr, distanciaAncho + 8, distanciaAlto1 + 35)
         }

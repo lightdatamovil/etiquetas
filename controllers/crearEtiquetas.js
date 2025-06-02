@@ -26,6 +26,8 @@ const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envi
                 var objData = {
                     nombreFantasia: logistica.nombreFantasia,
                     logo: logistica.logo,
+                    did: paquete.did,
+                    didCliente: paquete.didCliente,
                     localidad: cambiarACaba(!esDatoValido(paquete.ciudad) && !esDatoValido(paquete.localidad) && esDatoValido(paquete.municipio) ? paquete.municipio : esDatoValido(paquete.ciudad) ? paquete.ciudad : paquete.localidad),
                     fecha: convertirFecha(paquete.fecha_venta),
                     nroVenta: esDatoValido(paquete.ml_venta_id) ? paquete.ml_venta_id : paquete.ml_shipment_id,
@@ -60,12 +62,17 @@ const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envi
                     objData.observacion = obsConMetodo.join(" / ")
                 }
 
+                let llevaCodigo = false
+                if (didEmpresa == 160) {
+                    llevaCodigo = true
+                }
+
                 let cualEtiqueta = objData.camposEspeciales.length > 0 ? (objData.fulfillment.length == 0 ? "CE" : "A") : objData.fulfillment.length == 0 ? "S" : "FF"
                 let funcionName = medidaEtiqueta + cualEtiqueta + calidadEtiqueta
                 let funcionNameA4 = medidaEtiqueta + calidadEtiqueta
 
                 if (tipoEtiqueta == 0 || tipoEtiqueta == 1 || tipoEtiqueta == 3) {
-                    await exportsEtiquetas[funcionName](doc, objData)
+                    await exportsEtiquetas[funcionName](doc, objData, llevaCodigo)
                     if (tipoEtiqueta == 3) {
                         doc.roundedRect(0, 0, 283.5, 425.25) // x, y, ancho, alto
                             .stroke("black")
@@ -82,7 +89,7 @@ const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envi
                         distanciaAlto_a4 = 15
                     }
 
-                    const result = await exportsEtiquetas[funcionNameA4](doc, objData, index_a4, distanciaAlto_a4, cantFulfillmentPag_a4, altoContenedor_a4, mayorPorPag_a4)
+                    const result = await exportsEtiquetas[funcionNameA4](doc, objData, index_a4, distanciaAlto_a4, cantFulfillmentPag_a4, altoContenedor_a4, mayorPorPag_a4, llevaCodigo)
 
                     index_a4 = result.index
                     cantFulfillmentPag_a4 = result.cantFulfillmentPag

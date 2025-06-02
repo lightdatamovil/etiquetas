@@ -181,6 +181,7 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
 
         datos.envios.forEach((envio) => {
             enviosMap[envio.did] = {
+                did: envio.did,
                 localidad: envio.localidad || null,
                 fecha_venta: envio.fecha_venta !== "0000-00-00 00:00:00" ? envio.fecha_venta : envio.fecha_inicio !== "0000-00-00 00:00:00" ? envio.fecha_inicio : null,
                 ml_venta_id: envio.ml_venta_id || null,

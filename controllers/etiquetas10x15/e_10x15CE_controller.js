@@ -6,8 +6,8 @@ const { esDatoValido, cortarTexto, tamañoSegunLargo } = require("../../utils/fu
 const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../utils/colores.js")
 //ETIQUETA 10X15 CON CAMPOS ESPECIALES
 
-const e10x15CE = async (doc, objData) => {
-    let { nombreFantasia, logo, camposEspeciales, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fulfillment } = objData
+const e10x15CE = async (doc, objData, llevaCodigo) => {
+    let { did, didCliente, nombreFantasia, logo, camposEspeciales, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fulfillment } = objData
 
     for (let i = 0; i < bultos; i++) {
         const distanciaAncho1 = 129
@@ -23,7 +23,12 @@ const e10x15CE = async (doc, objData) => {
                     resolve(buffer)
                 })
             })
-            doc.image(codigoQR, 0, 40, { height: 125 })
+            if (llevaCodigo) {
+                doc.image(codigoQR, 0, 40, { height: 115 })
+                doc.fontSize(8).font("Helvetica-Bold").text(`${did}d54df4s8a${didCliente}`, 0, 155, { baseline: "middle", lineBreak: false, width: 125, align: "center" })
+            } else {
+                doc.image(codigoQR, 0, 40, { height: 125 })
+            }
         }
 
         if (esDatoValido(logo)) {

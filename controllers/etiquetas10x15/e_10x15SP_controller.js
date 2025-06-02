@@ -7,8 +7,8 @@ const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../util
 
 //ETIQUETA 10X15 CON SOLO PREMIUM
 
-const e10x15SP = async (doc, objData) => {
-    let { nombreFantasia, logo, camposEspeciales, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fulfillment } = objData
+const e10x15SP = async (doc, objData, llevaCodigo) => {
+    let { did, didCliente, nombreFantasia, logo, camposEspeciales, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fulfillment } = objData
 
     for (let i = 0; i < bultos; i++) {
         const distanciaAncho1 = 129
@@ -24,7 +24,13 @@ const e10x15SP = async (doc, objData) => {
                     resolve(buffer)
                 })
             })
-            doc.image(codigoQR, 0, 75, { height: 125 })
+
+            if (llevaCodigo) {
+                doc.image(codigoQR, 0, 75, { height: 115 })
+                doc.fontSize(8).font("Helvetica-Bold").text(`${did}d54df4s8a${didCliente}`, 0, 190, { baseline: "middle", lineBreak: false, width: 115, align: "center" })
+            } else {
+                doc.image(codigoQR, 0, 75, { height: 125 })
+            }
         }
 
         if (esDatoValido(logo)) {

@@ -7,8 +7,8 @@ const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../util
 
 //ETIQUETA 10x10 CON CAMPOS ESPECIALES PREMIUM
 
-const e10x10CEP = async (doc, objData) => {
-    let { nombreFantasia, logo, camposEspeciales, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fulfillment } = objData
+const e10x10CEP = async (doc, objData, llevaCodigo) => {
+    let { did, didCliente, nombreFantasia, logo, camposEspeciales, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fulfillment } = objData
 
     for (let i = 0; i < bultos; i++) {
         const distanciaAncho1 = 80
@@ -24,7 +24,14 @@ const e10x10CEP = async (doc, objData) => {
                     resolve(buffer)
                 })
             })
-            doc.image(codigoQR, 0, 5, { height: 80 })
+            if (llevaCodigo) {
+                doc.image(codigoQR, 5, 5, { height: 70 })
+                doc.fontSize(6)
+                    .font("Helvetica-Bold")
+                    .text(`${did}d54df4s8a${didCliente}`, 0, 70 + 5, { baseline: "middle", lineBreak: false, width: 85, align: "center" })
+            } else {
+                doc.image(codigoQR, 0, 5, { height: 80 })
+            }
         }
 
         // ! SECCION SUPERIOR
