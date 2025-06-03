@@ -316,7 +316,6 @@ const registrarReimpresion = async (idempresa, dids, modulo, quien, esFulfillmen
         })
 
         const queryUpdateEnvios = `UPDATE envios SET impreso = 1 WHERE did IN (${dids.map(() => "?").join(", ")}) AND superado = 0 AND (elim = 0 OR elim = 52)`
-        console.log("Query Update Envios:", queryUpdateEnvios, dids)
 
         await new Promise((resolve, reject) => {
             connection.query(queryUpdateEnvios, dids, (error, results) => {
