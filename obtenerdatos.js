@@ -74,7 +74,7 @@ async function getFromRedis(key) {
 }
 
 //FUNCION PARA OBTEBNER LOS DATOS DE LAS ETIQUETAS
-const obtenerDatosEnvios = async (idempresa, dids) => {
+const obtenerDatosEnvios = async (idempresa, dids, esFulfillment = 0) => {
     try {
         let cacheLogos = {}
         let enviosMap = {}
@@ -88,6 +88,18 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
         const empresasLogoGrandes = [288, 285]
         if (empresasLogoGrandes.includes(idempresa)) {
             logo = `${empresa.url}/app-assets/images/logo/logov1.png`
+        }
+
+        if (esFulfillment == 1) {
+            queryff = `SELECT didEnvio FROM ordenes WHERE did IN (?) AND superado = 0 AND elim = 0`
+            const didEnviosFromOrdenes = await new Promise((resolve, reject) => {
+                connection.query(queryff, [dids], (error, results) => {
+                    if (error) return reject(error)
+                    resolve(results.map((r) => r.didEnvio))
+                })
+            })
+
+            dids = didEnviosFromOrdenes.length ? didEnviosFromOrdenes : [-1]
         }
 
         const consultas = [
@@ -108,7 +120,8 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
                     LEFT JOIN envios_direcciones_destino edd ON e.did = edd.didEnvio AND edd.superado = 0 AND edd.elim = 0
                     LEFT JOIN envios_observaciones eo ON e.did = eo.didEnvio AND eo.superado = 0 AND eo.elim = 0
                     LEFT JOIN clientes c ON e.didCliente = c.did AND c.superado = 0
-                    WHERE e.did IN (?) AND e.superado = 0 AND e.elim = 0;
+                    WHERE e.did IN (?) AND e.superado = 0 AND (e.elim = 0 OR e.elim = 52);
+
                 `,
             },
             {
@@ -258,20 +271,42 @@ const obtenerDatosEnvios = async (idempresa, dids) => {
 }
 
 //FUNCION PARA INSERTAR LOS ENVIOS YA IMPRESOS EN LA TABLA REIMPRESION HISTORIAL
-const registrarReimpresion = async (idempresa, dids, modulo, quien) => {
-    let { connection } = await getConnection(idempresa)
+const registrarReimpresion = async (idempresa, dids, modulo, quien, esFulfillment = 0) => {
+    const { connection } = await getConnection(idempresa)
 
     if (!Array.isArray(dids) || dids.length === 0) {
         throw new Error("El parámetro dids debe ser un array con al menos un elemento.")
     }
 
     try {
-        await connection.beginTransaction() // Inicia la transacción
+        await connection.beginTransaction()
 
-        // Insertar en reimpresion_historial
-        let values = dids.map(() => "(?, ?, ?)").join(", ")
-        let queryInsert = `INSERT INTO reimpresion_historial (didEnvio, modulo, quien) VALUES ${values}`
-        let paramsInsert = dids.flatMap((did) => [did, modulo, quien])
+        if (esFulfillment == 1) {
+            const ordenesData = await new Promise((resolve, reject) => {
+                const qSelect = `SELECT id, didEnvio, descargado FROM ordenes WHERE id IN (?) AND superado = 0 AND elim = 0`
+                connection.query(qSelect, [dids], (err, rows) => {
+                    if (err) return reject(err)
+                    resolve(rows)
+                })
+            })
+
+            if (ordenesData.length) {
+                await new Promise((resolve, reject) => {
+                    const qUpdate = `UPDATE ordenes SET descargado = descargado + 1 WHERE id IN (?) AND superado = 0 AND elim = 0`
+                    connection.query(qUpdate, [dids], (err, res) => {
+                        if (err) return reject(err)
+                        resolve(res)
+                    })
+                })
+            }
+
+            const didEnvios = [...new Set(ordenesData.map((o) => o.didEnvio))]
+            dids = didEnvios.length ? didEnvios : [-1]
+        }
+
+        const placeholders = dids.map(() => "(?, ?, ?)").join(", ")
+        const queryInsert = `INSERT INTO reimpresion_historial (didEnvio, modulo, quien) VALUES ${placeholders}`
+        const paramsInsert = dids.flatMap((did) => [did, modulo, quien])
 
         await new Promise((resolve, reject) => {
             connection.query(queryInsert, paramsInsert, (error, results) => {
@@ -280,28 +315,28 @@ const registrarReimpresion = async (idempresa, dids, modulo, quien) => {
             })
         })
 
-        // Actualizar la columna "impreso" en la tabla "envios"
-        let queryUpdate = `UPDATE envios SET impreso = 1 WHERE did IN (${dids.map(() => "?").join(", ")}) AND superado = 0 AND elim = 0`
+        const queryUpdateEnvios = `UPDATE envios SET impreso = 1 WHERE did IN (${dids.map(() => "?").join(", ")}) AND superado = 0 AND (elim = 0 OR elim = 52)`
+        console.log("Query Update Envios:", queryUpdateEnvios, dids)
 
         await new Promise((resolve, reject) => {
-            connection.query(queryUpdate, dids, (error, results) => {
+            connection.query(queryUpdateEnvios, dids, (error, results) => {
                 if (error) return reject(error)
                 resolve(results)
             })
         })
 
-        await connection.commit() // Confirma la transacción
+        await connection.commit()
 
         return {
             success: true,
             message: "Reimpresión registrada y estado actualizado correctamente.",
         }
     } catch (error) {
-        await connection.rollback() // Revierte la transacción si hay un error
+        await connection.rollback()
         console.error("Error en registrarReimpresion:", error.message)
         throw error
     } finally {
-        connection.end() // Cierra la conexión
+        connection.end()
     }
 }
 

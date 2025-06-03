@@ -2,11 +2,11 @@ const crearEtiquetas = require("../controllers/crearEtiquetas")
 const { obtenerDatosEnvios, registrarReimpresion } = require("../obtenerdatos")
 
 const postEtiqueta = async (req, res) => {
-    const { didEmpresa, didEnvios, tipoEtiqueta, calidad, quien } = req.body
-    const modulo = "Default"
+    const { didEmpresa, didEnvios, tipoEtiqueta, calidad, quien, fulfillment } = req.body
+    const modulo = fulfillment == 1 ? "FF" : "Default"
 
     try {
-        const datos = await obtenerDatosEnvios(didEmpresa, didEnvios)
+        const datos = await obtenerDatosEnvios(didEmpresa, didEnvios, fulfillment)
 
         if (!datos) {
             return res.status(400).json({
@@ -24,7 +24,7 @@ const postEtiqueta = async (req, res) => {
             const result = await crearEtiquetas(didEmpresa, tipoEtiqueta, calidad, logistica, envios, res)
 
             if (result) {
-                await registrarReimpresion(didEmpresa, didEnvios, modulo, quien)
+                await registrarReimpresion(didEmpresa, didEnvios, modulo, quien, fulfillment)
                 return res.end()
             } else {
                 return res.status(500).json({ error: "No se pudo generar el PDF" })
