@@ -385,7 +385,7 @@ const ea4 = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, alto
                     .text(esDatoValido(elemento["ean"]) ? cortarTexto(elemento["ean"], 25) : "Sin información", distanciaAncho4 + 104 + margin4 + padding4, posicionAltoTexto4(0) + 1, { baseline: "middle", lineBreak: false })
                 doc.fontSize(tamañoFuente4)
                     .font("Helvetica")
-                    .text(esDatoValido(elemento["descripcion"]) ? cortarTexto(elemento["descripcion"].toLowerCase(), 75) : "Sin información", distanciaAncho4 + 208 + margin4 * 2 + padding4, posicionAltoTexto4(0) + 1, { baseline: "middle", lineBreak: false })
+                    .text(esDatoValido(elemento["descripcion"]) ? cortarTexto(elemento["descripcion"], 75) : "Sin información", distanciaAncho4 + 208 + margin4 * 2 + padding4, posicionAltoTexto4(0) + 1, { baseline: "middle", lineBreak: false })
                 doc.fontSize(tamañoFuente4)
                     .font("Helvetica")
                     .text(esDatoValido(elemento["cantidad"]) ? cortarTexto(elemento["cantidad"], 25) : "Sin información", distanciaAncho4 + 414 + margin4 * 3 + padding4, posicionAltoTexto4(0) + 1, { baseline: "middle", lineBreak: false })

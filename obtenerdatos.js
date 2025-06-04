@@ -166,7 +166,7 @@ const obtenerDatosEnvios = async (idempresa, dids, esFulfillment = 0) => {
                     SELECT o.didEnvio,
                     COALESCE(NULLIF(oi.seller_sku, ''), NULLIF(fp.sku, '')) AS sku,
                     fp.ean,
-                    COALESCE(NULLIF(oi.descripcion, ''), NULLIF(fp.descripcion, '')) AS descripcion,
+                    COALESCE(NULLIF(fp.descripcion, ''), NULLIF(oi.descripcion, '')) AS descripcion,
                     oi.cantidad
                     FROM ordenes o
                     LEFT JOIN ordenes_items oi ON o.did = oi.didOrden AND oi.superado = 0 AND oi.elim = 0
