@@ -4,8 +4,17 @@ const exportsEtiquetas = require("../utils/exportsEtiquetas")
 const { medida10x10, medida10x15, medidaA4 } = require("../utils/medidasEtiquetas")
 
 const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envios, res) => {
+    // Ordena los envíos por ml_shipment_id de manera natural (alfanumérica)
+
     return new Promise(async (resolve, reject) => {
         try {
+            envios = Object.values(envios).sort((a, b) =>
+                (a.ml_shipment_id || "").localeCompare(b.ml_shipment_id || "", undefined, {
+                    numeric: true,
+                    sensitivity: "base",
+                })
+            )
+
             let tamañoHoja = tipoEtiqueta == 0 ? medida10x10 : tipoEtiqueta == 1 ? medida10x15 : medidaA4
             let medidaEtiqueta = tipoEtiqueta == 0 ? "e10x10" : tipoEtiqueta == 1 || tipoEtiqueta == 3 ? "e10x15" : "ea4"
             let calidadEtiqueta = calidad == 1 ? "P" : ""

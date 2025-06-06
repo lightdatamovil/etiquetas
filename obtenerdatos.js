@@ -121,7 +121,6 @@ const obtenerDatosEnvios = async (idempresa, dids, esFulfillment = 0) => {
                     LEFT JOIN envios_observaciones eo ON e.did = eo.didEnvio AND eo.superado = 0 AND eo.elim = 0
                     LEFT JOIN clientes c ON e.didCliente = c.did AND c.superado = 0
                     WHERE e.did IN (?) AND e.superado = 0 AND (e.elim = 0 OR e.elim = 52);
-
                 `,
             },
             {
@@ -193,6 +192,12 @@ const obtenerDatosEnvios = async (idempresa, dids, esFulfillment = 0) => {
         const datos = Object.fromEntries(consultas.map((c, i) => [c.key, resultados[i]]))
 
         datos.envios.forEach((envio) => {
+            qrData = envio.flex == 1 ? envio.ml_qr_seguridad : `{"local": 1, "did": "${envio.did}", "cliente": ${envio.didCliente}, "empresa": ${idempresa}}`
+
+            if (idempresa == 287 && envio.choferAsignado == 7) {
+                qrData = `{"local": 1, "did": "${envio.did}", "cliente": ${envio.didCliente}, "empresa": ${idempresa}, "eid": ${envio.ml_shipment_id}}`
+            }
+
             enviosMap[envio.did] = {
                 did: envio.did,
                 localidad: envio.localidad || null,
@@ -211,7 +216,7 @@ const obtenerDatosEnvios = async (idempresa, dids, esFulfillment = 0) => {
                 monto_total_a_cobrar: envio.monto_total_a_cobrar || null,
                 peso: envio.peso || null,
                 remitente: envio.nombre_fantasia || null,
-                qr: envio.flex == 1 ? envio.ml_qr_seguridad : `{"local": 1, "did": "${envio.did}", "cliente": ${envio.didCliente}, "empresa": ${idempresa}}`,
+                qr: qrData,
                 bultos: envio.bultos || null,
                 municipio: envio.destination_municipality_name || null,
                 camposEspeciales: [],
