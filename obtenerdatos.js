@@ -195,7 +195,7 @@ const obtenerDatosEnvios = async (idempresa, dids, esFulfillment = 0) => {
             qrData = envio.flex == 1 ? envio.ml_qr_seguridad : `{"local": 1, "did": "${envio.did}", "cliente": ${envio.didCliente}, "empresa": ${idempresa}}`
 
             if (idempresa == 287 && envio.choferAsignado == 7) {
-                qrData = `{"local": 1, "did": "${envio.did}", "cliente": ${envio.didCliente}, "empresa": ${idempresa}, "eid": ${envio.ml_shipment_id}}`
+                qrData = `{"local": 1, "did": "${envio.did}", "cliente": ${envio.didCliente}, "empresa": ${idempresa}, "eid": "${envio.ml_shipment_id}"}`
             }
 
             enviosMap[envio.did] = {
