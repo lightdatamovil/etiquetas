@@ -113,7 +113,7 @@ const obtenerDatosEnvios = async (idempresa, dids, esFulfillment = 0) => {
                         COALESCE(NULLIF(edd.cp, ''), NULLIF(e.destination_shipping_zip_code, '')) AS cp,
                         COALESCE(NULLIF(edd.destination_comments, ''), NULLIF(e.destination_comments, '')) AS ref,
                         edd.ciudad,
-                        eo.observacion,
+                        COALESCE(NULLIF(eo.observacion, ''), NULLIF(e.obs, '')) AS observacion,
                         e.destination_municipality_name,
                         c.nombre_fantasia
                     FROM envios e
