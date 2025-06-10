@@ -2,7 +2,7 @@ const PDFDocument = require("pdfkit")
 const { convertirFecha, cambiarACaba, combinarArrays, esDatoValido } = require("../utils/funciones")
 const exportsEtiquetas = require("../utils/exportsEtiquetas")
 const { medida10x10, medida10x15, medidaA4 } = require("../utils/medidasEtiquetas")
-const { empresasConCodigoDebajoDelQr, empresasConTotalAPagarGande } = require("../utils/empresasConEspecificaciones.json")
+const { empresasConCodigoDebajoDelQr, empresasConTotalAPagarGrande, empresasConObservacionA4Grande } = require("../utils/empresasConEspecificaciones.json")
 
 const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envios, res) => {
     // Ordena los envíos por ml_shipment_id de manera natural (alfanumérica)
@@ -78,8 +78,13 @@ const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envi
                 }
 
                 let totalGrande = false
-                if (empresasConTotalAPagarGande.includes(didEmpresa)) {
+                if (empresasConTotalAPagarGrande.includes(didEmpresa)) {
                     totalGrande = true
+                }
+
+                let observacionA4Grande = false
+                if (empresasConObservacionA4Grande.includes(didEmpresa)) {
+                    observacionA4Grande = true
                 }
 
                 let cualEtiqueta = objData.camposEspeciales.length > 0 ? (objData.fulfillment.length == 0 ? "CE" : "A") : objData.fulfillment.length == 0 ? "S" : "FF"
@@ -104,7 +109,7 @@ const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envi
                         distanciaAlto_a4 = 15
                     }
 
-                    const result = await exportsEtiquetas[funcionNameA4](doc, objData, index_a4, distanciaAlto_a4, cantFulfillmentPag_a4, altoContenedor_a4, mayorPorPag_a4, llevaCodigo, totalGrande)
+                    const result = await exportsEtiquetas[funcionNameA4](doc, objData, index_a4, distanciaAlto_a4, cantFulfillmentPag_a4, altoContenedor_a4, mayorPorPag_a4, llevaCodigo, totalGrande, observacionA4Grande)
 
                     index_a4 = result.index
                     cantFulfillmentPag_a4 = result.cantFulfillmentPag

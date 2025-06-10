@@ -7,7 +7,7 @@ const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../util
 
 // ! ETIQUETA a4 CON AMBOS SIMPLE
 
-const ea4 = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, altoContenedor, mayorPorPag, llevaCodigo, totalGrande) => {
+const ea4 = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, altoContenedor, mayorPorPag, llevaCodigo, totalGrande, observacionA4Grande) => {
     let { did, didCliente, nombreFantasia, logo, camposEspeciales, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fulfillment } = objData
 
     for (let i = 0; i < bultos; i++) {
@@ -195,12 +195,19 @@ const ea4 = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, alto
             .font("Helvetica-Bold")
             .text(`${esDatoValido(direccion) ? cortarTexto(direccion, 105) : "Sin información"} ${esDatoValido(cp) ? "CP: " + cortarTexto(cp, 10) : ""}`, posicionAnchoTexto2 + 12, posicionAltoTexto2(2), { baseline: "middle", width: anchoContainer2 - 10 })
 
-        doc.fontSize(tamañoFuente2 - 2)
+        tamañoFuenteObs = tamañoFuente2 - 2
+        indentObs = 40
+        if (observacionA4Grande) {
+            tamañoFuenteObs += 3
+            indentObs += 20
+        }
+
+        doc.fontSize(tamañoFuenteObs)
             .font("Helvetica-Bold")
             .text("Observación:", posicionAnchoTexto2, posicionAltoTexto2(4) - 10, { baseline: "middle", lineBreak: false })
-        doc.fontSize(tamañoFuente2 - 2)
+        doc.fontSize(tamañoFuenteObs)
             .font("Helvetica")
-            .text(esDatoValido(observacion) ? cortarTexto(observacion, 250) : "Sin información", posicionAnchoTexto2, posicionAltoTexto2(4) - 10, { baseline: "middle", indent: 40, width: anchoContainer2 - 10 })
+            .text(esDatoValido(observacion) ? cortarTexto(observacion, 250) : "Sin información", posicionAnchoTexto2, posicionAltoTexto2(4) - 10, { baseline: "middle", indent: indentObs, width: anchoContainer2 - 10 })
         // ! /SECCION DESTINATARIO
 
         // ! SECCION CAMPOS ESPECIALES
