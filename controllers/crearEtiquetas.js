@@ -2,6 +2,7 @@ const PDFDocument = require("pdfkit")
 const { convertirFecha, cambiarACaba, combinarArrays, esDatoValido } = require("../utils/funciones")
 const exportsEtiquetas = require("../utils/exportsEtiquetas")
 const { medida10x10, medida10x15, medidaA4 } = require("../utils/medidasEtiquetas")
+const { empresasConCodigoDebajoDelQr, empresasConTotalAPagarGande } = require("../utils/empresasConEspecificaciones.json")
 
 const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envios, res) => {
     // Ordena los envíos por ml_shipment_id de manera natural (alfanumérica)
@@ -72,12 +73,12 @@ const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envi
                 }
 
                 let llevaCodigo = false
-                if (didEmpresa == 160) {
+                if (empresasConCodigoDebajoDelQr.includes(didEmpresa)) {
                     llevaCodigo = true
                 }
 
                 let totalGrande = false
-                if (didEmpresa == 137) {
+                if (empresasConTotalAPagarGande.includes(didEmpresa)) {
                     totalGrande = true
                 }
 

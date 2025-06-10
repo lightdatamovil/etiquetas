@@ -2,6 +2,7 @@ const e = require("express")
 const mysql = require("mysql")
 const redis = require("redis")
 require("dotenv").config()
+const { empresasConLogoGrande, empresasConItemsEnEnvios } = require("./utils/empresasConEspecificaciones.json")
 const { REDIS_HOST, REDIS_PORT, REDIS_PASSWORD } = process.env
 
 const redisClient = redis.createClient({
@@ -85,8 +86,7 @@ const obtenerDatosEnvios = async (idempresa, dids, esFulfillment = 0) => {
 
         let logo = cacheLogos[empresa.empresa] || `${empresa.url}/app-assets/images/logo/logo.png` || null
 
-        const empresasLogoGrandes = [288, 285]
-        if (empresasLogoGrandes.includes(idempresa)) {
+        if (empresasConLogoGrande.includes(idempresa)) {
             logo = `${empresa.url}/app-assets/images/logo/logov1.png`
         }
 
@@ -175,7 +175,7 @@ const obtenerDatosEnvios = async (idempresa, dids, esFulfillment = 0) => {
             })
         }
 
-        if (idempresa == 82) {
+        if (empresasConItemsEnEnvios.includes(idempresa)) {
             consultas.push({
                 key: "items",
                 query: `
@@ -249,7 +249,7 @@ const obtenerDatosEnvios = async (idempresa, dids, esFulfillment = 0) => {
             })
         }
 
-        if (idempresa == 82 && datos.items) {
+        if (empresasConItemsEnEnvios.includes(idempresa) && datos.items) {
             datos.items.forEach((item) => {
                 enviosMap[item.didEnvio]["didCliente"]
                 if (enviosMap[item.didEnvio] && enviosMap[item.didEnvio]["didCliente"] == 37) {
