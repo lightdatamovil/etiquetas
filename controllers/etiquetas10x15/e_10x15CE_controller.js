@@ -1,12 +1,13 @@
 const QRCode = require("qrcode")
 const SVGtoPDF = require("svg-to-pdfkit")
+const BwipJs = require("bwip-js")
 
 const { iconCalendar, iconNombre, iconTelefono, iconUbicacion } = require("../../utils/icons.js")
-const { esDatoValido, cortarTexto, tamañoSegunLargo } = require("../../utils/funciones.js")
+const { esDatoValido, cortarTexto, tamañoSegunLargo, altoCodigoBarras } = require("../../utils/funciones.js")
 const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../utils/colores.js")
 //ETIQUETA 10X15 CON CAMPOS ESPECIALES
 
-const e10x15CE = async (doc, objData, llevaCodigo) => {
+const e10x15CE = async (doc, objData, llevaCodigo, llevaCodigoBarras) => {
     let { did, didCliente, nombreFantasia, logo, camposEspeciales, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fulfillment } = objData
 
     for (let i = 0; i < bultos; i++) {
@@ -40,6 +41,28 @@ const e10x15CE = async (doc, objData, llevaCodigo) => {
         doc.fontSize(tamañoSegunLargo(nombreFantasia, 20, 14))
             .font("Helvetica-Bold")
             .text(esDatoValido(nombreFantasia) ? cortarTexto(nombreFantasia, 20) : "Logistica", 63, 30, { lineBreak: false, baseline: "middle" })
+
+        if (llevaCodigoBarras && esDatoValido(nroVenta)) {
+            let codigoBarras = await new Promise((resolve, reject) => {
+                BwipJs.toBuffer(
+                    {
+                        bcid: "code128", // Tipo de código
+                        text: nroVenta, // Texto a codificar
+                        scale: 3, // Escala (tamaño)
+                        height: altoCodigoBarras(nroVenta), // Alto del código
+                        includetext: true, // Mostrar texto debajo
+                        textxalign: "center", // Centrado del texto
+                        textsize: 5,
+                    },
+                    (err, png) => {
+                        if (err) reject(err)
+                        resolve(png)
+                    }
+                )
+            })
+
+            doc.image(codigoBarras, 170, 5, { fit: [100, 50], align: "center", valign: "center" })
+        }
 
         // ! SECCION SUPERIOR
         tamañoFuente1 = 10

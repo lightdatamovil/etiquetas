@@ -64,4 +64,15 @@ function combinarArrays(camposEspeciales, camposCobranzas, camposLogi) {
     return nuevoArray // No se rellena con null, simplemente devuelve lo que haya
 }
 
-module.exports = { esDatoValido, convertirFecha, cortarTexto, tamañoSegunLargo, primeraLetraMayuscula, cambiarACaba, combinarArrays }
+function altoCodigoBarras(texto) {
+    const longitud = texto.length
+
+    if (longitud <= 2) return 4
+    if (longitud <= 4) return 5
+    if (longitud <= 6) return 6
+    if (longitud <= 9) return 7
+
+    return 10
+}
+
+module.exports = { esDatoValido, convertirFecha, cortarTexto, tamañoSegunLargo, primeraLetraMayuscula, cambiarACaba, combinarArrays, altoCodigoBarras }

@@ -2,7 +2,7 @@ const PDFDocument = require("pdfkit")
 const { convertirFecha, cambiarACaba, combinarArrays, esDatoValido } = require("../utils/funciones")
 const exportsEtiquetas = require("../utils/exportsEtiquetas")
 const { medida10x10, medida10x15, medidaA4 } = require("../utils/medidasEtiquetas")
-const { empresasConCodigoDebajoDelQr, empresasConTotalAPagarGrande, empresasConObservacionA4Grande } = require("../utils/empresasConEspecificaciones.json")
+const { empresasConObservacionesConMetodo, empresasConCodigoDebajoDelQr, empresasConTotalAPagarGrande, empresasConObservacionA4Grande, empresasConCodigoBarras } = require("../utils/empresasConEspecificaciones.json")
 
 const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envios, res) => {
     // Ordena los envíos por ml_shipment_id de manera natural (alfanumérica)
@@ -62,8 +62,9 @@ const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envi
                     }
                 }
 
-                if (didEmpresa == 288 && paquete.didCliente == 157) {
-                    obsConMetodo = []
+                const clienteId = paquete.didCliente
+                if (empresasConObservacionesConMetodo[String(didEmpresa)]?.includes(clienteId)) {
+                    const obsConMetodo = []
 
                     if (esDatoValido(paquete.obs)) obsConMetodo.push(paquete.obs)
                     if (esDatoValido(paquete.ref)) obsConMetodo.push(`Ref: ${paquete.ref}`)
@@ -72,27 +73,17 @@ const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envi
                     objData.observacion = obsConMetodo.join(" / ")
                 }
 
-                let llevaCodigo = false
-                if (empresasConCodigoDebajoDelQr.includes(didEmpresa)) {
-                    llevaCodigo = true
-                }
-
-                let totalGrande = false
-                if (empresasConTotalAPagarGrande.includes(didEmpresa)) {
-                    totalGrande = true
-                }
-
-                let observacionA4Grande = false
-                if (empresasConObservacionA4Grande.includes(didEmpresa)) {
-                    observacionA4Grande = true
-                }
+                const llevaCodigo = empresasConCodigoDebajoDelQr.includes(didEmpresa)
+                const totalGrande = empresasConTotalAPagarGrande.includes(didEmpresa)
+                const observacionA4Grande = empresasConObservacionA4Grande.includes(didEmpresa)
+                const llevaCodigoBarras = empresasConCodigoBarras[String(didEmpresa)]?.includes(clienteId) || false
 
                 let cualEtiqueta = objData.camposEspeciales.length > 0 ? (objData.fulfillment.length == 0 ? "CE" : "A") : objData.fulfillment.length == 0 ? "S" : "FF"
                 let funcionName = medidaEtiqueta + cualEtiqueta + calidadEtiqueta
                 let funcionNameA4 = medidaEtiqueta + calidadEtiqueta
 
                 if (tipoEtiqueta == 0 || tipoEtiqueta == 1 || tipoEtiqueta == 3) {
-                    await exportsEtiquetas[funcionName](doc, objData, llevaCodigo)
+                    await exportsEtiquetas[funcionName](doc, objData, llevaCodigo, llevaCodigoBarras)
                     if (tipoEtiqueta == 3) {
                         doc.roundedRect(0, 0, 283.5, 425.25) // x, y, ancho, alto
                             .stroke("black")
