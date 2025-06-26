@@ -368,7 +368,7 @@ const ea4 = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, alto
                 .text("Descripción", distanciaAncho4 + 208 + margin4 * 2 + padding4, posicionAltoTexto4(0) - 12, { baseline: "middle", lineBreak: false })
             doc.fontSize(tamañoFuente3)
                 .font("Helvetica")
-                .text("Cantidad", distanciaAncho4 + 414 + margin4 * 3 + padding4, posicionAltoTexto4(0) - 12, { baseline: "middle", lineBreak: false })
+                .text("Cantidad", distanciaAncho4 + 460 + margin4 * 3 + padding4, posicionAltoTexto4(0) - 12, { baseline: "middle", lineBreak: false })
 
             await fulfillment.map((elemento) => {
                 indexFF += 1
@@ -395,7 +395,7 @@ const ea4 = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, alto
                     .text(esDatoValido(elemento["descripcion"]) ? cortarTexto(elemento["descripcion"], 75) : "Sin información", distanciaAncho4 + 208 + margin4 * 2 + padding4, posicionAltoTexto4(0) + 1, { baseline: "middle", lineBreak: false })
                 doc.fontSize(tamañoFuente4)
                     .font("Helvetica")
-                    .text(esDatoValido(elemento["cantidad"]) ? cortarTexto(elemento["cantidad"], 25) : "Sin información", distanciaAncho4 + 414 + margin4 * 3 + padding4, posicionAltoTexto4(0) + 1, { baseline: "middle", lineBreak: false })
+                    .text(esDatoValido(elemento["cantidad"]) ? cortarTexto(elemento["cantidad"], 25) : "Sin información", distanciaAncho4 + 460 + margin4 * 3 + padding4, posicionAltoTexto4(0) + 1, { baseline: "middle", lineBreak: false })
 
                 distanciaAlto4 += 15
             })

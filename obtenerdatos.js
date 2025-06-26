@@ -175,7 +175,7 @@ const obtenerDatosEnvios = async (idempresa, dids, esFulfillment = 0) => {
             })
         }
 
-        if (empresasConItemsEnEnvios.includes(idempresa)) {
+        if (empresasConItemsEnEnvios[String(idempresa)]) {
             consultas.push({
                 key: "items",
                 query: `
@@ -249,10 +249,12 @@ const obtenerDatosEnvios = async (idempresa, dids, esFulfillment = 0) => {
             })
         }
 
-        if (empresasConItemsEnEnvios.includes(idempresa) && datos.items) {
+        console.log("datos.items", datos.items)
+
+        if (empresasConItemsEnEnvios[String(idempresa)] && datos.items) {
             datos.items.forEach((item) => {
                 enviosMap[item.didEnvio]["didCliente"]
-                if (enviosMap[item.didEnvio] && enviosMap[item.didEnvio]["didCliente"] == 37) {
+                if (enviosMap[item.didEnvio] && empresasConItemsEnEnvios[String(idempresa)]?.includes(enviosMap[item.didEnvio]["didCliente"])) {
                     enviosMap[item.didEnvio].fulfillment.push({
                         sku: item.sku || null,
                         ean: item.ean || null,
