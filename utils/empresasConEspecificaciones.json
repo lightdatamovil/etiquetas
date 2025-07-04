@@ -1,6 +1,7 @@
 {
     "empresasConLogoGrande": [288, 285],
     "empresasConItemsEnEnvios": { "82": [37], "211": [250] },
+    "empresasConEidEnQr": [287],
     "empresasConObservacionesConMetodo": { "288": [157] },
     "empresasConCodigoDebajoDelQr": [160],
     "empresasConTotalAPagarGrande": [137],

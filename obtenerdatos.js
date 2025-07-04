@@ -2,7 +2,7 @@ const e = require("express")
 const mysql = require("mysql")
 const redis = require("redis")
 require("dotenv").config()
-const { empresasConLogoGrande, empresasConItemsEnEnvios } = require("./utils/empresasConEspecificaciones.json")
+const { empresasConLogoGrande, empresasConItemsEnEnvios, empresasConEidEnQr } = require("./utils/empresasConEspecificaciones.json")
 const { REDIS_HOST, REDIS_PORT, REDIS_PASSWORD } = process.env
 
 const redisClient = redis.createClient({
@@ -194,7 +194,7 @@ const obtenerDatosEnvios = async (idempresa, dids, esFulfillment = 0) => {
         datos.envios.forEach((envio) => {
             qrData = envio.flex == 1 ? envio.ml_qr_seguridad : `{"local": 1, "did": "${envio.did}", "cliente": ${envio.didCliente}, "empresa": ${idempresa}}`
 
-            if (idempresa == 287 && envio.choferAsignado == 7) {
+            if (empresasConEidEnQr.includes(idempresa)) {
                 qrData = `{"local": 1, "did": "${envio.did}", "cliente": ${envio.didCliente}, "empresa": ${idempresa}, "eid": "${envio.ml_shipment_id}"}`
             }
 
