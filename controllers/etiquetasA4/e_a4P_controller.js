@@ -389,9 +389,9 @@ const ea4P = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, alt
         doc.roundedRect(distanciaAncho - 10, distanciaAlto1 - 10, 550, altoContenedor, 7).stroke("black")
 
         if (bultos > 1 && i < bultos) {
-            doc.fontSize(7)
-                .font("Helvetica")
-                .text(`Bulto ${i + 1} / ${bultos}`, 380, distanciaAlto1, {
+            doc.fontSize(8)
+                .font("Helvetica-Bold")
+                .text(`BULTO ${i + 1} / ${bultos}`, 380, distanciaAlto1, {
                     width: 170,
                     align: "right",
                 })

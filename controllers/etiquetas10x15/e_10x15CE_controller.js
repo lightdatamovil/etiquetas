@@ -271,9 +271,9 @@ const e10x15CE = async (doc, objData, llevaCodigo, llevaCodigoBarras) => {
 
         if (bultos > 1 && i < bultos) {
             doc.fillAndStroke("black", "black")
-            doc.fontSize(5)
-                .font("Helvetica")
-                .text(`Bulto ${i + 1} / ${bultos}`, 100, 10, {
+            doc.fontSize(10)
+                .font("Helvetica-Bold")
+                .text(`BULTO ${i + 1} / ${bultos}`, 100, 10, {
                     width: 170,
                     align: "right",
                 })

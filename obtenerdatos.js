@@ -249,8 +249,6 @@ const obtenerDatosEnvios = async (idempresa, dids, esFulfillment = 0) => {
             })
         }
 
-        console.log("datos.items", datos.items)
-
         if (empresasConItemsEnEnvios[String(idempresa)] && datos.items) {
             datos.items.forEach((item) => {
                 enviosMap[item.didEnvio]["didCliente"]

@@ -345,9 +345,9 @@ const e10x10AP = async (doc, objData, llevaCodigo) => {
         // ! /SECCION FULFILLMENT
 
         if (bultos > 1 && i < bultos && paginasMultiples < 5) {
-            doc.fontSize(5)
-                .font("Helvetica")
-                .text(`Bulto ${i + 1} / ${bultos}`, 100, 10, {
+            doc.fontSize(8)
+                .font("Helvetica-Bold")
+                .text(`BULTO ${i + 1} / ${bultos}`, 100, 10, {
                     width: 170,
                     align: "right",
                 })
