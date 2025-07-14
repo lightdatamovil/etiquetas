@@ -51,7 +51,7 @@ const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envi
                     peso: paquete.peso,
                     remitente: paquete.remitente,
                     qr: paquete.qr,
-                    bultos: paquete.bultos >= 2 && paquete.bultos <= 10 ? paquete.bultos : 1,
+                    bultos: paquete.bultos >= 2 && paquete.bultos <= 30 ? paquete.bultos : 1,
                     camposEspeciales: camposExtras || [],
                     fulfillment: paquete.fulfillment || [],
                 }
