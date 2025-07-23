@@ -169,7 +169,7 @@ const obtenerDatosEnvios = async (idempresa, dids, esFulfillment = 0) => {
                     oi.cantidad
                     FROM ordenes o
                     LEFT JOIN ordenes_items oi ON o.did = oi.didOrden AND oi.superado = 0 AND oi.elim = 0
-                    LEFT JOIN fulfillment_productos fp ON oi.seller_sku = fp.sku AND fp.superado = 0 AND fp.elim = 0
+                    LEFT JOIN fulfillment_productos fp ON oi.seller_sku = fp.sku AND fp.superado = 0 AND fp.elim = 0 AND o.didCliente = fp.didCliente
                     WHERE o.didEnvio IN (?) AND o.superado = 0 AND o.elim = 0
                 `,
             })
