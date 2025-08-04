@@ -2,8 +2,14 @@ const crearEtiquetas = require("../controllers/crearEtiquetas")
 const { obtenerDatosEnvios, registrarReimpresion } = require("../obtenerdatos")
 
 const postEtiqueta = async (req, res) => {
-    const { didEmpresa, didEnvios, tipoEtiqueta, calidad, quien, fulfillment, api } = req.body
-    const modulo = api == 1 ? "API" : fulfillment == 1 ? "FF" : "Default"
+    const { didEmpresa = 0, didEnvios = [], tipoEtiqueta = 2, calidad = 0, quien = 0, fulfillment = 0, api = 0, didCliente = 0 } = req.body
+    const modulo = api == 1 ? `API_${didCliente}` : fulfillment == 1 ? "FF" : "Default"
+
+    if (didEmpresa == 0 || didEnvios.length == 0) {
+        return res.status(400).json({
+            error: "Faltan campos obligatorios: didEmpresa y didEnvios",
+        })
+    }
 
     try {
         const datos = await obtenerDatosEnvios(didEmpresa, didEnvios, fulfillment)
