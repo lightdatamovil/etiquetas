@@ -5,6 +5,6 @@
     "empresasConObservacionesConMetodo": { "288": [157] },
     "empresasConCodigoDebajoDelQr": [160],
     "empresasConTotalAPagarGrande": [137],
-    "empresasConObservacionA4Grande": [12],
+    "empresasConObservacionA4Grande": [12, 130],
     "empresasConCodigoBarras": { "22": [61, 63, 64, 47] }
 }
