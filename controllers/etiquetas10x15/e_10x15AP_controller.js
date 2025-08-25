@@ -8,7 +8,7 @@ const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../util
 
 //ETIQUETA 10X15 CON AMBOS PREMIUM
 
-const e10x15AP = async (doc, objData, llevaCodigo, llevaCodigoBarras) => {
+const e10x15AP = async (doc, objData, llevaCodigo, llevaCodigoBarras, sinEan) => {
     let { did, didCliente, nombreFantasia, logo, camposEspeciales, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fulfillment } = objData
 
     for (let i = 0; i < bultos; i++) {
@@ -299,15 +299,17 @@ const e10x15AP = async (doc, objData, llevaCodigo, llevaCodigoBarras) => {
             doc.fontSize(tamañoFuente3)
                 .font("Helvetica")
                 .text("SKU", posicionAnchoTexto4, posicionAltoTexto4(0) - 12, { baseline: "middle", lineBreak: false })
-            doc.fontSize(tamañoFuente3)
-                .font("Helvetica")
-                .text("EAN", distanciaAncho4 + 52 + margin4 + padding4, posicionAltoTexto4(0) - 12, { baseline: "middle", lineBreak: false })
+            if (!sinEan) {
+                doc.fontSize(tamañoFuente3)
+                    .font("Helvetica")
+                    .text("EAN", distanciaAncho4 + 52 + margin4 + padding4, posicionAltoTexto4(0) - 12, { baseline: "middle", lineBreak: false })
+            }
             doc.fontSize(tamañoFuente3)
                 .font("Helvetica")
                 .text("Descripción", distanciaAncho4 + 104 + margin4 * 2 + padding4, posicionAltoTexto4(0) - 12, { baseline: "middle", lineBreak: false })
             doc.fontSize(tamañoFuente3)
                 .font("Helvetica")
-                .text("Cantidad", distanciaAncho4 + 224 + margin4 * 3 + padding4, posicionAltoTexto4(0) - 12, { baseline: "middle", lineBreak: false })
+                .text("Cant.", distanciaAncho4 + 237 + margin4 * 3 + padding4, posicionAltoTexto4(0) - 12, { baseline: "middle", lineBreak: false })
 
             await fulfillment.map((elemento) => {
                 indexFF += 1
@@ -316,24 +318,35 @@ const e10x15AP = async (doc, objData, llevaCodigo, llevaCodigoBarras) => {
                     return
                 }
 
-                doc.roundedRect(distanciaAncho4, distanciaAlto4, 51, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
-                doc.roundedRect(distanciaAncho4 + 52 + margin4, distanciaAlto4, 51, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
-                doc.roundedRect(distanciaAncho4 + 104 + margin4 * 2, distanciaAlto4, 126, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
-                doc.roundedRect(distanciaAncho4 + 231 + margin4 * 3, distanciaAlto4, 31, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
+                if (sinEan) {
+                    doc.roundedRect(distanciaAncho4, distanciaAlto4, 103 + margin4, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
+                } else {
+                    doc.roundedRect(distanciaAncho4, distanciaAlto4, 51, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
+                    doc.roundedRect(distanciaAncho4 + 52 + margin4, distanciaAlto4, 51, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
+                }
+                doc.roundedRect(distanciaAncho4 + 104 + margin4 * 2, distanciaAlto4, 136, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
+                doc.roundedRect(distanciaAncho4 + 241 + margin4 * 3, distanciaAlto4, 21, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
 
                 doc.fillAndStroke("black", "black")
+
+                if (sinEan) {
+                    doc.fontSize(tamañoFuente4)
+                        .font("Helvetica")
+                        .text(esDatoValido(elemento["sku"]) ? cortarTexto(elemento["sku"], 27) : "Sin información", posicionAnchoTexto4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
+                } else {
+                    doc.fontSize(tamañoFuente4)
+                        .font("Helvetica")
+                        .text(esDatoValido(elemento["sku"]) ? cortarTexto(elemento["sku"], 11) : "Sin información", posicionAnchoTexto4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
+                    doc.fontSize(tamañoFuente4)
+                        .font("Helvetica")
+                        .text(esDatoValido(elemento["ean"]) ? cortarTexto(elemento["ean"], 11) : "Sin información", distanciaAncho4 + 52 + margin4 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
+                }
                 doc.fontSize(tamañoFuente4)
                     .font("Helvetica")
-                    .text(esDatoValido(elemento["sku"]) ? cortarTexto(elemento["sku"], 11) : "Sin información", posicionAnchoTexto4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
-                doc.fontSize(tamañoFuente4)
-                    .font("Helvetica")
-                    .text(esDatoValido(elemento["ean"]) ? cortarTexto(elemento["ean"], 11) : "Sin información", distanciaAncho4 + 52 + margin4 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
-                doc.fontSize(tamañoFuente4)
-                    .font("Helvetica")
-                    .text(esDatoValido(elemento["descripcion"]) ? cortarTexto(elemento["descripcion"], 40) : "Sin información", distanciaAncho4 + 104 + margin4 * 2 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
-                doc.fontSize(tamañoFuente4)
-                    .font("Helvetica")
-                    .text(esDatoValido(elemento["cantidad"]) ? cortarTexto(elemento["cantidad"], 6) : "Sin información", distanciaAncho4 + 231 + margin4 * 3 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
+                    .text(esDatoValido(elemento["descripcion"]) ? cortarTexto(elemento["descripcion"], 42) : "Sin información", distanciaAncho4 + 104 + margin4 * 2 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
+                doc.fontSize(!sinEan ? tamañoFuente4 : tamañoFuente4 + 3)
+                    .font("Helvetica-Bold")
+                    .text(esDatoValido(elemento["cantidad"]) ? cortarTexto(elemento["cantidad"], 6) : "Sin información", distanciaAncho4 + 241 + margin4 * 3 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
 
                 let mensajePagina1 = `Etiqueta 1`
                 let mensajePagina2 = `Etiqueta 2`
