@@ -265,8 +265,6 @@ const obtenerDatosEnvios = async (idempresa, dids, esFulfillment = 0) => {
 
         connection.end()
 
-        console.log("enviosMap", enviosMap)
-
         return {
             nombreFantasia: empresa.empresa || null,
             logo,
