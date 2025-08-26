@@ -130,7 +130,7 @@ const obtenerDatosEnvios = async (idempresa, dids, esFulfillment = 0) => {
                     FROM envios e
                     LEFT JOIN envios_campos_extras ec ON e.did = ec.didEnvio AND ec.superado = 0 AND ec.elim = 0
                     LEFT JOIN sistema_datospaqueteria sdp ON ec.didCampo = sdp.did AND sdp.superado = 0 AND sdp.elim = 0
-                    WHERE e.did IN (?) AND e.superado = 0 AND e.elim = 0
+                    WHERE e.did IN (?) AND e.superado = 0 AND (e.elim = 0 OR e.elim = 52)
                     AND (ec.valor IS NOT NULL OR sdp.nombre IS NOT NULL)
                 `,
             },
@@ -141,7 +141,7 @@ const obtenerDatosEnvios = async (idempresa, dids, esFulfillment = 0) => {
                     FROM envios e
                     LEFT JOIN envios_cobranzas eco ON e.did = eco.didEnvio AND eco.superado = 0 AND eco.elim = 0
                     LEFT JOIN sistema_datosPaqueteria_cobranzas sdpc ON eco.didCampoCobranza = sdpc.did AND sdpc.superado = 0 AND sdpc.elim = 0
-                    WHERE e.did IN (?) AND e.superado = 0 AND e.elim = 0
+                    WHERE e.did IN (?) AND e.superado = 0 AND (e.elim = 0 OR e.elim = 52)
                     AND (eco.valor IS NOT NULL OR sdpc.nombre IS NOT NULL)
                 `,
             },
@@ -152,7 +152,7 @@ const obtenerDatosEnvios = async (idempresa, dids, esFulfillment = 0) => {
                     FROM envios e
                     LEFT JOIN envios_logisticainversa eli ON e.did = eli.didEnvio AND eli.superado = 0 AND eli.elim = 0
                     LEFT JOIN sistema_datosPaqueteria_logisticainversa sdpli ON eli.didCampoLogistica = sdpli.did AND sdpli.superado = 0 AND sdpli.elim = 0
-                    WHERE e.did IN (?) AND e.superado = 0 AND e.elim = 0
+                    WHERE e.did IN (?) AND e.superado = 0 AND (e.elim = 0 OR e.elim = 52)
                     AND (eli.valor IS NOT NULL OR sdpli.nombre IS NOT NULL)
                 `,
             },
@@ -264,6 +264,8 @@ const obtenerDatosEnvios = async (idempresa, dids, esFulfillment = 0) => {
         }
 
         connection.end()
+
+        console.log("enviosMap", enviosMap)
 
         return {
             nombreFantasia: empresa.empresa || null,
