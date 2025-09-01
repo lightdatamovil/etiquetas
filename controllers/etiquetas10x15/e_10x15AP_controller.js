@@ -319,20 +319,45 @@ const e10x15AP = async (doc, objData, llevaCodigo, llevaCodigoBarras, sinEan) =>
                 }
 
                 if (sinEan) {
-                    doc.roundedRect(distanciaAncho4, distanciaAlto4, 103 + margin4, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
+                    let skuText = esDatoValido(elemento["sku"]) ? elemento["sku"].toString() : "Sin información"
+                    let skuFinal = skuText
+                    doc.font("Helvetica").fontSize(tamañoFuente4)
+                    let skuWidth = doc.widthOfString(skuFinal) + 10
+
+                    doc.roundedRect(distanciaAncho4, distanciaAlto4, skuWidth, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
+
+                    let descripcionWidth = 241 - skuWidth
+
+                    doc.roundedRect(distanciaAncho4 + skuWidth + margin4, distanciaAlto4, descripcionWidth, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
                 } else {
                     doc.roundedRect(distanciaAncho4, distanciaAlto4, 51, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
                     doc.roundedRect(distanciaAncho4 + 52 + margin4, distanciaAlto4, 51, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
+                    doc.roundedRect(distanciaAncho4 + 104 + margin4 * 2, distanciaAlto4, 136, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
                 }
-                doc.roundedRect(distanciaAncho4 + 104 + margin4 * 2, distanciaAlto4, 136, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
                 doc.roundedRect(distanciaAncho4 + 241 + margin4 * 3, distanciaAlto4, 21, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
 
                 doc.fillAndStroke("black", "black")
 
                 if (sinEan) {
-                    doc.fontSize(tamañoFuente4)
-                        .font("Helvetica")
-                        .text(esDatoValido(elemento["sku"]) ? cortarTexto(elemento["sku"], 27) : "Sin información", posicionAnchoTexto4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
+                    let skuText = esDatoValido(elemento["sku"]) ? elemento["sku"].toString() : "Sin información"
+                    let skuFinal = skuText
+                    doc.font("Helvetica").fontSize(tamañoFuente4)
+                    let skuWidth = doc.widthOfString(skuFinal)
+                    let descripcionStartX = posicionAnchoTexto4 + skuWidth + 10
+                    let baseDescripcionLength = 65
+                    let ajuste = Math.max(0, skuFinal.length - 10)
+                    let maxDescripcionLength = Math.max(20, baseDescripcionLength - ajuste)
+                    let descripcionText = esDatoValido(elemento["descripcion"]) ? cortarTexto(elemento["descripcion"] + "hfaljfhlajsdfhlkahsj", maxDescripcionLength) : "Sin información"
+
+                    doc.text(skuFinal, posicionAnchoTexto4, posicionAltoTexto4(0), {
+                        baseline: "middle",
+                        lineBreak: false,
+                    })
+
+                    doc.text(descripcionText, descripcionStartX, posicionAltoTexto4(0), {
+                        baseline: "middle",
+                        lineBreak: false,
+                    })
                 } else {
                     doc.fontSize(tamañoFuente4)
                         .font("Helvetica")
@@ -340,10 +365,10 @@ const e10x15AP = async (doc, objData, llevaCodigo, llevaCodigoBarras, sinEan) =>
                     doc.fontSize(tamañoFuente4)
                         .font("Helvetica")
                         .text(esDatoValido(elemento["ean"]) ? cortarTexto(elemento["ean"], 11) : "Sin información", distanciaAncho4 + 52 + margin4 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
+                    doc.fontSize(tamañoFuente4)
+                        .font("Helvetica")
+                        .text(esDatoValido(elemento["descripcion"]) ? cortarTexto(elemento["descripcion"], 42) : "Sin información", distanciaAncho4 + 104 + margin4 * 2 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
                 }
-                doc.fontSize(tamañoFuente4)
-                    .font("Helvetica")
-                    .text(esDatoValido(elemento["descripcion"]) ? cortarTexto(elemento["descripcion"], 42) : "Sin información", distanciaAncho4 + 104 + margin4 * 2 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
                 doc.fontSize(!sinEan ? tamañoFuente4 : tamañoFuente4 + 3)
                     .font("Helvetica-Bold")
                     .text(esDatoValido(elemento["cantidad"]) ? cortarTexto(elemento["cantidad"], 6) : "Sin información", distanciaAncho4 + 241 + margin4 * 3 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })

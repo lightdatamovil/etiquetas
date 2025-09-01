@@ -258,20 +258,67 @@ const e10x10FF = async (doc, objData, llevaCodigo, _, sinEan) => {
                     doc.fillAndStroke("black", "black")
 
                     if (sinEan) {
-                        doc.fontSize(tamañoFuente4)
-                            .font("Helvetica")
-                            .text(esDatoValido(elemento["sku"]) ? cortarTexto(elemento["sku"], 27) : "Sin información", posicionAnchoTexto4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
+                        let skuText = esDatoValido(elemento["sku"]) ? elemento["sku"].toString() : "Sin información"
+                        let skuFinal = skuText
+                        doc.font("Helvetica").fontSize(tamañoFuente4)
+                        let skuWidth = doc.widthOfString(skuFinal)
+                        let descripcionStartX = posicionAnchoTexto4 + skuWidth + 10
+                        let baseDescripcionLength = 65
+                        let ajuste = Math.max(0, skuFinal.length - 10)
+                        let maxDescripcionLength = Math.max(20, baseDescripcionLength - ajuste)
+                        let descripcionText = esDatoValido(elemento["descripcion"]) ? cortarTexto(elemento["descripcion"] + "hfaljfhlajsdfhlkahsj", maxDescripcionLength) : "Sin información"
+
+                        doc.fillAndStroke("black", "black")
+
+                        doc.text(skuFinal, posicionAnchoTexto4, posicionAltoTexto4(0), {
+                            baseline: "middle",
+                            lineBreak: false,
+                        })
+
+                        doc.moveTo(descripcionStartX - 3, posicionAltoTexto4(0) - 5)
+                            .lineTo(descripcionStartX - 3, posicionAltoTexto4(0) + 4)
+                            .fill(colorGrisOscuro)
+
+                        doc.fillAndStroke("black", "black")
+
+                        doc.text(descripcionText, descripcionStartX, posicionAltoTexto4(0), {
+                            baseline: "middle",
+                            lineBreak: false,
+                        })
                     } else {
+                        doc.fillAndStroke("black", "black")
+
                         doc.fontSize(tamañoFuente4)
                             .font("Helvetica")
                             .text(esDatoValido(elemento["sku"]) ? cortarTexto(elemento["sku"], 11) : "Sin información", posicionAnchoTexto4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
+
+                        doc.moveTo(distanciaAncho4 + 52 + margin4 + padding4 - 3, posicionAltoTexto4(0) - 5)
+                            .lineTo(distanciaAncho4 + 52 + margin4 + padding4 - 3, posicionAltoTexto4(0) + 4)
+                            .fill(colorGrisOscuro)
+
+                        doc.fillAndStroke("black", "black")
+
                         doc.fontSize(tamañoFuente4)
                             .font("Helvetica")
                             .text(esDatoValido(elemento["ean"]) ? cortarTexto(elemento["ean"], 11) : "Sin información", distanciaAncho4 + 52 + margin4 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
+
+                        doc.moveTo(distanciaAncho4 + 104 + margin4 * 2 + padding4 - 3, posicionAltoTexto4(0) - 5)
+                            .lineTo(distanciaAncho4 + 104 + margin4 * 2 + padding4 - 3, posicionAltoTexto4(0) + 4)
+                            .fill(colorGrisOscuro)
+
+                        doc.fillAndStroke("black", "black")
+
+                        doc.fontSize(tamañoFuente4)
+                            .font("Helvetica")
+                            .text(esDatoValido(elemento["descripcion"]) ? cortarTexto(elemento["descripcion"], 42) : "Sin información", distanciaAncho4 + 104 + margin4 * 2 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
                     }
-                    doc.fontSize(tamañoFuente4)
-                        .font("Helvetica")
-                        .text(esDatoValido(elemento["descripcion"]) ? cortarTexto(elemento["descripcion"], 42) : "Sin información", distanciaAncho4 + 104 + margin4 * 2 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
+
+                    doc.moveTo(distanciaAncho4 + 241 + margin4 * 3 + padding4 - 3, posicionAltoTexto4(0) - 5)
+                        .lineTo(distanciaAncho4 + 241 + margin4 * 3 + padding4 - 3, posicionAltoTexto4(0) + 4)
+                        .fill(colorGrisOscuro)
+
+                    doc.fillAndStroke("black", "black")
+
                     doc.fontSize(!sinEan ? tamañoFuente4 : tamañoFuente4 + 3)
                         .font("Helvetica-Bold")
                         .text(esDatoValido(elemento["cantidad"]) ? cortarTexto(elemento["cantidad"], 6) : "Sin información", distanciaAncho4 + 241 + margin4 * 3 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
