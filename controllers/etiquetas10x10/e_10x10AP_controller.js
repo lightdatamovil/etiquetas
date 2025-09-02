@@ -329,7 +329,7 @@ const e10x10AP = async (doc, objData, llevaCodigo, _, sinEan) => {
                     let baseDescripcionLength = 65
                     let ajuste = Math.max(0, skuFinal.length - 10)
                     let maxDescripcionLength = Math.max(20, baseDescripcionLength - ajuste)
-                    let descripcionText = esDatoValido(elemento["descripcion"]) ? cortarTexto(elemento["descripcion"] + "hfaljfhlajsdfhlkahsj", maxDescripcionLength) : "Sin información"
+                    let descripcionText = esDatoValido(elemento["descripcion"]) ? cortarTexto(elemento["descripcion"], maxDescripcionLength) : "Sin información"
 
                     doc.text(skuFinal, posicionAnchoTexto4, posicionAltoTexto4(0), {
                         baseline: "middle",

@@ -348,7 +348,7 @@ const e10x15A = async (doc, objData, llevaCodigo, llevaCodigoBarras, sinEan) => 
                     let baseDescripcionLength = 65
                     let ajuste = Math.max(0, skuFinal.length - 10)
                     let maxDescripcionLength = Math.max(20, baseDescripcionLength - ajuste)
-                    let descripcionText = esDatoValido(elemento["descripcion"]) ? cortarTexto(elemento["descripcion"] + "hfaljfhlajsdfhlkahsj", maxDescripcionLength) : "Sin información"
+                    let descripcionText = esDatoValido(elemento["descripcion"]) ? cortarTexto(elemento["descripcion"], maxDescripcionLength) : "Sin información"
 
                     doc.fillAndStroke("black", "black")
 
