@@ -4,7 +4,7 @@
     "empresasConEidEnQr": [287],
     "empresasConObservacionesConMetodo": { "288": [157] },
     "empresasConCodigoDebajoDelQr": [160],
-    "empresasConTotalAPagarGrande": [137],
+    "empresasConTotalAPagarGrande": [137, 286],
     "empresasConObservacionA4Grande": [12, 130],
     "empresasConCodigoBarras": { "207": [61, 63, 64, 47] },
     "empresasSinEan": [97]
