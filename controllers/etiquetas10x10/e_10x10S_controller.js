@@ -7,7 +7,7 @@ const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../util
 
 //ETIQUETA 10x10 CON SOLO
 
-const e10x10S = async (doc, objData, llevaCodigo) => {
+const e10x10S = async ({ doc, objData, llevaCodigo }) => {
     let { did, didCliente, nombreFantasia, logo, camposEspeciales, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fulfillment } = objData
 
     for (let i = 0; i < bultos; i++) {

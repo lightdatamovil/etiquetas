@@ -2,7 +2,7 @@ const PDFDocument = require("pdfkit")
 const { convertirFecha, cambiarACaba, combinarArrays, esDatoValido } = require("../utils/funciones")
 const exportsEtiquetas = require("../utils/exportsEtiquetas")
 const { medida10x10, medida10x15, medidaA4 } = require("../utils/medidasEtiquetas")
-const { empresasConObservacionesConMetodo, empresasConCodigoDebajoDelQr, empresasConTotalAPagarGrande, empresasConObservacionA4Grande, empresasConCodigoBarras, empresasSinEan } = require("../utils/empresasConEspecificaciones.json")
+const { empresasConObservacionesConMetodo, empresasConCodigoDebajoDelQr, empresasConTotalAPagarGrande, empresasConObservacionA4Grande, empresasConCodigoBarras, empresasSinEan, empresasConCamposExtraGrande } = require("../utils/empresasConEspecificaciones.json")
 
 const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envios, res) => {
     // Ordena los envíos por ml_shipment_id de manera natural (alfanumérica)
@@ -78,13 +78,14 @@ const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envi
                 const observacionA4Grande = empresasConObservacionA4Grande.includes(didEmpresa)
                 const llevaCodigoBarras = empresasConCodigoBarras[String(didEmpresa)]?.includes(clienteId) || false
                 const sinEan = empresasSinEan.includes(didEmpresa)
+                const camposExtraGrande = empresasConCamposExtraGrande.includes(didEmpresa)
 
                 let cualEtiqueta = objData.camposEspeciales.length > 0 ? (objData.fulfillment.length == 0 ? "CE" : "A") : objData.fulfillment.length == 0 ? "S" : "FF"
                 let funcionName = medidaEtiqueta + cualEtiqueta + calidadEtiqueta
                 let funcionNameA4 = medidaEtiqueta + calidadEtiqueta
 
                 if (tipoEtiqueta == 0 || tipoEtiqueta == 1 || tipoEtiqueta == 3) {
-                    await exportsEtiquetas[funcionName](doc, objData, llevaCodigo, llevaCodigoBarras, sinEan)
+                    await exportsEtiquetas[funcionName]({ doc, objData, llevaCodigo, llevaCodigoBarras, sinEan, camposExtraGrande })
                     if (tipoEtiqueta == 3) {
                         doc.roundedRect(0, 0, 283.5, 425.25) // x, y, ancho, alto
                             .stroke("black")
@@ -101,7 +102,7 @@ const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envi
                         distanciaAlto_a4 = 15
                     }
 
-                    const result = await exportsEtiquetas[funcionNameA4](doc, objData, index_a4, distanciaAlto_a4, cantFulfillmentPag_a4, altoContenedor_a4, mayorPorPag_a4, llevaCodigo, totalGrande, observacionA4Grande)
+                    const result = await exportsEtiquetas[funcionNameA4](doc, objData, index_a4, distanciaAlto_a4, cantFulfillmentPag_a4, altoContenedor_a4, mayorPorPag_a4, llevaCodigo, totalGrande, observacionA4Grande, camposExtraGrande)
 
                     index_a4 = result.index
                     cantFulfillmentPag_a4 = result.cantFulfillmentPag

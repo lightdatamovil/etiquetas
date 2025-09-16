@@ -7,7 +7,7 @@ const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../util
 
 // ! ETIQUETA a4 CON AMBOS SIMPLE
 
-const ea4 = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, altoContenedor, mayorPorPag, llevaCodigo, totalGrande, observacionA4Grande) => {
+const ea4 = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, altoContenedor, mayorPorPag, llevaCodigo, totalGrande, observacionA4Grande, camposExtraGrande) => {
     let { did, didCliente, nombreFantasia, logo, camposEspeciales, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fulfillment } = objData
 
     for (let i = 0; i < bultos; i++) {
@@ -252,7 +252,7 @@ const ea4 = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, alto
                 nombresConPrecio = ["total", "total a cobrar", "total a pagar"]
                 campoValor = esDatoValido(campo["valor"]) ? (nombresConPrecio.includes(campo["nombre"].toLowerCase()) ? cortarTexto(` $${Number(campo["valor"]).toLocaleString("es-AR")}`, esModoUnaColumna ? 130 : 48) : cortarTexto(campo["valor"], esModoUnaColumna ? 130 : 48)) : "Sin información"
 
-                let tamañoCE = tamañoSegunLargo(campo["nombre"] + campoValor, tamañoFuente3, esModoUnaColumna ? 115 : 40)
+                let tamañoCE = tamañoSegunLargo(campo["nombre"] + campoValor, camposExtraGrande ? tamañoFuente3 + 5 : tamañoFuente3, esModoUnaColumna ? 115 : 40)
                 if (totalGrande) {
                     tamañoCE = tamañoSegunLargo(campo["nombre"] + campoValor, nombresConPrecio.includes(campo["nombre"].toLowerCase()) ? tamañoFuente3 + 5 : tamañoFuente3, esModoUnaColumna ? 115 : 40)
                 }

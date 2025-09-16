@@ -7,7 +7,7 @@ const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../util
 
 // ! ETIQUETA 10x10 CON CAMPOS ESPECIALES
 
-const e10x10CE = async (doc, objData, llevaCodigo) => {
+const e10x10CE = async ({ doc, objData, llevaCodigo, camposExtraGrande }) => {
     let { did, didCliente, nombreFantasia, logo, camposEspeciales, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fulfillment } = objData
 
     for (let i = 0; i < bultos; i++) {
@@ -216,7 +216,7 @@ const e10x10CE = async (doc, objData, llevaCodigo) => {
             siguiente = 0
             await camposEspeciales.map((campo) => {
                 if (siguiente < 5) {
-                    let tamañoCE = tamañoSegunLargo(campo["nombre"] + campo["valor"], tamañoFuente3, 68)
+                    let tamañoCE = tamañoSegunLargo(campo["nombre"] + campo["valor"], camposExtraGrande ? tamañoFuente3 + 3 : tamañoFuente3, 68)
                     doc.fontSize(tamañoCE)
                     let anchoTextoEsp = doc.widthOfString(campo["nombre"] ? cortarTexto(campo["nombre"], 25) + ":" : "CampoEsp:", { font: "Helvetica-Bold", size: tamañoCE })
 

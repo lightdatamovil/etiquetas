@@ -7,7 +7,7 @@ const { esDatoValido, cortarTexto, tamañoSegunLargo, altoCodigoBarras } = requi
 const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../utils/colores.js")
 //ETIQUETA 10X15 CON CAMPOS ESPECIALES
 
-const e10x15CE = async (doc, objData, llevaCodigo, llevaCodigoBarras) => {
+const e10x15CE = async ({ doc, objData, llevaCodigo, llevaCodigoBarras, camposExtraGrande }) => {
     let { did, didCliente, nombreFantasia, logo, camposEspeciales, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fulfillment } = objData
 
     for (let i = 0; i < bultos; i++) {
@@ -238,7 +238,7 @@ const e10x15CE = async (doc, objData, llevaCodigo, llevaCodigoBarras) => {
             siguiente = 0
             await camposEspeciales.map((campo) => {
                 if (siguiente < 5) {
-                    let tamañoCE = tamañoSegunLargo(campo["nombre"] + campo["valor"], tamañoFuente3, 65)
+                    let tamañoCE = tamañoSegunLargo(campo["nombre"] + campo["valor"], camposExtraGrande ? tamañoFuente3 + 3 : tamañoFuente3, 65)
                     doc.fontSize(tamañoCE)
                     let anchoTextoEsp = doc.widthOfString(campo["nombre"] ? cortarTexto(campo["nombre"], 25) + ":" : "CampoEsp:", { font: "Helvetica-Bold", size: tamañoCE })
 
