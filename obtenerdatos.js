@@ -108,12 +108,12 @@ const obtenerDatosEnvios = async (idempresa, dids, esFulfillment = 0) => {
                 query: `
                    SELECT 
                         e.*, 
-                        COALESCE(NULLIF(edd.localidad, ''), NULLIF(e.destination_city_name, '')) AS localidad,
-                        COALESCE(NULLIF(edd.address_line, ''), NULLIF(e.destination_shipping_address_line, '')) AS address_line,
-                        COALESCE(NULLIF(edd.cp, ''), NULLIF(e.destination_shipping_zip_code, '')) AS cp,
-                        COALESCE(NULLIF(edd.destination_comments, ''), NULLIF(e.destination_comments, '')) AS ref,
+                        COALESCE(NULLIF(TRIM(edd.localidad), ''), NULLIF(TRIM(e.destination_city_name), '')) AS localidad,
+                        COALESCE(NULLIF(TRIM(edd.address_line), ''), NULLIF(TRIM(e.destination_shipping_address_line), '')) AS address_line,
+                        COALESCE(NULLIF(TRIM(edd.cp), ''), NULLIF(TRIM(e.destination_shipping_zip_code), '')) AS cp,
+                        COALESCE(NULLIF(TRIM(edd.destination_comments), ''), NULLIF(TRIM(e.destination_comments), '')) AS ref,
                         edd.ciudad,
-                        COALESCE(NULLIF(eo.observacion, ''), NULLIF(e.obs, '')) AS observacion,
+                        COALESCE(NULLIF(TRIM(eo.observacion), ''), NULLIF(TRIM(e.obs), '')) AS observacion,
                         e.destination_municipality_name,
                         c.nombre_fantasia
                     FROM envios e
