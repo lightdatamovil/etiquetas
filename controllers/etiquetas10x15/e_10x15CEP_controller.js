@@ -192,7 +192,7 @@ const e10x15CEP = async ({ doc, objData, llevaCodigo, llevaCodigoBarras, camposE
         doc.fontSize(tamañoObs).font("Helvetica-Bold").text("Observación:", posicionAnchoTexto2, posicionAltoTexto2(2), { baseline: "middle", lineBreak: false })
         doc.fontSize(tamañoObs)
             .font("Helvetica")
-            .text(esDatoValido(observacion) ? cortarTexto(observacion, 155) : "Sin información", posicionAnchoTexto2, posicionAltoTexto2(2), { baseline: "middle", indent: comienzoObs, width: anchoContainer2 - 10 })
+            .text(esDatoValido(observacion) ? cortarTexto(observacion, 155) : "Sin información", posicionAnchoTexto2, posicionAltoTexto2(2), { baseline: "middle", indent: comienzoObs, width: anchoContainer2 - 20 })
         // ! /SECCION DESTINATARIO
 
         // ! SECCION CAMPOS ESPECIALES

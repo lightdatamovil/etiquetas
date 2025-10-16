@@ -196,7 +196,7 @@ const e10x15SP = async ({ doc, objData, llevaCodigo, llevaCodigoBarras }) => {
         doc.fontSize(tamañoObs).font("Helvetica-Bold").text("Observación:", posicionAnchoTexto2, posicionAltoTexto2(3), { baseline: "middle", lineBreak: false })
         doc.fontSize(tamañoObs)
             .font("Helvetica")
-            .text(esDatoValido(observacion) ? cortarTexto(observacion, 330) : "Sin información", posicionAnchoTexto2, posicionAltoTexto2(3), { baseline: "middle", indent: comienzoObs, width: anchoContainer2 - 8, height: altoContainer2 * 2.2 })
+            .text(esDatoValido(observacion) ? cortarTexto(observacion, 330) : "Sin información", posicionAnchoTexto2, posicionAltoTexto2(3), { baseline: "middle", indent: comienzoObs, width: anchoContainer2 - 20, height: altoContainer2 * 2.2 })
 
         // ! /SECCION DESTINATARIO
 

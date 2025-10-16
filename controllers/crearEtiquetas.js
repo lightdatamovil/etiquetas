@@ -46,7 +46,7 @@ const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envi
                     nroTelefono: paquete.destination_receiver_phone,
                     direccion: esDatoValido(paquete.ciudad) && esDatoValido(paquete.localidad) ? `${paquete.address_line}, ${paquete.localidad}` : paquete.address_line,
                     cp: paquete.cp,
-                    observacion: esDatoValido(paquete.obs) && esDatoValido(paquete.ref) ? `${paquete.obs} / Ref: ${paquete.ref}` : esDatoValido(paquete.ref) ? `Ref: ${paquete.ref}` : paquete.obs,
+                    observacion: paquete.obs,
                     total: paquete.monto_total_a_cobrar,
                     peso: paquete.peso,
                     remitente: paquete.remitente,
@@ -63,15 +63,14 @@ const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envi
                 }
 
                 const clienteId = paquete.didCliente
+
+                const obsCompleta = []
+                if (esDatoValido(paquete.ref)) obsCompleta.push(`Ref: ${paquete.ref}`)
+                if (esDatoValido(paquete.obs)) obsCompleta.push(paquete.obs)
                 if (empresasConObservacionesConMetodo[String(didEmpresa)]?.includes(clienteId)) {
-                    const obsConMetodo = []
-
-                    if (esDatoValido(paquete.obs)) obsConMetodo.push(paquete.obs)
-                    if (esDatoValido(paquete.ref)) obsConMetodo.push(`Ref: ${paquete.ref}`)
-                    if (esDatoValido(paquete.metodo_name)) obsConMetodo.push(paquete.metodo_name)
-
-                    objData.observacion = obsConMetodo.join(" / ")
+                    if (esDatoValido(paquete.metodo_name)) obsCompleta.push(paquete.metodo_name)
                 }
+                objData.observacion = obsCompleta.join(" / ")
 
                 const llevaCodigo = empresasConCodigoDebajoDelQr.includes(didEmpresa)
                 const totalGrande = empresasConTotalAPagarGrande.includes(didEmpresa)
