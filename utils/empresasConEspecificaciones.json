@@ -8,5 +8,6 @@
     "empresasConObservacionA4Grande": [12, 130],
     "empresasConCodigoBarras": { "207": [61, 63, 64, 47] },
     "empresasSinEan": [97],
-    "empresasConCamposExtraGrande": [137]
+    "empresasConCamposExtraGrande": [137],
+    "empresasSinColumnaObservacion": { "288": [157] }
 }

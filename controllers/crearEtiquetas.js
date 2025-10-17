@@ -2,7 +2,7 @@ const PDFDocument = require("pdfkit")
 const { convertirFecha, cambiarACaba, combinarArrays, esDatoValido } = require("../utils/funciones")
 const exportsEtiquetas = require("../utils/exportsEtiquetas")
 const { medida10x10, medida10x15, medidaA4 } = require("../utils/medidasEtiquetas")
-const { empresasConObservacionesConMetodo, empresasConCodigoDebajoDelQr, empresasConTotalAPagarGrande, empresasConObservacionA4Grande, empresasConCodigoBarras, empresasSinEan, empresasConCamposExtraGrande } = require("../utils/empresasConEspecificaciones.json")
+const { empresasConObservacionesConMetodo, empresasConCodigoDebajoDelQr, empresasConTotalAPagarGrande, empresasConObservacionA4Grande, empresasConCodigoBarras, empresasSinEan, empresasConCamposExtraGrande, empresasSinColumnaObservacion } = require("../utils/empresasConEspecificaciones.json")
 
 const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envios, res) => {
     // Ordena los envíos por ml_shipment_id de manera natural (alfanumérica)
@@ -66,7 +66,9 @@ const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envi
 
                 const obsCompleta = []
                 if (esDatoValido(paquete.ref)) obsCompleta.push(`Ref: ${paquete.ref}`)
-                if (esDatoValido(paquete.obs)) obsCompleta.push(paquete.obs)
+                if (!empresasSinColumnaObservacion[String(didEmpresa)]?.includes(clienteId)) {
+                    if (esDatoValido(paquete.obs)) obsCompleta.push(paquete.obs)
+                }
                 if (empresasConObservacionesConMetodo[String(didEmpresa)]?.includes(clienteId)) {
                     if (esDatoValido(paquete.metodo_name)) obsCompleta.push(paquete.metodo_name)
                 }
