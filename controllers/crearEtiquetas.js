@@ -44,7 +44,7 @@ const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envi
                     nroEnvio: paquete.ml_shipment_id,
                     nombre: paquete.destination_receiver_name,
                     nroTelefono: paquete.destination_receiver_phone,
-                    direccion: esDatoValido(paquete.ciudad) && esDatoValido(paquete.localidad) ? `${paquete.address_line}, ${paquete.localidad}` : paquete.address_line,
+                    direccion: esDatoValido(paquete.ciudad) && esDatoValido(paquete.localidad) ? `${paquete.address_line}${esDatoValido(paquete.piso) ? ", Piso " + paquete.piso : ""}, ${paquete.localidad}` : paquete.address_line,
                     cp: paquete.cp,
                     observacion: paquete.obs,
                     total: paquete.monto_total_a_cobrar,
