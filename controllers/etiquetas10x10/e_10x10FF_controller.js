@@ -7,7 +7,7 @@ const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../util
 
 // ! ETIQUETA 10x10 CON FULFILLMENT SIMPLE
 
-const e10x10FF = async ({ doc, objData, llevaCodigo, sinEan }) => {
+const e10x10FF = async ({ doc, objData, llevaCodigo, sinEan, loteEnItems }) => {
     let { did, didCliente, nombreFantasia, logo, camposEspeciales, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fulfillment } = objData
 
     for (let i = 0; i < bultos; i++) {
@@ -79,7 +79,7 @@ const e10x10FF = async ({ doc, objData, llevaCodigo, sinEan }) => {
 
         doc.fontSize(tamañoSegunLargo(fecha, tamañoFuente1, 15))
             .font("Helvetica-Bold")
-            .text(esDatoValido(fecha) ? cortarTexto(fecha, anchoCaracteres2) : "Sin información", posicionAnchoTexto1 + 20, posicionAltoTexto1(1), { baseline: "middle", lineBreak: false })
+            .text(esDatoValido(fecha) ? fecha : "Sin información", posicionAnchoTexto1 + 20, posicionAltoTexto1(1), { baseline: "middle", lineBreak: false })
 
         let tamañoRem = tamañoSegunLargo("Rte.: " + remitente, tamañoFuente1, 20)
         doc.fontSize(tamañoRem)
@@ -224,6 +224,13 @@ const e10x10FF = async ({ doc, objData, llevaCodigo, sinEan }) => {
             doc.fontSize(tamañoFuente4 + 2)
                 .font("Helvetica")
                 .text("Descripción", distanciaAncho4 + 104 + margin4 * 2 + padding4, posicionAltoTexto4(0) - 12, { baseline: "middle", lineBreak: false })
+
+            if (loteEnItems) {
+                doc.fontSize(tamañoFuente4 + 2)
+                    .font("Helvetica")
+                    .text("Lote", distanciaAncho4 + 200 + margin4 * 3 + padding4, posicionAltoTexto4(0) - 12, { baseline: "middle", lineBreak: false })
+            }
+
             doc.fontSize(tamañoFuente4 + 2)
                 .font("Helvetica")
                 .text("Cant.", distanciaAncho4 + 237 + margin4 * 3 + padding4, posicionAltoTexto4(0) - 12, { baseline: "middle", lineBreak: false })
@@ -308,9 +315,25 @@ const e10x10FF = async ({ doc, objData, llevaCodigo, sinEan }) => {
 
                         doc.fillAndStroke("black", "black")
 
-                        doc.fontSize(tamañoFuente4)
-                            .font("Helvetica")
-                            .text(esDatoValido(elemento["descripcion"]) ? cortarTexto(elemento["descripcion"], 42) : "Sin información", distanciaAncho4 + 104 + margin4 * 2 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
+                        if (loteEnItems) {
+                            doc.fontSize(tamañoFuente4)
+                                .font("Helvetica")
+                                .text(esDatoValido(elemento["descripcion"]) ? cortarTexto(elemento["descripcion"], 24) : "Sin información", distanciaAncho4 + 104 + margin4 * 2 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
+
+                            doc.moveTo(distanciaAncho4 + 200 + margin4 * 2 + padding4 - 3, posicionAltoTexto4(0) - 5)
+                                .lineTo(distanciaAncho4 + 200 + margin4 * 2 + padding4 - 3, posicionAltoTexto4(0) + 4)
+                                .fill(colorGrisOscuro)
+
+                            doc.fillAndStroke("black", "black")
+
+                            doc.fontSize(tamañoFuente4)
+                                .font("Helvetica")
+                                .text(esDatoValido(elemento["lote"]) ? cortarTexto(elemento["lote"], 11) : "Sin info", distanciaAncho4 + 200 + margin4 + padding4 * 2, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
+                        } else {
+                            doc.fontSize(tamañoFuente4)
+                                .font("Helvetica")
+                                .text(esDatoValido(elemento["descripcion"]) ? cortarTexto(elemento["descripcion"], 39) : "Sin información", distanciaAncho4 + 104 + margin4 * 2 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
+                        }
                     }
 
                     doc.moveTo(distanciaAncho4 + 241 + margin4 * 3 + padding4 - 3, posicionAltoTexto4(0) - 5)

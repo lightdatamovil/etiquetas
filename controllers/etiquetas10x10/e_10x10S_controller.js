@@ -80,7 +80,7 @@ const e10x10S = async ({ doc, objData, llevaCodigo }) => {
 
         doc.fontSize(tamañoSegunLargo(fecha, tamañoFuente1, 15))
             .font("Helvetica-Bold")
-            .text(esDatoValido(fecha) ? cortarTexto(fecha, anchoCaracteres2) : "Sin información", posicionAnchoTexto1 + 20, posicionAltoTexto1(1), { baseline: "middle", lineBreak: false })
+            .text(esDatoValido(fecha) ? fecha : "Sin información", posicionAnchoTexto1 + 20, posicionAltoTexto1(1), { baseline: "middle", lineBreak: false })
 
         let tamañoRem = tamañoSegunLargo("Rte.: " + remitente, tamañoFuente1, 20)
         doc.fontSize(tamañoRem)

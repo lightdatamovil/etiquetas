@@ -7,7 +7,7 @@ const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../util
 
 // ! ETIQUETA a4 CON AMBOS PREMIUM
 
-const ea4P = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, altoContenedor, mayorPorPag, llevaCodigo, totalGrande, observacionA4Grande, camposExtraGrande) => {
+const ea4P = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, altoContenedor, mayorPorPag, llevaCodigo, totalGrande, observacionA4Grande, camposExtraGrande, loteEnItems) => {
     let { did, didCliente, nombreFantasia, logo, camposEspeciales, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fulfillment } = objData
 
     for (let i = 0; i < bultos; i++) {
@@ -348,9 +348,18 @@ const ea4P = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, alt
             doc.fontSize(tamañoFuente3)
                 .font("Helvetica")
                 .text("Descripción", distanciaAncho4 + 208 + margin4 * 2 + padding4, posicionAltoTexto4(0) - 12, { baseline: "middle", lineBreak: false })
-            doc.fontSize(tamañoFuente3)
-                .font("Helvetica")
-                .text("Cantidad", distanciaAncho4 + 460 + margin4 * 3 + padding4, posicionAltoTexto4(0) - 12, { baseline: "middle", lineBreak: false })
+            if (loteEnItems) {
+                doc.fontSize(tamañoFuente3)
+                    .font("Helvetica")
+                    .text("Lote", distanciaAncho4 + 400 + margin4 * 3 + padding4, posicionAltoTexto4(0) - 12, { baseline: "middle", lineBreak: false })
+                doc.fontSize(tamañoFuente3)
+                    .font("Helvetica")
+                    .text("Cant", distanciaAncho4 + 480 + margin4 * 4 + padding4, posicionAltoTexto4(0) - 12, { baseline: "middle", lineBreak: false })
+            } else {
+                doc.fontSize(tamañoFuente3)
+                    .font("Helvetica")
+                    .text("Cantidad", distanciaAncho4 + 460 + margin4 * 3 + padding4, posicionAltoTexto4(0) - 12, { baseline: "middle", lineBreak: false })
+            }
 
             await fulfillment.map((elemento) => {
                 indexFF += 1
@@ -363,8 +372,14 @@ const ea4P = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, alt
 
                 doc.roundedRect(distanciaAncho4, distanciaAlto4, 104, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
                 doc.roundedRect(distanciaAncho4 + 104 + margin4, distanciaAlto4, 104, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
-                doc.roundedRect(distanciaAncho4 + 208 + margin4 * 2, distanciaAlto4, 250, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
-                doc.roundedRect(distanciaAncho4 + 460 + margin4 * 3, distanciaAlto4, 58, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
+                if (loteEnItems) {
+                    doc.roundedRect(distanciaAncho4 + 208 + margin4 * 2, distanciaAlto4, 192, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
+                    doc.roundedRect(distanciaAncho4 + 400 + margin4 * 3, distanciaAlto4, 78, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
+                    doc.roundedRect(distanciaAncho4 + 480 + margin4 * 3, distanciaAlto4, 40, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
+                } else {
+                    doc.roundedRect(distanciaAncho4 + 208 + margin4 * 2, distanciaAlto4, 250, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
+                    doc.roundedRect(distanciaAncho4 + 460 + margin4 * 3, distanciaAlto4, 58, altoContainer4, borderRadius4).fillAndStroke(colorGrisClaro, colorGrisClaro)
+                }
 
                 doc.fillAndStroke("black", "black")
                 doc.fontSize(tamañoFuente4)
@@ -373,13 +388,24 @@ const ea4P = async (doc, objData, index, distanciaAlto1, cantFulfillmentPag, alt
                 doc.fontSize(tamañoFuente4)
                     .font("Helvetica")
                     .text(esDatoValido(elemento["ean"]) ? cortarTexto(elemento["ean"], 25) : "Sin información", distanciaAncho4 + 104 + margin4 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
-                doc.fontSize(tamañoFuente4)
-                    .font("Helvetica")
-                    .text(esDatoValido(elemento["descripcion"]) ? cortarTexto(elemento["descripcion"], 75) : "Sin información", distanciaAncho4 + 208 + margin4 * 2 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
-                doc.fontSize(tamañoFuente4)
-                    .font("Helvetica")
-                    .text(esDatoValido(elemento["cantidad"]) ? cortarTexto(elemento["cantidad"], 25) : "Sin información", distanciaAncho4 + 460 + margin4 * 3 + padding4, posicionAltoTexto4(0), { baseline: "middle", lineBreak: false })
-
+                if (loteEnItems) {
+                    doc.fontSize(tamañoFuente4)
+                        .font("Helvetica")
+                        .text(esDatoValido(elemento["descripcion"]) ? cortarTexto(elemento["descripcion"], 55) : "Sin información", distanciaAncho4 + 208 + margin4 * 2 + padding4, posicionAltoTexto4(0) + 1, { baseline: "middle", lineBreak: false })
+                    doc.fontSize(tamañoFuente4)
+                        .font("Helvetica")
+                        .text(esDatoValido(elemento["lote"]) ? cortarTexto(elemento["lote"], 25) : "Sin información", distanciaAncho4 + 400 + margin4 * 3 + padding4, posicionAltoTexto4(0) + 1, { baseline: "middle", lineBreak: false })
+                    doc.fontSize(tamañoFuente4)
+                        .font("Helvetica")
+                        .text(esDatoValido(elemento["cantidad"]) ? cortarTexto(elemento["cantidad"], 25) : "Sin información", distanciaAncho4 + 480 + margin4 * 4 + padding4, posicionAltoTexto4(0) + 1, { baseline: "middle", lineBreak: false })
+                } else {
+                    doc.fontSize(tamañoFuente4)
+                        .font("Helvetica")
+                        .text(esDatoValido(elemento["descripcion"]) ? cortarTexto(elemento["descripcion"], 75) : "Sin información", distanciaAncho4 + 208 + margin4 * 2 + padding4, posicionAltoTexto4(0) + 1, { baseline: "middle", lineBreak: false })
+                    doc.fontSize(tamañoFuente4)
+                        .font("Helvetica")
+                        .text(esDatoValido(elemento["cantidad"]) ? cortarTexto(elemento["cantidad"], 25) : "Sin información", distanciaAncho4 + 460 + margin4 * 3 + padding4, posicionAltoTexto4(0) + 1, { baseline: "middle", lineBreak: false })
+                }
                 distanciaAlto4 += 15
             })
         }

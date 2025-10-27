@@ -2,7 +2,7 @@ const e = require("express")
 const mysql = require("mysql")
 const redis = require("redis")
 require("dotenv").config()
-const { empresasConLogoGrande, empresasConItemsEnEnvios, empresasConEidEnQr } = require("./utils/empresasConEspecificaciones.json")
+const { empresasConLogoGrande, empresasConItemsEnEnvios, empresasConEidEnQr, empresasConLoteEnItems } = require("./utils/empresasConEspecificaciones.json")
 const { REDIS_HOST, REDIS_PORT, REDIS_PASSWORD } = process.env
 
 const redisClient = redis.createClient({
@@ -167,6 +167,7 @@ const obtenerDatosEnvios = async (idempresa, dids, esFulfillment = 0) => {
                     COALESCE(NULLIF(oi.seller_sku, ''), NULLIF(fp.sku, '')) AS sku,
                     fp.ean,
                     COALESCE(NULLIF(fp.descripcion, ''), NULLIF(oi.descripcion, '')) AS descripcion,
+                    ${empresasConLoteEnItems.includes(idempresa) ? "oi.lote," : ""}
                     oi.cantidad
                     FROM ordenes o
                     LEFT JOIN ordenes_items oi ON o.did = oi.didOrden AND oi.superado = 0 AND oi.elim = 0
@@ -203,6 +204,7 @@ const obtenerDatosEnvios = async (idempresa, dids, esFulfillment = 0) => {
                 did: envio.did,
                 localidad: envio.localidad || null,
                 fecha_venta: envio.fecha_venta !== "0000-00-00 00:00:00" ? envio.fecha_venta : envio.fecha_inicio !== "0000-00-00 00:00:00" ? envio.fecha_inicio : null,
+                deadline: envio.estimated_delivery_time_date !== "0000-00-00 00:00:00" ? envio.estimated_delivery_time_date : null,
                 ml_venta_id: envio.ml_venta_id || null,
                 ml_shipment_id: envio.ml_shipment_id || null,
                 destination_receiver_name: envio.destination_receiver_name || null,
@@ -246,6 +248,7 @@ const obtenerDatosEnvios = async (idempresa, dids, esFulfillment = 0) => {
                         ean: orden.ean || null,
                         descripcion: orden.descripcion || null,
                         cantidad: orden.cantidad || 1,
+                        lote: "lote" in orden ? orden.lote || "" : "",
                     })
                 }
             })
