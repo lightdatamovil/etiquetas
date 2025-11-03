@@ -7,7 +7,7 @@ const { esDatoValido, cortarTexto, tamañoSegunLargo, altoCodigoBarras } = requi
 const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../utils/colores.js")
 //ETIQUETA 10X15 CON CAMPOS ESPECIALES
 
-const e10x15CE = async ({ doc, objData, llevaCodigo, llevaCodigoBarras, camposExtraGrande }) => {
+const e10x15CE = async ({ doc, objData, llevaCodigo, llevaCodigoBarras, camposExtraGrande, localidadSinFranja }) => {
     let { did, didCliente, nombreFantasia, logo, camposEspeciales, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fulfillment } = objData
 
     for (let i = 0; i < bultos; i++) {
@@ -81,8 +81,17 @@ const e10x15CE = async ({ doc, objData, llevaCodigo, llevaCodigoBarras, camposEx
             }
         }
 
-        doc.roundedRect(distanciaAncho1, distanciaAlto1, anchoContainer1, altoContainer1, borderRadius1) // x, y, ancho, alto, radio de la esquina
-            .fillAndStroke("black", "black")
+        if (!localidadSinFranja) {
+            doc.roundedRect(distanciaAncho1, distanciaAlto1, anchoContainer1, altoContainer1, borderRadius1) // x, y, ancho, alto, radio de la esquina
+                .fillAndStroke("black", "black")
+        } else {
+            doc.moveTo(distanciaAncho1, containerSiguiente1(0) - 3)
+                .lineTo(275, containerSiguiente1(0) - 3)
+                .fill(colorGrisOscuro)
+            doc.moveTo(distanciaAncho1, containerSiguiente1(1) - 3)
+                .lineTo(275, containerSiguiente1(1) - 3)
+                .fill(colorGrisOscuro)
+        }
 
         doc.moveTo(distanciaAncho1, containerSiguiente1(2) - 3)
             .lineTo(275, containerSiguiente1(2) - 3)
@@ -97,7 +106,7 @@ const e10x15CE = async ({ doc, objData, llevaCodigo, llevaCodigoBarras, camposEx
             .lineTo(275, containerSiguiente1(5) - 3)
             .fill(colorGrisOscuro)
 
-        doc.fillAndStroke("white", "white")
+        doc.fillAndStroke(localidadSinFranja ? "black" : "white", localidadSinFranja ? "black" : "white")
         doc.fontSize(tamañoSegunLargo(localidad, tamañoFuente1, anchoCaracteres1))
             .font("Helvetica-Bold")
             .text(esDatoValido(localidad) ? cortarTexto(localidad.toUpperCase(), anchoCaracteres1 + 5) : "Sin información", distanciaAncho1, posicionAltoTexto1(0), { baseline: "middle", lineBreak: false, width: anchoContainer1, align: "center" })

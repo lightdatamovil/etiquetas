@@ -13,6 +13,7 @@ const {
     empresasSinColumnaObservacion,
     empresasConDeadline,
     empresasConLoteEnItems,
+    empresasSinFranjaNegraEnLocalidad,
 } = require("../utils/empresasConEspecificaciones.json")
 
 const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envios, res) => {
@@ -92,13 +93,14 @@ const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envi
                 const sinEan = empresasSinEan.includes(didEmpresa)
                 const camposExtraGrande = empresasConCamposExtraGrande.includes(didEmpresa)
                 const loteEnItems = empresasConLoteEnItems.includes(didEmpresa)
+                const localidadSinFranja = empresasSinFranjaNegraEnLocalidad.includes(didEmpresa)
 
                 let cualEtiqueta = objData.camposEspeciales.length > 0 ? (objData.fulfillment.length == 0 ? "CE" : "A") : objData.fulfillment.length == 0 ? "S" : "FF"
                 let funcionName = medidaEtiqueta + cualEtiqueta + calidadEtiqueta
                 let funcionNameA4 = medidaEtiqueta + calidadEtiqueta
 
                 if (tipoEtiqueta == 0 || tipoEtiqueta == 1 || tipoEtiqueta == 3) {
-                    await exportsEtiquetas[funcionName]({ doc, objData, llevaCodigo, llevaCodigoBarras, sinEan, camposExtraGrande, loteEnItems })
+                    await exportsEtiquetas[funcionName]({ doc, objData, llevaCodigo, llevaCodigoBarras, sinEan, camposExtraGrande, loteEnItems, localidadSinFranja })
                     if (tipoEtiqueta == 3) {
                         doc.roundedRect(0, 0, 283.5, 425.25) // x, y, ancho, alto
                             .stroke("black")

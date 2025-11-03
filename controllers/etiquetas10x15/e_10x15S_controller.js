@@ -8,7 +8,7 @@ const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../util
 
 //ETIQUETA 10X15 CON SOLO
 
-const e10x15S = async ({ doc, objData, llevaCodigo, llevaCodigoBarras }) => {
+const e10x15S = async ({ doc, objData, llevaCodigo, llevaCodigoBarras, localidadSinFranja }) => {
     let { did, didCliente, nombreFantasia, logo, camposEspeciales, localidad, fecha, nroVenta, nroEnvio, nombre, nroTelefono, direccion, cp, observacion, total, peso, remitente, qr, bultos, fulfillment } = objData
 
     for (let i = 0; i < bultos; i++) {
@@ -86,8 +86,17 @@ const e10x15S = async ({ doc, objData, llevaCodigo, llevaCodigoBarras }) => {
             }
         }
 
-        doc.roundedRect(distanciaAncho12, distanciaAlto1, anchoContainer12, altoContainer1, borderRadius1) // x, y, ancho, alto, radio de la esquina
-            .fillAndStroke("black", "black")
+        if (!localidadSinFranja) {
+            doc.roundedRect(distanciaAncho12, distanciaAlto1, anchoContainer12, altoContainer1, borderRadius1) // x, y, ancho, alto, radio de la esquina
+                .fillAndStroke("black", "black")
+        } else {
+            doc.moveTo(distanciaAncho12, containerSiguiente1(0) - 3)
+                .lineTo(275, containerSiguiente1(0) - 3)
+                .fill(colorGrisOscuro)
+            doc.moveTo(distanciaAncho12, containerSiguiente1(1) - 3)
+                .lineTo(275, containerSiguiente1(1) - 3)
+                .fill(colorGrisOscuro)
+        }
 
         doc.moveTo(distanciaAncho1, containerSiguiente1(2) - 3)
             .lineTo(275, containerSiguiente1(2) - 3)
@@ -102,7 +111,7 @@ const e10x15S = async ({ doc, objData, llevaCodigo, llevaCodigoBarras }) => {
             .lineTo(275, containerSiguiente1(5) - 3)
             .fill(colorGrisOscuro)
 
-        doc.fillAndStroke("white", "white")
+        doc.fillAndStroke(localidadSinFranja ? "black" : "white", localidadSinFranja ? "black" : "white")
         doc.fontSize(tamañoSegunLargo(localidad, 14, 27))
             .font("Helvetica-Bold")
             .text(esDatoValido(localidad) ? cortarTexto(localidad.toUpperCase(), 32) : "Sin información", posicionAnchoTexto12, posicionAltoTexto1(0), { baseline: "middle", lineBreak: false, width: anchoContainer12, align: "center" })
