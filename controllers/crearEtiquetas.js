@@ -9,6 +9,7 @@ const {
     empresasConObservacionA4Grande,
     empresasConCodigoBarras,
     empresasSinEan,
+    empresasClienteSinEan,
     empresasConCamposExtraGrande,
     empresasSinColumnaObservacion,
     empresasConDeadline,
@@ -90,7 +91,7 @@ const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envi
                 const totalGrande = empresasConTotalAPagarGrande.includes(didEmpresa)
                 const observacionA4Grande = empresasConObservacionA4Grande.includes(didEmpresa)
                 const llevaCodigoBarras = empresasConCodigoBarras[String(didEmpresa)]?.includes(clienteId) || false
-                const sinEan = empresasSinEan.includes(didEmpresa)
+                const sinEan = empresasSinEan.includes(didEmpresa) || empresasClienteSinEan[String(didEmpresa)]?.includes(clienteId)
                 const camposExtraGrande = empresasConCamposExtraGrande.includes(didEmpresa)
                 const loteEnItems = empresasConLoteEnItems.includes(didEmpresa)
                 const localidadSinFranja = empresasSinFranjaNegraEnLocalidad.includes(didEmpresa)
