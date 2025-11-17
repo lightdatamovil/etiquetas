@@ -1,7 +1,7 @@
 const PDFDocument = require("pdfkit")
 const { convertirFecha, cambiarACaba, combinarArrays, esDatoValido } = require("../utils/funciones")
 const exportsEtiquetas = require("../utils/exportsEtiquetas")
-const { medida10x10, medida10x15, medidaA4 } = require("../utils/medidasEtiquetas")
+const { medida10x10, medida10x15, medidaA4, medida10x5 } = require("../utils/medidasEtiquetas")
 const {
     empresasConObservacionesConMetodo,
     empresasConCodigoDebajoDelQr,
@@ -18,8 +18,6 @@ const {
 } = require("../utils/empresasConEspecificaciones.json")
 
 const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envios, res) => {
-    // Ordena los envíos por ml_shipment_id de manera natural (alfanumérica)
-
     return new Promise(async (resolve, reject) => {
         try {
             envios = Object.values(envios).sort((a, b) =>
@@ -29,8 +27,8 @@ const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envi
                 })
             )
 
-            let tamañoHoja = tipoEtiqueta == 0 ? medida10x10 : tipoEtiqueta == 1 ? medida10x15 : medidaA4
-            let medidaEtiqueta = tipoEtiqueta == 0 ? "e10x10" : tipoEtiqueta == 1 || tipoEtiqueta == 3 ? "e10x15" : "ea4"
+            let tamañoHoja = tipoEtiqueta == 0 ? medida10x10 : tipoEtiqueta == 1 ? medida10x15 : tipoEtiqueta == 4 ? medida10x5 : medidaA4
+            let medidaEtiqueta = tipoEtiqueta == 0 ? "e10x10" : tipoEtiqueta == 1 || tipoEtiqueta == 3 ? "e10x15" : tipoEtiqueta == 4 ? "e10x5" : "ea4"
             let calidadEtiqueta = calidad == 1 ? "P" : ""
 
             const doc = new PDFDocument({ size: tamañoHoja, margin: 0 })
@@ -97,10 +95,10 @@ const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envi
                 const localidadSinFranja = empresasSinFranjaNegraEnLocalidad.includes(didEmpresa)
 
                 let cualEtiqueta = objData.camposEspeciales.length > 0 ? (objData.fulfillment.length == 0 ? "CE" : "A") : objData.fulfillment.length == 0 ? "S" : "FF"
-                let funcionName = medidaEtiqueta + cualEtiqueta + calidadEtiqueta
+                let funcionName = tipoEtiqueta == 4 ? medidaEtiqueta + "S" + calidadEtiqueta : medidaEtiqueta + cualEtiqueta + calidadEtiqueta
                 let funcionNameA4 = medidaEtiqueta + calidadEtiqueta
 
-                if (tipoEtiqueta == 0 || tipoEtiqueta == 1 || tipoEtiqueta == 3) {
+                if (tipoEtiqueta == 0 || tipoEtiqueta == 1 || tipoEtiqueta == 3 || tipoEtiqueta == 4) {
                     await exportsEtiquetas[funcionName]({ doc, objData, llevaCodigo, llevaCodigoBarras, sinEan, camposExtraGrande, loteEnItems, localidadSinFranja })
                     if (tipoEtiqueta == 3) {
                         doc.roundedRect(0, 0, 283.5, 425.25) // x, y, ancho, alto
