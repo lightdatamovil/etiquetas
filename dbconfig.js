@@ -1,7 +1,10 @@
 const mysql = require("mysql");
 const redis = require("redis");
 require("dotenv").config();
-const { REDIS_HOST, REDIS_PORT, REDIS_PASSWORD } = process.env;
+const { REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, FULFILLMENT_DB_HOST, FULFILLMENT_DB_USER_FOR_LOGS, FULFILLMENT_DB_PASSWORD_FOR_LOGS
+  , FULFILLMENT_DB_NAME_FOR_LOGS, FULFILLMENT_DB_PORT
+} = process.env
+
 
 const redisClient = redis.createClient({
   socket: {
@@ -116,4 +119,43 @@ async function executeQuery(connection, query, values, log = false) {
     throw error;
   }
 }
-module.exports = { getConnection, getFromRedis, redisClient, executeQuery };
+async function getConnectionFF(idempresa) {
+  try {
+
+
+
+    if (typeof idempresa !== "string" && typeof idempresa !== "number") {
+      throw new Error(
+        `idempresa debe ser un string o un número, pero es: ${typeof idempresa}`
+      );
+    }
+
+    const config = {
+      host: FULFILLMENT_DB_HOST,
+      user: `ue${idempresa}`,
+      password: `78451296_${idempresa}`,
+      database: `empresa_${idempresa}`,
+      port: FULFILLMENT_DB_PORT,
+    };
+
+
+
+    console.log("Configuración de la conexión:", config);
+
+    return mysql.createConnection(config);
+  } catch (error) {
+    console.error(`Error al obtener la conexión:`, error.message);
+
+    // Lanza un error con una respuesta estándar
+    throw {
+      status: 500,
+      response: {
+        estado: false,
+
+        error: -1,
+      },
+    };
+  }
+}
+
+module.exports = { getConnection, getFromRedis, redisClient, executeQuery, getConnectionFF };

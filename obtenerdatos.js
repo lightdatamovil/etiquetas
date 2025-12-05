@@ -16,10 +16,10 @@ const redisClient = redis.createClient({
 redisClient.on("error", (err) => {
     console.error("Error al conectar con Redis:", err)
 })
-;(async () => {
-    await redisClient.connect()
-    console.log("Redis conectado")
-})()
+    ; (async () => {
+        await redisClient.connect()
+        console.log("Redis conectado")
+    })()
 
 async function getConnection(idempresa) {
     try {
@@ -229,16 +229,16 @@ const obtenerDatosEnvios = async (idempresa, dids, esFulfillment = 0) => {
                 fulfillment: [],
             }
         })
-        ;["camposEspeciales", "camposCobranzas", "camposLogi"].forEach((key) => {
-            datos[key].forEach((campo) => {
-                if (enviosMap[campo.didEnvio] && campo.campo_nombre && campo.campo_valor) {
-                    enviosMap[campo.didEnvio][key].push({
-                        nombre: campo.campo_nombre,
-                        valor: campo.campo_valor,
-                    })
-                }
+            ;["camposEspeciales", "camposCobranzas", "camposLogi"].forEach((key) => {
+                datos[key].forEach((campo) => {
+                    if (enviosMap[campo.didEnvio] && campo.campo_nombre && campo.campo_valor) {
+                        enviosMap[campo.didEnvio][key].push({
+                            nombre: campo.campo_nombre,
+                            valor: campo.campo_valor,
+                        })
+                    }
+                })
             })
-        })
 
         if (datos.ordenes) {
             datos.ordenes.forEach((orden) => {
