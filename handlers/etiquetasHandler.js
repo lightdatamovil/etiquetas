@@ -1,9 +1,10 @@
 const crearEtiquetas = require("../controllers/crearEtiquetas")
 const { executeQuery, getConnection } = require("../dbconfig")
 const { obtenerDatosEnvios, registrarReimpresion } = require("../obtenerdatos")
+const { obtenerDatosEnviosFF } = require("../obtenerdatosFF")
 
 const postEtiqueta = async (req, res) => {
-    const { didEmpresa = 0, didEnvios = [], tipoEtiqueta = 2, calidad = 0, quien = 0, fulfillment = 0, api = 0, didCliente = 0 } = req.body
+    const { didEmpresa = 0, didEnvios = [], tipoEtiqueta = 2, calidad = 0, quien = 0, fulfillment = 0, api = 0, didCliente = 0, sistema = 0 } = req.body
     const modulo = api == 1 ? `API_${didCliente}` : fulfillment == 1 ? "FF" : "Default"
 
     if (didEmpresa == 0 || didEnvios.length == 0) {
@@ -13,7 +14,12 @@ const postEtiqueta = async (req, res) => {
     }
 
     try {
-        const datos = await obtenerDatosEnvios(didEmpresa, didEnvios, fulfillment)
+        let datos = []
+        if (sistema == 0) {
+            datos = await obtenerDatosEnvios(didEmpresa, didEnvios, fulfillment)
+        } else {
+            datos = await obtenerDatosEnviosFF(didEmpresa, didEnvios)
+        }
 
         if (!datos) {
             return res.status(400).json({
@@ -28,10 +34,12 @@ const postEtiqueta = async (req, res) => {
             res.setHeader("Content-Type", "application/pdf")
             res.setHeader("Content-Disposition", 'attachment; filename="etiqueta.pdf"')
 
-            const result = await crearEtiquetas(didEmpresa, tipoEtiqueta, calidad, logistica, envios, res)
+            const result = await crearEtiquetas(didEmpresa, tipoEtiqueta, calidad, logistica, envios, sistema, res)
 
             if (result) {
-                await registrarReimpresion(didEmpresa, didEnvios, modulo, quien, fulfillment)
+                if (sistema == 0) {
+                    await registrarReimpresion(didEmpresa, didEnvios, modulo, quien, fulfillment)
+                }
                 return res.end()
             } else {
                 return res.status(500).json({ error: "No se pudo generar el PDF" })

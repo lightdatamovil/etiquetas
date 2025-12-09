@@ -1,7 +1,7 @@
 const QRCode = require("qrcode")
 const SVGtoPDF = require("svg-to-pdfkit")
 
-const { iconCalendarChico, iconNombre, iconTelefono, iconUbicacion } = require("../../utils/icons.js")
+const { iconCalendarChico, iconNombre, iconTelefono, iconUbicacion, iconNoQr } = require("../../utils/icons.js")
 const { esDatoValido, cortarTexto, tamañoSegunLargo } = require("../../utils/funciones.js")
 const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../utils/colores.js")
 
@@ -32,6 +32,8 @@ const e10x10CEP = async ({ doc, objData, llevaCodigo, camposExtraGrande }) => {
             } else {
                 doc.image(codigoQR, 0, 5, { height: 80 })
             }
+        } else {
+            SVGtoPDF(doc, iconNoQr, 10, 15)
         }
 
         // ! SECCION SUPERIOR

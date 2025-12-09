@@ -2,7 +2,7 @@ const QRCode = require("qrcode")
 const SVGtoPDF = require("svg-to-pdfkit")
 const BwipJs = require("bwip-js")
 
-const { iconCalendarGrande, iconNombreGrande, iconTelefonoGrande, iconUbicacionGrande } = require("../../utils/icons.js")
+const { iconCalendarGrande, iconNombreGrande, iconTelefonoGrande, iconUbicacionGrande, iconNoQr } = require("../../utils/icons.js")
 const { esDatoValido, cortarTexto, tamañoSegunLargo, altoCodigoBarras } = require("../../utils/funciones.js")
 const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../utils/colores.js")
 
@@ -32,6 +32,8 @@ const e10x15S = async ({ doc, objData, llevaCodigo, llevaCodigoBarras, localidad
             } else {
                 doc.image(codigoQR, 0, 75, { height: 125 })
             }
+        } else {
+            SVGtoPDF(doc, iconNoQr, 35, 75)
         }
 
         if (esDatoValido(logo)) {

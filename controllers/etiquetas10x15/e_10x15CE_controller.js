@@ -2,7 +2,7 @@ const QRCode = require("qrcode")
 const SVGtoPDF = require("svg-to-pdfkit")
 const BwipJs = require("bwip-js")
 
-const { iconCalendar, iconNombre, iconTelefono, iconUbicacion } = require("../../utils/icons.js")
+const { iconCalendar, iconNombre, iconTelefono, iconUbicacion, iconNoQr } = require("../../utils/icons.js")
 const { esDatoValido, cortarTexto, tamañoSegunLargo, altoCodigoBarras } = require("../../utils/funciones.js")
 const { colorGrisClaro, colorGrisOscuro, colorNegroClaro } = require("../../utils/colores.js")
 //ETIQUETA 10X15 CON CAMPOS ESPECIALES
@@ -30,6 +30,8 @@ const e10x15CE = async ({ doc, objData, llevaCodigo, llevaCodigoBarras, camposEx
             } else {
                 doc.image(codigoQR, 0, 40, { height: 125 })
             }
+        } else {
+            SVGtoPDF(doc, iconNoQr, 35, 75)
         }
 
         if (esDatoValido(logo)) {

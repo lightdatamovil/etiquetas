@@ -17,7 +17,7 @@ const {
     empresasSinFranjaNegraEnLocalidad,
 } = require("../utils/empresasConEspecificaciones.json")
 
-const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envios, res) => {
+const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envios, sistema, res) => {
     return new Promise(async (resolve, reject) => {
         try {
             envios = Object.values(envios).sort((a, b) =>
@@ -75,24 +75,39 @@ const crearEtiquetas = async (didEmpresa, tipoEtiqueta, calidad, logistica, envi
 
                 const clienteId = paquete.didCliente
 
+                let llevaCodigo = false
+                let totalGrande = false
+                let observacionA4Grande = false
+                let llevaCodigoBarras = false
+                let sinEan = false
+                let camposExtraGrande = false
+                let loteEnItems = false
+                let localidadSinFranja = false
+
                 const obsCompleta = []
                 if (esDatoValido(paquete.ref)) obsCompleta.push(`Ref: ${paquete.ref}`)
-                if (!empresasSinColumnaObservacion[String(didEmpresa)]?.includes(clienteId)) {
+
+                if (sistema == 0) {
+                    if (!empresasSinColumnaObservacion[String(didEmpresa)]?.includes(clienteId)) {
+                        if (esDatoValido(paquete.obs)) obsCompleta.push(paquete.obs)
+                    }
+                    if (empresasConObservacionesConMetodo[String(didEmpresa)]?.includes(clienteId)) {
+                        if (esDatoValido(paquete.metodo_name)) obsCompleta.push(paquete.metodo_name)
+                    }
+
+                    llevaCodigo = empresasConCodigoDebajoDelQr.includes(didEmpresa)
+                    totalGrande = empresasConTotalAPagarGrande.includes(didEmpresa)
+                    observacionA4Grande = empresasConObservacionA4Grande.includes(didEmpresa)
+                    llevaCodigoBarras = empresasConCodigoBarras[String(didEmpresa)]?.includes(clienteId) || false
+                    sinEan = empresasSinEan.includes(didEmpresa) || empresasClienteSinEan[String(didEmpresa)]?.includes(clienteId)
+                    camposExtraGrande = empresasConCamposExtraGrande.includes(didEmpresa)
+                    loteEnItems = empresasConLoteEnItems.includes(didEmpresa)
+                    localidadSinFranja = empresasSinFranjaNegraEnLocalidad.includes(didEmpresa)
+                } else {
                     if (esDatoValido(paquete.obs)) obsCompleta.push(paquete.obs)
                 }
-                if (empresasConObservacionesConMetodo[String(didEmpresa)]?.includes(clienteId)) {
-                    if (esDatoValido(paquete.metodo_name)) obsCompleta.push(paquete.metodo_name)
-                }
-                objData.observacion = obsCompleta.join(" / ")
 
-                const llevaCodigo = empresasConCodigoDebajoDelQr.includes(didEmpresa)
-                const totalGrande = empresasConTotalAPagarGrande.includes(didEmpresa)
-                const observacionA4Grande = empresasConObservacionA4Grande.includes(didEmpresa)
-                const llevaCodigoBarras = empresasConCodigoBarras[String(didEmpresa)]?.includes(clienteId) || false
-                const sinEan = empresasSinEan.includes(didEmpresa) || empresasClienteSinEan[String(didEmpresa)]?.includes(clienteId)
-                const camposExtraGrande = empresasConCamposExtraGrande.includes(didEmpresa)
-                const loteEnItems = empresasConLoteEnItems.includes(didEmpresa)
-                const localidadSinFranja = empresasSinFranjaNegraEnLocalidad.includes(didEmpresa)
+                objData.observacion = obsCompleta.join(" / ")
 
                 let cualEtiqueta = objData.camposEspeciales.length > 0 ? (objData.fulfillment.length == 0 ? "CE" : "A") : objData.fulfillment.length == 0 ? "S" : "FF"
                 let funcionName = tipoEtiqueta == 4 ? medidaEtiqueta + "S" + calidadEtiqueta : medidaEtiqueta + cualEtiqueta + calidadEtiqueta
