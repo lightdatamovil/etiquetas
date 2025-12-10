@@ -61,6 +61,7 @@ const postEtiqueta2 = async (req, res) => {
     const calidad = 0
     const tipoEtiqueta = 1
     const quien = 0
+    const sistema = 0
 
     try {
         const datos = await obtenerDatosEnvios(didEmpresa, didEnvio)
@@ -78,7 +79,7 @@ const postEtiqueta2 = async (req, res) => {
             res.setHeader("Content-Type", "application/pdf")
             res.setHeader("Content-Disposition", 'attachment; filename="etiqueta.pdf"')
 
-            const result = await crearEtiquetas(didEmpresa, tipoEtiqueta, calidad, logistica, envios, res)
+            const result = await crearEtiquetas(didEmpresa, tipoEtiqueta, calidad, logistica, envios, sistema, res)
 
             if (result) {
                 await registrarReimpresion(didEmpresa, didEnvio, modulo, quien)
@@ -96,7 +97,7 @@ const postEtiqueta2 = async (req, res) => {
 }
 
 const getEtiqueta = async (req, res) => {
-    const { token, didEmpresa, didEnvio, tipoEtiqueta = 2, calidad = 0, quien = 0, fulfillment = 0 } = req.query
+    const { token, didEmpresa, didEnvio, tipoEtiqueta = 2, calidad = 0, quien = 0, fulfillment = 0, sistema = 0 } = req.query
 
     if (!token || !didEmpresa || !didEnvio) {
         return res.status(400).json({
@@ -155,7 +156,7 @@ const getEtiqueta = async (req, res) => {
             res.setHeader("Content-Type", "application/pdf")
             res.setHeader("Content-Disposition", 'attachment; filename="etiqueta.pdf"')
 
-            const result = await crearEtiquetas(didEmpresa, tipoEtiqueta, calidad, logistica, envios, res)
+            const result = await crearEtiquetas(didEmpresa, tipoEtiqueta, calidad, logistica, envios, sistema, res)
 
             if (result) {
                 await registrarReimpresion(didEmpresa, didEnvios, modulo, quien, fulfillment)
