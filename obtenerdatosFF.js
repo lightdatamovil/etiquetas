@@ -15,7 +15,7 @@ const obtenerDatosEnviosFF = async (idempresa, dids) => {
 
         const resultEmpresa = await executeQuery(connection, queryEmpresa, idempresa)
         const empresa = resultEmpresa[0] || {}
-        const logo = `https://ff.lightdata.app/assets-app/img/logos-empresas/general/${empresa.imagen}` || ""
+        const logo = empresa.imagen ? `https://ff.lightdata.app/assets-app/img/logos-empresas/general/${empresa.imagen}` : ""
 
         const consultas = [
             {
