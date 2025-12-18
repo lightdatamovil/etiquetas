@@ -1,7 +1,19 @@
 const crearEtiquetas = require("../controllers/crearEtiquetas")
-const { executeQuery, getConnection } = require("../dbconfig")
+const { executeQuery, getConnection, getConnectionPrueba } = require("../dbconfig")
 const { obtenerDatosEnvios, registrarReimpresion } = require("../obtenerdatos")
 const { obtenerDatosEnviosFF } = require("../obtenerdatosFF")
+
+const testconexion = async (req, res) => {
+    const didEmpresa = Number(req.params.didEmpresa || 0)
+
+    const resultado = await getConnectionPrueba(didEmpresa)
+
+    if (resultado.exito) {
+        return res.status(200).json(resultado)
+    }
+
+    return res.status(500).json(resultado)
+}
 
 const postEtiqueta = async (req, res) => {
     const { didEmpresa = 0, didEnvios = [], tipoEtiqueta = 2, calidad = 0, quien = 0, fulfillment = 0, api = 0, didCliente = 0, sistema = 0 } = req.body
@@ -175,4 +187,4 @@ const getEtiqueta = async (req, res) => {
     }
 }
 
-module.exports = { postEtiqueta, postEtiqueta2, getEtiqueta }
+module.exports = { postEtiqueta, postEtiqueta2, getEtiqueta, testconexion }

@@ -68,7 +68,69 @@ async function getConnection(idempresa) {
         }
     }
 }
+async function getConnectionPrueba(idempresa) {
+    let connection
 
+    try {
+        // Validación
+        if (typeof idempresa !== "string" && typeof idempresa !== "number") {
+            return { exito: false, error: "idempresa debe ser string o number" }
+        }
+
+        // Redis
+        const redisKey = "empresasData"
+        const empresasData = await getFromRedis(redisKey)
+
+        if (!empresasData) {
+            return { exito: false, error: "No hay datos de empresas en Redis" }
+        }
+
+        const empresa = empresasData[String(idempresa)]
+        if (!empresa) {
+            return { exito: false, error: `Empresa no encontrada: ${idempresa}` }
+        }
+
+        const config = {
+            host: "bhsmysql1.lightdata.com.ar",
+            user: empresa.dbuser,
+            password: empresa.dbpass,
+            database: empresa.dbname,
+        }
+
+        // Crear conexión
+        connection = mysql.createConnection(config)
+
+        // Promisificar connect + query
+        await new Promise((resolve, reject) => {
+            connection.connect((err) => {
+                if (err) return reject(err)
+                resolve()
+            })
+        })
+
+        const rows = await new Promise((resolve, reject) => {
+            connection.query("SELECT * FROM envios ORDER BY id DESC LIMIT 1", (err, results) => {
+                if (err) return reject(err)
+                resolve(results)
+            })
+        })
+
+        console.log("Último envío:", rows)
+
+        return {
+            exito: true,
+            data: rows,
+        }
+    } catch (error) {
+        console.error("Error prueba conexión:", error)
+        return {
+            exito: false,
+            error: error.message,
+        }
+    } finally {
+        if (connection) connection.end()
+    }
+}
 // Función para obtener datos desde Redis
 async function getFromRedis(key) {
     try {
@@ -144,4 +206,4 @@ async function getConnectionFF(idempresa) {
     }
 }
 
-module.exports = { getConnection, getFromRedis, redisClient, executeQuery, getConnectionFF }
+module.exports = { getConnection, getFromRedis, redisClient, executeQuery, getConnectionFF, getConnectionPrueba }
