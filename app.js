@@ -15,7 +15,8 @@ server.all("/proxy/*", (req, res) => {
     req.pipe(request(url)).pipe(res)
 })
 
-server.use(bodyParser.urlencoded())
+server.use(bodyParser.urlencoded({ extended: true }));
+
 server.use(bodyParser.json())
 server.use(cookieParser())
 server.use(morgan("dev"))
